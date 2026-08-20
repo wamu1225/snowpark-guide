@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="Snowpark と Polars を結ぶ双方向矢印">
+  <rect width="64" height="64" rx="12" fill="#0f172a"/>
+  <path d="M14 24 L26 24 L20 17 M14 24 L20 31" fill="none" stroke="#38bdf8" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M50 40 L38 40 L44 33 M50 40 L44 47" fill="none" stroke="#f0abfc" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round"/>
+  <line x1="14" y1="40" x2="50" y2="40" stroke="#f0abfc" stroke-width="3.4" stroke-linecap="round"/>
+  <line x1="14" y1="24" x2="50" y2="24" stroke="#38bdf8" stroke-width="3.4" stroke-linecap="round"/>
+</svg>
