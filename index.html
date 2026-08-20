@@ -32,7 +32,7 @@
       src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9102538151148380"
       crossorigin="anonymous"
     ></script>
-    <script type="module" crossorigin src="./assets/index-DpBj5JGo.js"></script>
+    <script type="module" crossorigin src="./assets/index-Dff2Kodk.js"></script>
     <link rel="stylesheet" crossorigin href="./assets/index-D1asY8GJ.css">
   <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebSite","name":"Snowpark ⇄ Polars 対応表","url":"https://study-apps.com/snowpark-guide/","description":"Snowpark PythonのDataFrame/Column APIを、Polarsの同等コードと並べて確認できる逆引きリファレンスです。挙動の違いと移行時の落とし穴をメソッドごとに解説します。","inLanguage":"ja"}</script>
   </head>
@@ -49,7 +49,11 @@
 <li><a href="/snowpark-guide/alias/" style="color:#38bdf8">alias</a> ── 式の出力列に名前をつける。</li>
 <li><a href="/snowpark-guide/columns/" style="color:#38bdf8">columns / collect_schema().names()</a> ── 現在の列名の一覧を取得する。</li>
 <li><a href="/snowpark-guide/schema/" style="color:#38bdf8">schema / collect_schema()</a> ── 列名と型の一覧（スキーマ）を取得する。</li></ul></section>
-<section style="margin-top:24px"><h2 style="font-size:1.1rem">フィルタ・サンプリング</h2><p style="color:#94a3b8;font-size:0.9rem">行を絞り込む・抜き出す</p><ul style="padding-left:20px"><li style="color:#94a3b8">準備中</li></ul></section>
+<section style="margin-top:24px"><h2 style="font-size:1.1rem">フィルタ・サンプリング</h2><p style="color:#94a3b8;font-size:0.9rem">行を絞り込む・抜き出す</p><ul style="padding-left:20px"><li><a href="/snowpark-guide/filter/" style="color:#38bdf8">filter / where</a> ── 条件に合う行だけを残す。whereはfilterの別名で、書き方はどちらも同じ。</li>
+<li><a href="/snowpark-guide/limit/" style="color:#38bdf8">limit</a> ── 先頭から指定した行数だけを取得する。</li>
+<li><a href="/snowpark-guide/sample/" style="color:#38bdf8">sample</a> ── データの一部をランダムに抽出する。</li>
+<li><a href="/snowpark-guide/distinct/" style="color:#38bdf8">distinct / unique</a> ── 重複行を取り除く。メソッド名がSnowparkとPolarsで異なる点に注意。</li>
+<li><a href="/snowpark-guide/drop-duplicates/" style="color:#38bdf8">drop_duplicates</a> ── 指定した列の値が一致する行を重複とみなして間引く。</li></ul></section>
 <section style="margin-top:24px"><h2 style="font-size:1.1rem">集約・構造変換</h2><p style="color:#94a3b8;font-size:0.9rem">グループ化・集計・縦横の入れ替え</p><ul style="padding-left:20px"><li style="color:#94a3b8">準備中</li></ul></section>
 <section style="margin-top:24px"><h2 style="font-size:1.1rem">結合・集合演算</h2><p style="color:#94a3b8;font-size:0.9rem">複数のテーブルを1つにする</p><ul style="padding-left:20px"><li style="color:#94a3b8">準備中</li></ul></section>
 <section style="margin-top:24px"><h2 style="font-size:1.1rem">ソート</h2><p style="color:#94a3b8;font-size:0.9rem">並び順を決める</p><ul style="padding-left:20px"><li style="color:#94a3b8">準備中</li></ul></section>

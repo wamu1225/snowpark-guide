@@ -10,6 +10,11 @@
   <url><loc>https://study-apps.com/snowpark-guide/alias/</loc><lastmod>2026-08-20</lastmod><priority>0.8</priority></url>
   <url><loc>https://study-apps.com/snowpark-guide/columns/</loc><lastmod>2026-08-20</lastmod><priority>0.8</priority></url>
   <url><loc>https://study-apps.com/snowpark-guide/schema/</loc><lastmod>2026-08-20</lastmod><priority>0.8</priority></url>
+  <url><loc>https://study-apps.com/snowpark-guide/filter/</loc><lastmod>2026-08-20</lastmod><priority>0.8</priority></url>
+  <url><loc>https://study-apps.com/snowpark-guide/limit/</loc><lastmod>2026-08-20</lastmod><priority>0.8</priority></url>
+  <url><loc>https://study-apps.com/snowpark-guide/sample/</loc><lastmod>2026-08-20</lastmod><priority>0.8</priority></url>
+  <url><loc>https://study-apps.com/snowpark-guide/distinct/</loc><lastmod>2026-08-20</lastmod><priority>0.8</priority></url>
+  <url><loc>https://study-apps.com/snowpark-guide/drop-duplicates/</loc><lastmod>2026-08-20</lastmod><priority>0.8</priority></url>
   <url><loc>https://study-apps.com/snowpark-guide/about/</loc><lastmod>2026-08-20</lastmod><priority>0.3</priority></url>
   <url><loc>https://study-apps.com/snowpark-guide/privacy/</loc><lastmod>2026-08-20</lastmod><priority>0.2</priority></url>
 </urlset>
