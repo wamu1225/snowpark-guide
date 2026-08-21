@@ -1,5 +1,6 @@
 import { ALL_ENTRIES } from '../src/data/entries';
 import { CATEGORIES } from '../src/data/types';
+import { CONCEPTS } from '../src/data/concepts';
 
 const errors: string[] = [];
 const CATEGORY_IDS = new Set(CATEGORIES.map((c) => c.id));
@@ -72,10 +73,60 @@ for (const e of ALL_ENTRIES) {
   }
 }
 
+// ── Layer A（基礎知識・概要）の検証 ──
+const seenConceptSlugs = new Set<string>();
+const entrySlugSet = new Set(ALL_ENTRIES.map((e) => e.slug));
+if (CONCEPTS.length === 0) {
+  errors.push('CONCEPTS が空です');
+}
+for (const c of CONCEPTS) {
+  const label = `guide/${c.slug || '(slugなし)'}`;
+
+  if (!/^[a-z0-9-]+$/.test(c.slug)) {
+    errors.push(`${label}: slug は小文字英数とハイフンのみ（現在値: "${c.slug}"）`);
+  }
+  if (seenConceptSlugs.has(c.slug)) {
+    errors.push(`${label}: slug が重複しています`);
+  }
+  seenConceptSlugs.add(c.slug);
+
+  for (const field of ['title', 'summary', 'body'] as const) {
+    if (typeof c[field] !== 'string' || c[field].trim().length === 0) {
+      errors.push(`${label}: ${field} が空です`);
+    }
+  }
+
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(c.verifiedDate ?? '')) {
+    errors.push(`${label}: verifiedDate が YYYY-MM-DD 形式ではありません（${c.verifiedDate}）`);
+  }
+
+  if (!c.sources || c.sources.length === 0) {
+    errors.push(`${label}: sources が空です（実行検証できない層なので出典必須）`);
+  } else {
+    for (const s of c.sources) {
+      if (!/^https:\/\//.test(s.url)) {
+        errors.push(`${label}: 出典URLが https:// で始まっていません（${s.url}）`);
+      }
+    }
+  }
+
+  for (const slug of c.relatedEntrySlugs) {
+    if (!entrySlugSet.has(slug)) {
+      errors.push(`${label}: relatedEntrySlugs の "${slug}" が ALL_ENTRIES に存在しません`);
+    }
+  }
+
+  if (/\[span_\d+\]|start_span|end_span/.test(c.body)) {
+    errors.push(`${label}: リサーチ下書きの脚注マーカーの残骸が本文に残っています`);
+  }
+}
+
 if (errors.length > 0) {
   console.error(`validate-data: ${errors.length} 件のエラー`);
   for (const e of errors) console.error(`  - ${e}`);
   process.exit(1);
 }
 
-console.log(`validate-data: OK（${ALL_ENTRIES.length} 件のエントリ、${CATEGORIES.length} カテゴリ）`);
+console.log(
+  `validate-data: OK（${ALL_ENTRIES.length} 件のエントリ、${CATEGORIES.length} カテゴリ、${CONCEPTS.length} 件の基礎知識ページ）`,
+);

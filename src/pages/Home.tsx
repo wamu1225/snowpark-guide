@@ -1,6 +1,7 @@
 import { useMemo, useState } from 'react';
 import { ALL_ENTRIES } from '../data/entries';
 import { CATEGORIES } from '../data/types';
+import { CONCEPTS } from '../data/concepts';
 import { href } from '../lib/router';
 
 function matches(query: string, e: (typeof ALL_ENTRIES)[number]): boolean {
@@ -60,6 +61,23 @@ export function Home() {
           )}
         </section>
       ) : (
+        <>
+        <section className="home__concepts">
+          <h2>基礎から読む</h2>
+          <p className="category-block__desc">
+            関数の書き方だけでなく、Snowparkがどう動いているか・何にコストがかかるかも解説します。
+          </p>
+          <ul className="entry-list">
+            {CONCEPTS.map((c) => (
+              <li key={c.slug}>
+                <a href={href(`/guide/${c.slug}/`)} className="entry-list__item">
+                  <span className="entry-list__title entry-list__title--prose">{c.title}</span>
+                  <span className="entry-list__summary">{c.summary}</span>
+                </a>
+              </li>
+            ))}
+          </ul>
+        </section>
         <section className="home__categories">
           {CATEGORIES.map((cat) => {
             const entries = ALL_ENTRIES.filter((e) => e.category === cat.id);
@@ -85,6 +103,7 @@ export function Home() {
             );
           })}
         </section>
+        </>
       )}
     </div>
   );

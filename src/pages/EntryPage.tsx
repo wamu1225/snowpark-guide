@@ -1,9 +1,11 @@
 import type { Entry } from '../data/types';
 import { CATEGORIES } from '../data/types';
+import { CONCEPTS } from '../data/concepts';
 import { href } from '../lib/router';
 
 export function EntryPage({ entry }: { entry: Entry }) {
   const category = CATEGORIES.find((c) => c.id === entry.category);
+  const relatedConcepts = CONCEPTS.filter((c) => c.relatedEntrySlugs.includes(entry.slug));
   return (
     <article className="entry-page">
       <p className="entry-page__crumb">
@@ -38,6 +40,19 @@ export function EntryPage({ entry }: { entry: Entry }) {
         <h2>移行時の落とし穴</h2>
         <p>{entry.pitfall}</p>
       </section>
+
+      {relatedConcepts.length > 0 && (
+        <section className="entry-section entry-section--refs">
+          <h2>関連する基礎知識</h2>
+          <ul className="entry-page__refs">
+            {relatedConcepts.map((c) => (
+              <li key={c.slug}>
+                <a href={href(`/guide/${c.slug}/`)}>{c.title}</a>
+              </li>
+            ))}
+          </ul>
+        </section>
+      )}
 
       <section className="entry-section entry-section--refs">
         <h2>出典・検証情報</h2>

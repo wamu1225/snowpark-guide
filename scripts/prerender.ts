@@ -6,6 +6,7 @@ import * as path from 'path';
 import { ALL_ENTRIES } from '../src/data/entries';
 import { CATEGORIES } from '../src/data/types';
 import { STATIC_PAGES } from '../src/data/static-pages';
+import { CONCEPTS } from '../src/data/concepts';
 import { mdToHtml } from '../src/lib/md-html';
 
 const DIST_DIR = path.resolve(process.cwd(), 'dist');
@@ -67,9 +68,13 @@ const categoryListHtml = CATEGORIES.map((cat) => {
           .join('\n');
   return `<section style="margin-top:24px"><h2 style="font-size:1.1rem">${esc(cat.label)}</h2><p style="color:#94a3b8;font-size:0.9rem">${esc(cat.description)}</p><ul style="padding-left:20px">${items}</ul></section>`;
 }).join('\n');
+const conceptListHtml = `<section style="margin-top:24px"><h2 style="font-size:1.1rem">基礎から読む</h2><ul style="padding-left:20px">${CONCEPTS.map(
+  (c) => `<li><a href="${BASE}/guide/${c.slug}/" style="color:#38bdf8">${esc(c.title)}</a> ── ${esc(c.summary)}</li>`,
+).join('\n')}</ul></section>`;
 const homeFallback = `${shellOpen}
   <h1 style="font-size:1.7rem;margin-bottom:8px">${SITE_TITLE}</h1>
   <p style="color:#475569">${esc(homeDesc)}</p>
+  ${conceptListHtml}
   ${categoryListHtml}
   ${footerNav}
 ${shellClose}`;
@@ -133,6 +138,45 @@ for (const e of ALL_ENTRIES) {
 }
 console.log(`✓ エントリページ ${ALL_ENTRIES.length} 件`);
 
+// ── 基礎知識（Layer A） ──
+for (const c of CONCEPTS) {
+  const related = c.relatedEntrySlugs.map((slug) => ALL_ENTRIES.find((e) => e.slug === slug)).filter(Boolean);
+  const relatedHtml =
+    related.length === 0
+      ? ''
+      : `<h2 style="font-size:1.05rem">関連する関数リファレンス</h2><ul style="padding-left:20px">${related
+          .map((e) => `<li><a href="${BASE}/${e!.slug}/" style="color:#38bdf8">${esc(e!.title)}</a></li>`)
+          .join('')}</ul>`;
+  const sourcesHtml = c.sources
+    .map((s) => `<li><a href="${s.url}" style="color:#38bdf8">${esc(s.label)}</a></li>`)
+    .join('');
+  const fallback = `${shellOpen}
+    <p style="color:#94a3b8;font-size:0.9rem"><a href="${BASE}/" style="color:#94a3b8">トップ</a> / 基礎知識</p>
+    <h1 style="font-size:1.6rem;margin-bottom:8px">${esc(c.title)}</h1>
+    <p style="color:#475569">${esc(c.summary)}</p>
+    ${mdToHtml(c.body)}
+    ${relatedHtml}
+    <h2 style="font-size:1.05rem">出典</h2>
+    <ul style="padding-left:20px">${sourcesHtml}</ul>
+    <p style="color:#94a3b8;font-size:0.85rem">公式ドキュメントの記載にもとづく解説です（実行検証はしていません）。確認日：${esc(c.verifiedDate)}</p>
+    ${footerNav}
+  ${shellClose}`;
+  let html = applyMeta(subTemplateHtml, c.title, c.summary, `/guide/${c.slug}/`);
+  html = html.replace('<div id="root"></div>', `<div id="root">${fallback}</div>`);
+  const jsonLd = JSON.stringify({
+    '@context': 'https://schema.org',
+    '@type': 'Article',
+    headline: c.title,
+    description: c.summary,
+    url: `${BASE_URL}/guide/${c.slug}/`,
+    dateModified: c.verifiedDate,
+    inLanguage: 'ja',
+  });
+  html = html.replace('</head>', `<script type="application/ld+json">${jsonLd}</script>\n  </head>`);
+  writePage(`guide/${c.slug}`, html);
+}
+console.log(`✓ 基礎知識ページ ${CONCEPTS.length} 件`);
+
 // ── about / privacy ──
 for (const page of STATIC_PAGES) {
   const fallback = `${shellOpen}
@@ -160,6 +204,7 @@ const today = new Date().toISOString().split('T')[0];
 const urls = [
   { loc: `${BASE_URL}/`, priority: '1.0' },
   ...ALL_ENTRIES.map((e) => ({ loc: `${BASE_URL}/${e.slug}/`, priority: '0.8' })),
+  ...CONCEPTS.map((c) => ({ loc: `${BASE_URL}/guide/${c.slug}/`, priority: '0.7' })),
   { loc: `${BASE_URL}/about/`, priority: '0.3' },
   { loc: `${BASE_URL}/privacy/`, priority: '0.2' },
 ];

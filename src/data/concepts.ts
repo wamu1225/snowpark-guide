@@ -1,0 +1,209 @@
+// 基礎知識・概要（Layer A）。関数リファレンス（Layer B = entries/）は「引く」場所、
+// こちらは「読む」場所。相互リンクは EntryPage 側で relatedEntrySlugs を逆引きして表示する。
+// 実行検証ができない領域のため、本文は公式ドキュメントの記載に厳密に沿って書く（体感・推測を書かない）。
+export type ConceptPage = {
+  slug: string;
+  title: string;
+  summary: string;
+  body: string;
+  relatedEntrySlugs: string[];
+  sources: { label: string; url: string }[];
+  verifiedDate: string;
+};
+
+export const CONCEPTS: ConceptPage[] = [
+  {
+    slug: 'architecture',
+    title: 'Snowparkのアーキテクチャと実行の仕組み',
+    summary: 'コードはどこで実行されるのか。遅延評価とSQLへの変換・プッシュダウンの仕組みを説明します。',
+    body: `## クライアント側では何も実行されない
+
+Snowpark DataFrameに対して \`select\`・\`filter\`・\`join\` のような変換メソッドを呼び出しても、その時点ではSnowflakeへリクエストは送られません。Snowflake公式ドキュメントは「DataFrameは、データを取得するために評価される必要のあるクエリのようなものである」と説明しており、変換メソッドは「SQL文の組み立て方を指定するだけで、Snowflakeデータベースからデータを取得しない」と明記しています。
+
+呼び出された変換は、クライアント側で内部的な論理プラン（実行計画）として積み上がっていきます。この間、Snowflake側では何も処理が走っていません。
+
+## アクションメソッドが実行の引き金になる
+
+実際にSnowflake側で処理が走るのは、\`collect()\`・\`count()\`・\`show()\`・\`save_as_table()\` のような**アクションメソッド**を呼んだ瞬間です。ここで初めて、それまで積み上げられた変換の内容がSQL文へと変換され、Snowflakeの分散クエリエンジン（Virtual Warehouse）に送信されて実行されます。
+
+この「変換は溜める・アクションで初めて動く」という順序を知らないと、「\`select\` や \`filter\` を書いた時点で何かが実行されているはず」という誤った直感でコードを読んでしまい、パフォーマンス上のボトルネックがどこにあるかを見誤ります。
+
+## なぜこの設計になっているか
+
+変換をSQLへまとめて変換してからSnowflakeへ送ることで、Snowflake側のクエリオプティマイザが変換全体を見渡して最適化できます。逐次的に1行ずつ処理を送るのではなく、まとまった単位で送ることで、データを不必要にクライアントへ転送せずに済み、ペタバイト規模のデータでも同じコードで処理できます。`,
+    relatedEntrySlugs: ['select', 'filter'],
+    sources: [
+      {
+        label: 'Snowflake Documentation: Working with DataFrames in Snowpark Python',
+        url: 'https://docs.snowflake.com/en/developer-guide/snowpark/python/working-with-dataframes',
+      },
+    ],
+    verifiedDate: '2026-08-21',
+  },
+  {
+    slug: 'vs-spark',
+    title: 'Snowpark と Apache Spark の違い',
+    summary: 'どちらも分散DataFrame APIだが、クラスタを自分で持つか持たないかで運用とコストの構造が変わります。',
+    body: `## クラスタを自分で管理するかどうか
+
+Apache SparkとSnowparkは、どちらも遅延評価の分散DataFrame APIという点で似ています。しかし、その裏側にあるインフラは大きく異なります。
+
+Sparkはユーザー自身がドライバーノードとワーカーノードから成る計算クラスタ（多くはJVM環境）を用意し、管理する必要があります。メモリ設定やネットワークのチューニングもユーザーの責任範囲です。一方でSnowparkは、Snowflakeが提供するフルマネージドな環境（Virtual Warehouse）の上で動くため、そうしたクラスタ運用の作業そのものが発生しません。
+
+## データの転送（Egress）が要るかどうか
+
+Snowflake上に蓄積されたデータをSparkで処理しようとすると、データを一度Snowflakeの外（Sparkクラスタ側）へ転送する必要が生じる場合があります。この転送にはネットワーク費用や転送時間がかかり、データがSnowflakeの外に出ることによるセキュリティ上の考慮も増えます。Snowparkはデータが存在するのと同じ基盤の上でコードが評価されるため、こうした転送が発生しません。
+
+## コストの発生の仕方
+
+Snowflakeの仮想ウェアハウスは秒単位（起動時のみ60秒の最低課金あり）で課金され、一定時間操作がなければ自動的に一時停止（オートサスペンド）し、次のクエリが来ると自動的に再開（オートレジューム）します。Sparkクラスタは、常時起動させておくか、都度起動・停止させるオーバーヘッドを引き受けるかのどちらかになります。`,
+    relatedEntrySlugs: [],
+    sources: [
+      {
+        label: 'Snowflake Documentation: Overview of Warehouses（課金・オートサスペンド/レジューム）',
+        url: 'https://docs.snowflake.com/en/user-guide/warehouses-overview',
+      },
+    ],
+    verifiedDate: '2026-08-21',
+  },
+  {
+    slug: 'vs-polars',
+    title: 'Snowpark と Polars の違い（総論）',
+    summary: 'どちらも遅延評価を採用しているが、計算がどこで走るか（クラウドかローカルか）が根本的に異なります。',
+    body: `## 「遅延評価」という共通点
+
+Snowpark DataFrameとPolars LazyFrameは、どちらも「評価をできるだけ先延ばしにして、まとめて最適化する」という遅延評価の設計思想を共有しています。このサイトの各メソッドページで頻繁に「両方とも遅延評価で……」という説明が出てくるのはこのためです。
+
+## 計算がどこで走るかが違う
+
+共通点はここまでで、実行される場所は対照的です。
+
+- **Snowpark**：Snowflakeの分散SQLエンジン上、クラウドのVirtual Warehouseで実行される
+- **Polars**：手元のマシンのCPU（またはローカルの分散環境）上、Rustで書かれたPolars自身の実行エンジンがApache Arrow形式のメモリ上で処理する
+
+Snowparkはネットワークの向こう側にあるクラウドの計算資源を使い、ペタバイト級のデータをマルチノードで処理できます。Polarsは基本的に手元の1台のマシン（マルチコアで並列化）で完結する処理で、外部にデータを送信しません。
+
+## 評価を起動するメソッドの違い
+
+遅延評価を実際に実行させる「引き金」のメソッドも異なります。
+
+- **Snowpark**：\`collect()\` ／ \`show()\` ／ \`save_as_table()\` など
+- **Polars**：\`collect()\` ／ \`sink_parquet()\` ／ \`sink_csv()\` など（\`sink_*\`系はストリーミングで直接ファイルへ書き出す）
+
+Polars側の \`collect\`・\`sink_parquet\`・\`sink_csv\`・\`sink_ipc\`・\`sink_ndjson\` は、いずれも \`LazyFrame\` に実在するメソッドであることを実機で確認済みです。`,
+    relatedEntrySlugs: ['schema', 'columns'],
+    sources: [
+      {
+        label: 'Snowflake Documentation: Working with DataFrames in Snowpark Python',
+        url: 'https://docs.snowflake.com/en/developer-guide/snowpark/python/working-with-dataframes',
+      },
+      { label: 'Polars API Reference: LazyFrame', url: 'https://docs.pola.rs/api/python/stable/reference/lazyframe/' },
+    ],
+    verifiedDate: '2026-08-21',
+  },
+  {
+    slug: 'udf-udtf-sproc',
+    title: 'UDF・Vectorized UDF・UDTF・ストアドプロシージャの使い分け',
+    summary: 'Snowflake上でカスタムロジックを実行する4つの手段を、入出力の形とSQLからの呼び出し方で整理します。',
+    body: `## スカラUDF：1行→1つの値
+
+スカラUDFは行ごとに呼び出され、1つの値を返す関数です。SELECT句やWHERE句などのSQL式の中から直接呼び出せます。Python UDFの場合、1行ずつPythonの関数を呼び出すため、行数が多いとPythonの呼び出しオーバーヘッドが積み重なります。
+
+## Vectorized UDF：複数行をまとめて処理
+
+Vectorized UDF（バッチUDF）は、複数行をPandasのDataFrameやSeriesとしてまとめて受け取り、まとめて結果を返す仕組みです。Snowflake公式ドキュメントは「Vectorized Python UDFは、入力行のバッチをPandas DataFrameとして受け取り、結果のバッチをPandas配列またはSeriesとして返すPython関数を定義できる」と説明しています。1行ずつPythonを呼び出すオーバーヘッドを避けられるため、機械学習の推論のようにバッチ処理に向く場面で特に有効です。
+
+## UDTF：1行(以上)の入力→複数行の出力
+
+UDTF（ユーザー定義テーブル関数）は、入力に対して0行以上の複数行を出力できる関数です。公式ドキュメントによれば、UDTFのハンドラクラスは行ごとに呼び出される\`process\`メソッドを実装し、そこでタプルとして表形式の値を返します。SQLのFROM句から呼び出す点がスカラUDFと異なります。
+
+## ストアドプロシージャ：制御フローそのものをパッケージ化
+
+ストアドプロシージャ（SPROC）は、条件分岐・ループ・トランザクション管理・DDL/DMLの実行といった「処理の手順そのもの」をパッケージ化したものです。SQL式の中から呼び出すのではなく、\`CALL\`文で独立して実行します。UDF・UDTFにはできないDDL/DMLの実行が可能な点が大きな違いです。
+
+## 使い分けの早見表
+
+| 種類 | 主な目的 | 戻り値 | SQL式内から直接呼べるか | DDL/DMLの実行 |
+|---|---|---|---|---|
+| スカラUDF | 行ごとの計算・変換 | 単一の値 | 可能 | 不可 |
+| Vectorized UDF | バッチ単位の高速演算 | 単一の値（バッチ処理） | 可能 | 不可 |
+| UDTF | 表構造への展開・変換 | 複数行・複数列 | 可能（FROM句内） | 不可 |
+| ストアドプロシージャ | パイプライン制御・自動化 | 任意 | 不可（CALL文） | 可能 |
+
+Polarsはローカルで動くライブラリなので、この4分類そのものが存在しません。Polarsで「カスタムロジック」というと、\`map_elements\`のようなメソッドにPython関数を渡す形が中心で、SQLエンジン側にプッシュダウンして実行させるという概念がそもそもありません。`,
+    relatedEntrySlugs: [],
+    sources: [
+      {
+        label: 'Snowflake Documentation: Creating UDFs for DataFrames in Python',
+        url: 'https://docs.snowflake.com/en/developer-guide/snowpark/python/creating-udfs',
+      },
+      {
+        label: 'Snowflake Documentation: Creating UDTFs for DataFrames in Python',
+        url: 'https://docs.snowflake.com/en/developer-guide/snowpark/python/creating-udtfs',
+      },
+    ],
+    verifiedDate: '2026-08-21',
+  },
+  {
+    slug: 'pricing',
+    title: '料金構造とウェアハウスのリソース消費',
+    summary: 'コストは何に対して発生するのか。標準ウェアハウスとSnowpark-Optimized Warehouseの違いを整理します。',
+    body: `## コンピュートコストは秒単位
+
+Snowparkのコードがアクションメソッドで実行されるとき、実際に処理を行うのはSnowflakeの仮想ウェアハウス（Virtual Warehouse）です。課金は秒単位で行われ、ウェアハウスが起動してから最初の60秒は最低利用時間として課金されます。一定時間クエリが来なければ自動的に一時停止（オートサスペンド）し、その間の課金は発生しません。
+
+## メモリが足りない処理にはSnowpark-Optimized Warehouse
+
+大量のメモリを必要とするPython UDFや機械学習のトレーニングでは、標準のウェアハウスだとメモリ不足（OOM）が起きることがあります。Snowflakeは「Snowpark-Optimized Warehouse」という、標準より多くのメモリを積んだウェアハウスの種類を提供しています。
+
+Snowflake公式ドキュメントによると、Snowpark-Optimized Warehouseの既定構成はノードあたり標準ウェアハウスの16倍のメモリを提供します。具体的なメモリ量はサイズ指定によって変わり、たとえば\`MEMORY_16X\`は256GB（Mサイズ以上）、\`MEMORY_64X\`は最大1TB（Lサイズ以上）です。**ただし1TBの構成（MEMORY_64X）は本稿確認時点でプレビュー機能かつAWSのみでの提供**であり、標準的に使えるわけではない点に注意してください。
+
+## ストレージコストも別に発生する
+
+\`cache_result()\`や\`save_as_table()\`を呼ぶと、その時点の結果を一時テーブルまたは永続テーブルとしてSnowflake内に保存します。これらのテーブルは通常のストレージ料金の対象になります。「キャッシュしたから無料」ではなく、キャッシュ自体がストレージコストを生む点は見落としやすい落とし穴です。`,
+    relatedEntrySlugs: [],
+    sources: [
+      {
+        label: 'Snowflake Documentation: Overview of Warehouses',
+        url: 'https://docs.snowflake.com/en/user-guide/warehouses-overview',
+      },
+      {
+        label: 'Snowflake Documentation: Snowpark-optimized Warehouses',
+        url: 'https://docs.snowflake.com/en/user-guide/warehouses-snowpark-optimized',
+      },
+    ],
+    verifiedDate: '2026-08-21',
+  },
+  {
+    slug: 'snowpark-ml',
+    title: 'Snowpark ML の概要',
+    summary: 'Snowflake上で完結する機械学習ワークフロー。前処理・学習を担うModelingと、モデル管理を担うRegistryの2本柱です。',
+    body: `## snowflake.ml.modeling：前処理とトレーニング
+
+Snowpark MLのモデリングAPIは、\`snowflake.ml.modeling\`というモジュールで提供されます。この中の\`snowflake.ml.modeling.preprocessing\`には、\`StandardScaler\`・\`OneHotEncoder\`・\`OrdinalEncoder\`・\`MinMaxScaler\`・\`RobustScaler\`など、scikit-learnで見慣れた前処理クラスに相当するものが揃っており、Snowflakeの分散コンピュート上で実行できます。公式ドキュメントは、既存のオープンソースのコードやライブラリをそのままSnowflake上のモデル学習に使えることを謳っています。
+
+## snowflake.ml.registry：モデルの管理と配信
+
+学習済みモデルを管理する側は\`snowflake.ml.registry\`モジュールで、\`Registry\`クラスを使います。公式ドキュメントは「モデルのバージョン・指標・メタデータを保存し、Python・SQL・REST APIエンドポイントを使った分散推論を提供する」と説明しています。登録したモデルは\`mv.run()\`のような呼び出しでウェアハウス上でのバッチ推論を実行でき、モデルの入出力の型（シグネチャ）やバージョンもRegistry側で管理されます。
+
+## 何が嬉しいか
+
+前処理からモデル管理まで、データをSnowflakeの外に出すことなく一貫して扱える点がSnowpark MLの特徴です。Polarsにはこうした「モデルのバージョン管理・配信」に相当する機能は無く、Polars自体はあくまでローカルのデータフレーム処理ライブラリです。学習・配信をSnowflake上で完結させたい場合の選択肢として位置づけられます。`,
+    relatedEntrySlugs: [],
+    sources: [
+      {
+        label: 'Snowflake Documentation: Snowflake ML - Modeling',
+        url: 'https://docs.snowflake.com/en/developer-guide/snowflake-ml/modeling',
+      },
+      {
+        label: 'Snowflake Documentation: Model Registry Overview',
+        url: 'https://docs.snowflake.com/en/developer-guide/snowflake-ml/model-registry/overview',
+      },
+      {
+        label: 'Snowflake ML API Reference: snowflake.ml.modeling.preprocessing',
+        url: 'https://docs.snowflake.com/en/developer-guide/snowpark-ml/reference/latest/modeling',
+      },
+    ],
+    verifiedDate: '2026-08-21',
+  },
+];

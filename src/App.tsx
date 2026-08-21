@@ -3,8 +3,10 @@ import './App.css';
 import { Home } from './pages/Home';
 import { EntryPage } from './pages/EntryPage';
 import { StaticPage } from './pages/StaticPage';
+import { ConceptPage } from './pages/ConceptPage';
 import { ALL_ENTRIES } from './data/entries';
 import { STATIC_PAGES } from './data/static-pages';
+import { CONCEPTS } from './data/concepts';
 import { BASE, getCurrentPath, href, navigate } from './lib/router';
 
 const SITE_TITLE = 'Snowpark ⇄ Polars 対応表';
@@ -69,6 +71,17 @@ export function App() {
     return (
       <Shell>
         <StaticPage page={staticPage} />
+      </Shell>
+    );
+  }
+
+  const guideMatch = path.match(/^\/guide\/([a-z0-9-]+)\/$/);
+  const concept = guideMatch ? CONCEPTS.find((c) => c.slug === guideMatch[1]) : undefined;
+  if (concept) {
+    applyMeta(`${concept.title}｜${SITE_TITLE}`, concept.summary, path);
+    return (
+      <Shell>
+        <ConceptPage page={concept} />
       </Shell>
     );
   }
