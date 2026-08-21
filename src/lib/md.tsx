@@ -1,11 +1,23 @@
 import type { ReactNode } from 'react';
+import { href } from './router';
 
-// `...` で囲んだインラインコードだけを <code> に変換する。
+// `...` はインラインコード、[text](/path/) はサイト内リンクに変換する。
 function inline(text: string): ReactNode[] {
-  const parts = text.split(/(`[^`]+`)/g);
-  return parts.map((part, i) =>
-    part.startsWith('`') && part.endsWith('`') ? <code key={i}>{part.slice(1, -1)}</code> : part,
-  );
+  const parts = text.split(/(`[^`]+`|\[[^\]]+\]\([^)]+\))/g);
+  return parts.map((part, i) => {
+    if (part.startsWith('`') && part.endsWith('`')) {
+      return <code key={i}>{part.slice(1, -1)}</code>;
+    }
+    const link = part.match(/^\[([^\]]+)\]\(([^)]+)\)$/);
+    if (link) {
+      return (
+        <a key={i} href={href(link[2])}>
+          {link[1]}
+        </a>
+      );
+    }
+    return part;
+  });
 }
 
 function parseTableRow(line: string): string[] {
@@ -16,7 +28,7 @@ function parseTableRow(line: string): string[] {
     .map((cell) => cell.trim());
 }
 
-// static-pages.ts の簡易記法（## 見出し／空行区切り段落／- 箇条書き／|表|）をReact要素へ変換する。
+// static-pages.ts の簡易記法（## 見出し／空行区切り段落／- 箇条書き／|表|／[リンク](/path/)）をReact要素へ変換する。
 // prerender.ts 側は同じ規則を素朴な文字列結合でHTML化する（別実装・同じ規則）。
 export function mdToReact(src: string): ReactNode[] {
   const blocks = src.trim().split(/\n\n+/);

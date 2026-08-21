@@ -154,7 +154,7 @@ for (const c of CONCEPTS) {
     <p style="color:#94a3b8;font-size:0.9rem"><a href="${BASE}/" style="color:#94a3b8">トップ</a> / 基礎知識</p>
     <h1 style="font-size:1.6rem;margin-bottom:8px">${esc(c.title)}</h1>
     <p style="color:#475569">${esc(c.summary)}</p>
-    ${mdToHtml(c.body)}
+    ${mdToHtml(c.body, BASE)}
     ${relatedHtml}
     <h2 style="font-size:1.05rem">出典</h2>
     <ul style="padding-left:20px">${sourcesHtml}</ul>
@@ -181,7 +181,7 @@ console.log(`✓ 基礎知識ページ ${CONCEPTS.length} 件`);
 for (const page of STATIC_PAGES) {
   const fallback = `${shellOpen}
     <h1 style="font-size:1.5rem;margin-bottom:14px">${esc(page.title)}</h1>
-    ${mdToHtml(page.body)}
+    ${mdToHtml(page.body, BASE)}
     ${footerNav}
   ${shellClose}`;
   let html = applyMeta(subTemplateHtml, page.title, page.description, `/${page.slug}/`);

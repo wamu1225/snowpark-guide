@@ -8,9 +8,14 @@ function parseTableRow(line: string): string[] {
     .map((cell) => cell.trim());
 }
 
-export function mdToHtml(src: string): string {
+// mdToHtml(src, base) の base はサイトのBASEパス（例: '/snowpark-guide'）。
+// [text](/path/) 形式のリンクを <a href="{base}/path/"> に変換する。
+export function mdToHtml(src: string, base = ''): string {
   const esc = (s: string) => s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
-  const inlineHtml = (s: string) => esc(s).replace(/`([^`]+)`/g, '<code>$1</code>');
+  const inlineHtml = (s: string) =>
+    esc(s)
+      .replace(/`([^`]+)`/g, '<code>$1</code>')
+      .replace(/\[([^\]]+)\]\(([^)]+)\)/g, (_m, text, path) => `<a href="${base}${path}">${text}</a>`);
   const blocks = src.trim().split(/\n\n+/);
   return blocks
     .map((block) => {
