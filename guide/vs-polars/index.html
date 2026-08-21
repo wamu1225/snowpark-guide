@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" type="image/svg+xml" href="../favicon.svg" />
+    <title>Snowpark と Polars の違い（総論）｜Snowpark ⇄ Polars 対応表</title>
+    <meta
+      name="description"
+      content="Snowpark PythonのDataFrame/Column APIを、Polarsの同等コードと並べて確認できる逆引きリファレンスです。挙動の違いと移行時の落とし穴をメソッドごとに解説します。"
+    />
+    <link rel="canonical" href="https://study-apps.com/snowpark-guide/guide/vs-polars/" />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="Snowpark ⇄ Polars 対応表" />
+    <meta property="og:title" content="Snowpark と Polars の違い（総論）｜Snowpark ⇄ Polars 対応表" />
+    <meta
+      property="og:description"
+      content="Snowpark PythonのDataFrame/Column APIを、Polarsの同等コードと並べて確認できる逆引きリファレンスです。"
+    />
+    <meta property="og:url" content="https://study-apps.com/snowpark-guide/guide/vs-polars/" />
+    <meta property="og:image" content="https://study-apps.com/snowpark-guide/ogp.png" />
+    <meta property="og:locale" content="ja_JP" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Snowpark と Polars の違い（総論）｜Snowpark ⇄ Polars 対応表" />
+    <meta
+      name="twitter:description"
+      content="Snowpark PythonのDataFrame/Column APIを、Polarsの同等コードと並べて確認できる逆引きリファレンスです。"
+    />
+    <meta name="twitter:image" content="https://study-apps.com/snowpark-guide/ogp.png" />
+    <script
+      async
+      src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9102538151148380"
+      crossorigin="anonymous"
+    ></script>
+    <script type="module" crossorigin src="../assets/index-C1YnR5Ok.js"></script>
+    <link rel="stylesheet" crossorigin href="../assets/index-Dq0rmFeK.css">
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","headline":"Snowpark と Polars の違い（総論）","description":"どちらも遅延評価を採用しているが、計算がどこで走るか（クラウドかローカルか）が根本的に異なります。","url":"https://study-apps.com/snowpark-guide/guide/vs-polars/","dateModified":"2026-08-21","inLanguage":"ja"}</script>
+  </head>
+  <body>
+    <div id="root"><div style="max-width:760px;margin:0 auto;padding:24px 16px;font-family:sans-serif;line-height:1.8;color:#0f172a">
+    <p style="color:#94a3b8;font-size:0.9rem"><a href="/snowpark-guide/" style="color:#94a3b8">トップ</a> / 基礎知識</p>
+    <h1 style="font-size:1.6rem;margin-bottom:8px">Snowpark と Polars の違い（総論）</h1>
+    <p style="color:#475569">どちらも遅延評価を採用しているが、計算がどこで走るか（クラウドかローカルか）が根本的に異なります。</p>
+    <h2>「遅延評価」という共通点</h2>
+<p>Snowpark DataFrameとPolars LazyFrameは、どちらも「評価をできるだけ先延ばしにして、まとめて最適化する」という遅延評価の設計思想を共有しています。このサイトの各メソッドページで頻繁に「両方とも遅延評価で……」という説明が出てくるのはこのためです。</p>
+<h2>計算がどこで走るかが違う</h2>
+<p>共通点はここまでで、実行される場所は対照的です。</p>
+<ul><li>**Snowpark**：Snowflakeの分散SQLエンジン上、クラウドのVirtual Warehouseで実行される</li><li>**Polars**：手元のマシンのCPU（またはローカルの分散環境）上、Rustで書かれたPolars自身の実行エンジンがApache Arrow形式のメモリ上で処理する</li></ul>
+<p>Snowparkはネットワークの向こう側にあるクラウドの計算資源を使い、ペタバイト級のデータをマルチノードで処理できます。Polarsは基本的に手元の1台のマシン（マルチコアで並列化）で完結する処理で、外部にデータを送信しません。</p>
+<h2>評価を起動するメソッドの違い</h2>
+<p>遅延評価を実際に実行させる「引き金」のメソッドも異なります。</p>
+<ul><li>**Snowpark**：<code>collect()</code> ／ <code>show()</code> ／ <code>save_as_table()</code> など</li><li>**Polars**：<code>collect()</code> ／ <code>sink_parquet()</code> ／ <code>sink_csv()</code> など（<code>sink_*</code>系はストリーミングで直接ファイルへ書き出す）</li></ul>
+<p>Polars側の <code>collect</code>・<code>sink_parquet</code>・<code>sink_csv</code>・<code>sink_ipc</code>・<code>sink_ndjson</code> は、いずれも <code>LazyFrame</code> に実在するメソッドであることを実機で確認済みです。</p>
+    <h2 style="font-size:1.05rem">関連する関数リファレンス</h2><ul style="padding-left:20px"><li><a href="/snowpark-guide/schema/" style="color:#38bdf8">schema / collect_schema()</a></li><li><a href="/snowpark-guide/columns/" style="color:#38bdf8">columns / collect_schema().names()</a></li></ul>
+    <h2 style="font-size:1.05rem">出典</h2>
+    <ul style="padding-left:20px"><li><a href="https://docs.snowflake.com/en/developer-guide/snowpark/python/working-with-dataframes" style="color:#38bdf8">Snowflake Documentation: Working with DataFrames in Snowpark Python</a></li><li><a href="https://docs.pola.rs/api/python/stable/reference/lazyframe/" style="color:#38bdf8">Polars API Reference: LazyFrame</a></li></ul>
+    <p style="color:#94a3b8;font-size:0.85rem">公式ドキュメントの記載にもとづく解説です（実行検証はしていません）。確認日：2026-08-21</p>
+    <nav style="margin-top:24px;display:flex;gap:16px;flex-wrap:wrap;font-size:0.85rem"><a href="/snowpark-guide/about/" style="color:#94a3b8">このサイトについて</a><a href="/snowpark-guide/privacy/" style="color:#94a3b8">プライバシーポリシー</a></nav>
+  </div></div>
+  </body>
+</html>

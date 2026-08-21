@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" type="image/svg+xml" href="../favicon.svg" />
+    <title>UDF・Vectorized UDF・UDTF・ストアドプロシージャの使い分け｜Snowpark ⇄ Polars 対応表</title>
+    <meta
+      name="description"
+      content="Snowpark PythonのDataFrame/Column APIを、Polarsの同等コードと並べて確認できる逆引きリファレンスです。挙動の違いと移行時の落とし穴をメソッドごとに解説します。"
+    />
+    <link rel="canonical" href="https://study-apps.com/snowpark-guide/guide/udf-udtf-sproc/" />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="Snowpark ⇄ Polars 対応表" />
+    <meta property="og:title" content="UDF・Vectorized UDF・UDTF・ストアドプロシージャの使い分け｜Snowpark ⇄ Polars 対応表" />
+    <meta
+      property="og:description"
+      content="Snowpark PythonのDataFrame/Column APIを、Polarsの同等コードと並べて確認できる逆引きリファレンスです。"
+    />
+    <meta property="og:url" content="https://study-apps.com/snowpark-guide/guide/udf-udtf-sproc/" />
+    <meta property="og:image" content="https://study-apps.com/snowpark-guide/ogp.png" />
+    <meta property="og:locale" content="ja_JP" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="UDF・Vectorized UDF・UDTF・ストアドプロシージャの使い分け｜Snowpark ⇄ Polars 対応表" />
+    <meta
+      name="twitter:description"
+      content="Snowpark PythonのDataFrame/Column APIを、Polarsの同等コードと並べて確認できる逆引きリファレンスです。"
+    />
+    <meta name="twitter:image" content="https://study-apps.com/snowpark-guide/ogp.png" />
+    <script
+      async
+      src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9102538151148380"
+      crossorigin="anonymous"
+    ></script>
+    <script type="module" crossorigin src="../assets/index-C1YnR5Ok.js"></script>
+    <link rel="stylesheet" crossorigin href="../assets/index-Dq0rmFeK.css">
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","headline":"UDF・Vectorized UDF・UDTF・ストアドプロシージャの使い分け","description":"Snowflake上でカスタムロジックを実行する4つの手段を、入出力の形とSQLからの呼び出し方で整理します。","url":"https://study-apps.com/snowpark-guide/guide/udf-udtf-sproc/","dateModified":"2026-08-21","inLanguage":"ja"}</script>
+  </head>
+  <body>
+    <div id="root"><div style="max-width:760px;margin:0 auto;padding:24px 16px;font-family:sans-serif;line-height:1.8;color:#0f172a">
+    <p style="color:#94a3b8;font-size:0.9rem"><a href="/snowpark-guide/" style="color:#94a3b8">トップ</a> / 基礎知識</p>
+    <h1 style="font-size:1.6rem;margin-bottom:8px">UDF・Vectorized UDF・UDTF・ストアドプロシージャの使い分け</h1>
+    <p style="color:#475569">Snowflake上でカスタムロジックを実行する4つの手段を、入出力の形とSQLからの呼び出し方で整理します。</p>
+    <h2>スカラUDF：1行→1つの値</h2>
+<p>スカラUDFは行ごとに呼び出され、1つの値を返す関数です。SELECT句やWHERE句などのSQL式の中から直接呼び出せます。Python UDFの場合、1行ずつPythonの関数を呼び出すため、行数が多いとPythonの呼び出しオーバーヘッドが積み重なります。</p>
+<h2>Vectorized UDF：複数行をまとめて処理</h2>
+<p>Vectorized UDF（バッチUDF）は、複数行をPandasのDataFrameやSeriesとしてまとめて受け取り、まとめて結果を返す仕組みです。Snowflake公式ドキュメントは「Vectorized Python UDFは、入力行のバッチをPandas DataFrameとして受け取り、結果のバッチをPandas配列またはSeriesとして返すPython関数を定義できる」と説明しています。1行ずつPythonを呼び出すオーバーヘッドを避けられるため、機械学習の推論のようにバッチ処理に向く場面で特に有効です。</p>
+<h2>UDTF：1行(以上)の入力→複数行の出力</h2>
+<p>UDTF（ユーザー定義テーブル関数）は、入力に対して0行以上の複数行を出力できる関数です。公式ドキュメントによれば、UDTFのハンドラクラスは行ごとに呼び出される<code>process</code>メソッドを実装し、そこでタプルとして表形式の値を返します。SQLのFROM句から呼び出す点がスカラUDFと異なります。</p>
+<h2>ストアドプロシージャ：制御フローそのものをパッケージ化</h2>
+<p>ストアドプロシージャ（SPROC）は、条件分岐・ループ・トランザクション管理・DDL/DMLの実行といった「処理の手順そのもの」をパッケージ化したものです。SQL式の中から呼び出すのではなく、<code>CALL</code>文で独立して実行します。UDF・UDTFにはできないDDL/DMLの実行が可能な点が大きな違いです。</p>
+<h2>使い分けの早見表</h2>
+<table><thead><tr><th>種類</th><th>主な目的</th><th>戻り値</th><th>SQL式内から直接呼べるか</th><th>DDL/DMLの実行</th></tr></thead><tbody><tr><td>スカラUDF</td><td>行ごとの計算・変換</td><td>単一の値</td><td>可能</td><td>不可</td></tr><tr><td>Vectorized UDF</td><td>バッチ単位の高速演算</td><td>単一の値（バッチ処理）</td><td>可能</td><td>不可</td></tr><tr><td>UDTF</td><td>表構造への展開・変換</td><td>複数行・複数列</td><td>可能（FROM句内）</td><td>不可</td></tr><tr><td>ストアドプロシージャ</td><td>パイプライン制御・自動化</td><td>任意</td><td>不可（CALL文）</td><td>可能</td></tr></tbody></table>
+<p>Polarsはローカルで動くライブラリなので、この4分類そのものが存在しません。Polarsで「カスタムロジック」というと、<code>map_elements</code>のようなメソッドにPython関数を渡す形が中心で、SQLエンジン側にプッシュダウンして実行させるという概念がそもそもありません。</p>
+    
+    <h2 style="font-size:1.05rem">出典</h2>
+    <ul style="padding-left:20px"><li><a href="https://docs.snowflake.com/en/developer-guide/snowpark/python/creating-udfs" style="color:#38bdf8">Snowflake Documentation: Creating UDFs for DataFrames in Python</a></li><li><a href="https://docs.snowflake.com/en/developer-guide/snowpark/python/creating-udtfs" style="color:#38bdf8">Snowflake Documentation: Creating UDTFs for DataFrames in Python</a></li></ul>
+    <p style="color:#94a3b8;font-size:0.85rem">公式ドキュメントの記載にもとづく解説です（実行検証はしていません）。確認日：2026-08-21</p>
+    <nav style="margin-top:24px;display:flex;gap:16px;flex-wrap:wrap;font-size:0.85rem"><a href="/snowpark-guide/about/" style="color:#94a3b8">このサイトについて</a><a href="/snowpark-guide/privacy/" style="color:#94a3b8">プライバシーポリシー</a></nav>
+  </div></div>
+  </body>
+</html>
