@@ -1,22 +1,36 @@
 import type { ReactNode } from 'react';
 import { href } from './router';
 
-// `...` はインラインコード、[text](/path/) はサイト内リンクに変換する。
-function inline(text: string): ReactNode[] {
+// `...` （インラインコード）と [text](/path/) （サイト内リンク）を変換する。**...**の内側でも使えるよう、
+// inline() から再帰的に呼ばれる。
+function codeAndLink(text: string, prefix: string): ReactNode[] {
   const parts = text.split(/(`[^`]+`|\[[^\]]+\]\([^)]+\))/g);
   return parts.map((part, i) => {
     if (part.startsWith('`') && part.endsWith('`')) {
-      return <code key={i}>{part.slice(1, -1)}</code>;
+      return <code key={`${prefix}c${i}`}>{part.slice(1, -1)}</code>;
     }
     const link = part.match(/^\[([^\]]+)\]\(([^)]+)\)$/);
     if (link) {
       return (
-        <a key={i} href={href(link[2])}>
+        <a key={`${prefix}l${i}`} href={href(link[2])}>
           {link[1]}
         </a>
       );
     }
     return part;
+  });
+}
+
+// **...** （強調）を最外側として先に切り出し、内側は codeAndLink() で処理する
+// （`**Polars 1.43.2では\`LazyFrame.pivot()\`を直接呼び出せる**` のように強調がコードを包む形に対応するため）。
+// Entry型のdifference/pitfallフィールドもこの記法を使うため、EntryPage/prerenderからも呼ぶ。
+export function inline(text: string): ReactNode[] {
+  const parts = text.split(/(\*\*[^*]+\*\*)/g);
+  return parts.flatMap((part, i): ReactNode[] => {
+    if (part.startsWith('**') && part.endsWith('**')) {
+      return [<strong key={`b${i}`}>{codeAndLink(part.slice(2, -2), `b${i}-`)}</strong>];
+    }
+    return part ? codeAndLink(part, `p${i}-`) : [];
   });
 }
 

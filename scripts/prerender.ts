@@ -7,7 +7,7 @@ import { ALL_ENTRIES } from '../src/data/entries';
 import { CATEGORIES } from '../src/data/types';
 import { STATIC_PAGES } from '../src/data/static-pages';
 import { CONCEPTS } from '../src/data/concepts';
-import { mdToHtml } from '../src/lib/md-html';
+import { mdToHtml, inlineHtml } from '../src/lib/md-html';
 
 const DIST_DIR = path.resolve(process.cwd(), 'dist');
 const INDEX_HTML_PATH = path.join(DIST_DIR, 'index.html');
@@ -111,9 +111,9 @@ for (const e of ALL_ENTRIES) {
       </div>
     </div>
     <h2 style="font-size:1.05rem">挙動・設計の違い</h2>
-    <p>${esc(e.difference)}</p>
+    <p>${inlineHtml(e.difference, BASE)}</p>
     <h2 style="font-size:1.05rem;color:#b45309">移行時の落とし穴</h2>
-    <p>${esc(e.pitfall)}</p>
+    <p>${inlineHtml(e.pitfall, BASE)}</p>
     <h2 style="font-size:1.05rem">出典・検証情報</h2>
     <ul style="padding-left:20px">
       <li><a href="${e.snowparkDocUrl}" style="color:#38bdf8">Snowpark 公式リファレンス（${esc(e.title)}）</a></li>

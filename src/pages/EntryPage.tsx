@@ -2,6 +2,7 @@ import type { Entry } from '../data/types';
 import { CATEGORIES } from '../data/types';
 import { CONCEPTS } from '../data/concepts';
 import { href } from '../lib/router';
+import { inline } from '../lib/md';
 
 export function EntryPage({ entry }: { entry: Entry }) {
   const category = CATEGORIES.find((c) => c.id === entry.category);
@@ -33,12 +34,12 @@ export function EntryPage({ entry }: { entry: Entry }) {
 
       <section className="entry-section">
         <h2>挙動・設計の違い</h2>
-        <p>{entry.difference}</p>
+        <p>{inline(entry.difference)}</p>
       </section>
 
       <section className="entry-section entry-section--pitfall">
         <h2>移行時の落とし穴</h2>
-        <p>{entry.pitfall}</p>
+        <p>{inline(entry.pitfall)}</p>
       </section>
 
       {relatedConcepts.length > 0 && (
