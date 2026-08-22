@@ -32,7 +32,7 @@
       src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9102538151148380"
       crossorigin="anonymous"
     ></script>
-    <script type="module" crossorigin src="./assets/index-DligZDmi.js"></script>
+    <script type="module" crossorigin src="./assets/index-dKg_GxE8.js"></script>
     <link rel="stylesheet" crossorigin href="./assets/index-Dq0rmFeK.css">
   <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebSite","name":"Snowpark ⇄ Polars 対応表","url":"https://study-apps.com/snowpark-guide/","description":"Snowpark PythonのDataFrame/Column APIを、Polarsの同等コードと並べて確認できる逆引きリファレンスです。挙動の違いと移行時の落とし穴をメソッドごとに解説します。","inLanguage":"ja"}</script>
   </head>
@@ -69,7 +69,12 @@
 <li><a href="/snowpark-guide/max/" style="color:#38bdf8">max</a> ── 列の最大値を求める。</li>
 <li><a href="/snowpark-guide/pivot/" style="color:#38bdf8">pivot</a> ── 行の値を列に展開する（縦持ちから横持ちへ）。</li>
 <li><a href="/snowpark-guide/unpivot/" style="color:#38bdf8">unpivot</a> ── pivotの逆。複数列を1つの列にまとめる（横持ちから縦持ちへ）。</li></ul></section>
-<section style="margin-top:24px"><h2 style="font-size:1.1rem">結合・集合演算</h2><p style="color:#94a3b8;font-size:0.9rem">複数のテーブルを1つにする</p><ul style="padding-left:20px"><li style="color:#94a3b8">準備中</li></ul></section>
+<section style="margin-top:24px"><h2 style="font-size:1.1rem">結合・集合演算</h2><p style="color:#94a3b8;font-size:0.9rem">複数のテーブルを1つにする</p><ul style="padding-left:20px"><li><a href="/snowpark-guide/join/" style="color:#38bdf8">join</a> ── 2つのDataFrameを結合する。</li>
+<li><a href="/snowpark-guide/union/" style="color:#38bdf8">union</a> ── 2つのDataFrameを縦に連結し、重複行を取り除く。</li>
+<li><a href="/snowpark-guide/union-all/" style="color:#38bdf8">union_all / unionAll</a> ── 2つのDataFrameを縦に連結する。重複行はそのまま残す。</li>
+<li><a href="/snowpark-guide/union-by-name/" style="color:#38bdf8">union_by_name / unionByName</a> ── 列の並び順ではなく列名を基準に2つのDataFrameを連結する。</li>
+<li><a href="/snowpark-guide/intersect/" style="color:#38bdf8">intersect</a> ── 2つのDataFrameの両方に存在する行だけを残す（積集合）。</li>
+<li><a href="/snowpark-guide/subtract/" style="color:#38bdf8">subtract / except_</a> ── 片方のDataFrameから、もう片方にも存在する行を取り除く（差集合）。</li></ul></section>
 <section style="margin-top:24px"><h2 style="font-size:1.1rem">ソート</h2><p style="color:#94a3b8;font-size:0.9rem">並び順を決める</p><ul style="padding-left:20px"><li style="color:#94a3b8">準備中</li></ul></section>
 <section style="margin-top:24px"><h2 style="font-size:1.1rem">式評価・文字列・型変換</h2><p style="color:#94a3b8;font-size:0.9rem">値を計算する・文字列を扱う・型を変える</p><ul style="padding-left:20px"><li style="color:#94a3b8">準備中</li></ul></section>
 <section style="margin-top:24px"><h2 style="font-size:1.1rem">ウィンドウ関数</h2><p style="color:#94a3b8;font-size:0.9rem">行をまたいだ計算（順位・累積・移動平均）</p><ul style="padding-left:20px"><li style="color:#94a3b8">準備中</li></ul></section>

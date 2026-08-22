@@ -24,6 +24,12 @@
   <url><loc>https://study-apps.com/snowpark-guide/max/</loc><lastmod>2026-08-22</lastmod><priority>0.8</priority></url>
   <url><loc>https://study-apps.com/snowpark-guide/pivot/</loc><lastmod>2026-08-22</lastmod><priority>0.8</priority></url>
   <url><loc>https://study-apps.com/snowpark-guide/unpivot/</loc><lastmod>2026-08-22</lastmod><priority>0.8</priority></url>
+  <url><loc>https://study-apps.com/snowpark-guide/join/</loc><lastmod>2026-08-22</lastmod><priority>0.8</priority></url>
+  <url><loc>https://study-apps.com/snowpark-guide/union/</loc><lastmod>2026-08-22</lastmod><priority>0.8</priority></url>
+  <url><loc>https://study-apps.com/snowpark-guide/union-all/</loc><lastmod>2026-08-22</lastmod><priority>0.8</priority></url>
+  <url><loc>https://study-apps.com/snowpark-guide/union-by-name/</loc><lastmod>2026-08-22</lastmod><priority>0.8</priority></url>
+  <url><loc>https://study-apps.com/snowpark-guide/intersect/</loc><lastmod>2026-08-22</lastmod><priority>0.8</priority></url>
+  <url><loc>https://study-apps.com/snowpark-guide/subtract/</loc><lastmod>2026-08-22</lastmod><priority>0.8</priority></url>
   <url><loc>https://study-apps.com/snowpark-guide/guide/architecture/</loc><lastmod>2026-08-22</lastmod><priority>0.7</priority></url>
   <url><loc>https://study-apps.com/snowpark-guide/guide/vs-spark/</loc><lastmod>2026-08-22</lastmod><priority>0.7</priority></url>
   <url><loc>https://study-apps.com/snowpark-guide/guide/vs-polars/</loc><lastmod>2026-08-22</lastmod><priority>0.7</priority></url>

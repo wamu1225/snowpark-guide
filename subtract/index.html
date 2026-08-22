@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" type="image/svg+xml" href="../favicon.svg" />
+    <title>subtract / except_｜Snowpark ⇄ Polars 対応表</title>
+    <meta
+      name="description"
+      content="Snowpark PythonのDataFrame/Column APIを、Polarsの同等コードと並べて確認できる逆引きリファレンスです。挙動の違いと移行時の落とし穴をメソッドごとに解説します。"
+    />
+    <link rel="canonical" href="https://study-apps.com/snowpark-guide/subtract/" />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="Snowpark ⇄ Polars 対応表" />
+    <meta property="og:title" content="subtract / except_｜Snowpark ⇄ Polars 対応表" />
+    <meta
+      property="og:description"
+      content="Snowpark PythonのDataFrame/Column APIを、Polarsの同等コードと並べて確認できる逆引きリファレンスです。"
+    />
+    <meta property="og:url" content="https://study-apps.com/snowpark-guide/subtract/" />
+    <meta property="og:image" content="https://study-apps.com/snowpark-guide/ogp.png" />
+    <meta property="og:locale" content="ja_JP" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="subtract / except_｜Snowpark ⇄ Polars 対応表" />
+    <meta
+      name="twitter:description"
+      content="Snowpark PythonのDataFrame/Column APIを、Polarsの同等コードと並べて確認できる逆引きリファレンスです。"
+    />
+    <meta name="twitter:image" content="https://study-apps.com/snowpark-guide/ogp.png" />
+    <script
+      async
+      src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9102538151148380"
+      crossorigin="anonymous"
+    ></script>
+    <script type="module" crossorigin src="../assets/index-dKg_GxE8.js"></script>
+    <link rel="stylesheet" crossorigin href="../assets/index-Dq0rmFeK.css">
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"TechArticle","headline":"subtract / except_","description":"片方のDataFrameから、もう片方にも存在する行を取り除く（差集合）。 Snowparkでの書き方とPolarsでの書き方を並べて解説します。","url":"https://study-apps.com/snowpark-guide/subtract/","dateModified":"2026-08-23","inLanguage":"ja"}</script>
+  </head>
+  <body>
+    <div id="root"><div style="max-width:760px;margin:0 auto;padding:24px 16px;font-family:sans-serif;line-height:1.8;color:#0f172a">
+    <p style="color:#94a3b8;font-size:0.9rem"><a href="/snowpark-guide/" style="color:#94a3b8">トップ</a> / 結合・集合演算</p>
+    <h1 style="font-family:monospace;font-size:1.6rem;margin-bottom:8px">subtract / except_</h1>
+    <p style="color:#475569">片方のDataFrameから、もう片方にも存在する行を取り除く（差集合）。</p>
+    <div style="display:flex;flex-wrap:wrap;gap:16px;margin:20px 0">
+      <div style="flex:1;min-width:260px">
+        <h2 style="color:#0284c7;font-size:0.9rem">SNOWPARK</h2>
+        <pre style="background:#0f172a;color:#e2e8f0;border-radius:10px;padding:14px;overflow-x:auto"><code>df1.subtract(df2)  # df1.except_(df2) でも同じ</code></pre>
+      </div>
+      <div style="flex:1;min-width:260px">
+        <h2 style="color:#c026d3;font-size:0.9rem">POLARS</h2>
+        <pre style="background:#0f172a;color:#e2e8f0;border-radius:10px;padding:14px;overflow-x:auto"><code>ldf1.join(ldf2, on=ldf1.collect_schema().names(), how=&quot;anti&quot;)</code></pre>
+      </div>
+    </div>
+    <h2 style="font-size:1.05rem">挙動・設計の違い</h2>
+    <p>SnowparkはSQLのEXCEPT（別名MINUS）に変換される。<code>subtract</code>と<code>except_</code>はSnowpark側の別名で、どちらを呼んでも同じ結果になる。Polars側は全列をキーにした<code>anti</code>結合（もう片方に一致する行を除外する結合）で代用する。実行して確認済み。</p>
+    <h2 style="font-size:1.05rem;color:#b45309">移行時の落とし穴</h2>
+    <p><code>except_</code>という名前は、Pythonの予約語<code>except</code>と衝突しないよう末尾にアンダースコアが付いている。うっかり<code>except</code>と書くとPythonの構文エラーになる。</p>
+    <h2 style="font-size:1.05rem">出典・検証情報</h2>
+    <ul style="padding-left:20px">
+      <li><a href="https://docs.snowflake.com/en/developer-guide/snowpark/reference/python/latest/snowpark/api/snowflake.snowpark.DataFrame.except_" style="color:#38bdf8">Snowpark 公式リファレンス（subtract / except_）</a></li>
+      <li><a href="https://docs.pola.rs/api/python/stable/reference/lazyframe/api/polars.LazyFrame.join.html" style="color:#38bdf8">Polars 公式リファレンス（subtract / except_）</a></li>
+    </ul>
+    <p style="color:#94a3b8;font-size:0.85rem">Polars 1.43.2 で実行確認 / Snowpark Python SDK 1.54.0 で静的検証（2026-08-23）</p>
+    <nav style="margin-top:24px;display:flex;gap:16px;flex-wrap:wrap;font-size:0.85rem"><a href="/snowpark-guide/about/" style="color:#94a3b8">このサイトについて</a><a href="/snowpark-guide/privacy/" style="color:#94a3b8">プライバシーポリシー</a></nav>
+  </div></div>
+  </body>
+</html>

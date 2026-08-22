@@ -4,24 +4,24 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="icon" type="image/svg+xml" href="../favicon.svg" />
-    <title>max｜Snowpark ⇄ Polars 対応表</title>
+    <title>union｜Snowpark ⇄ Polars 対応表</title>
     <meta
       name="description"
       content="Snowpark PythonのDataFrame/Column APIを、Polarsの同等コードと並べて確認できる逆引きリファレンスです。挙動の違いと移行時の落とし穴をメソッドごとに解説します。"
     />
-    <link rel="canonical" href="https://study-apps.com/snowpark-guide/max/" />
+    <link rel="canonical" href="https://study-apps.com/snowpark-guide/union/" />
     <meta property="og:type" content="website" />
     <meta property="og:site_name" content="Snowpark ⇄ Polars 対応表" />
-    <meta property="og:title" content="max｜Snowpark ⇄ Polars 対応表" />
+    <meta property="og:title" content="union｜Snowpark ⇄ Polars 対応表" />
     <meta
       property="og:description"
       content="Snowpark PythonのDataFrame/Column APIを、Polarsの同等コードと並べて確認できる逆引きリファレンスです。"
     />
-    <meta property="og:url" content="https://study-apps.com/snowpark-guide/max/" />
+    <meta property="og:url" content="https://study-apps.com/snowpark-guide/union/" />
     <meta property="og:image" content="https://study-apps.com/snowpark-guide/ogp.png" />
     <meta property="og:locale" content="ja_JP" />
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content="max｜Snowpark ⇄ Polars 対応表" />
+    <meta name="twitter:title" content="union｜Snowpark ⇄ Polars 対応表" />
     <meta
       name="twitter:description"
       content="Snowpark PythonのDataFrame/Column APIを、Polarsの同等コードと並べて確認できる逆引きリファレンスです。"
@@ -34,33 +34,33 @@
     ></script>
     <script type="module" crossorigin src="../assets/index-dKg_GxE8.js"></script>
     <link rel="stylesheet" crossorigin href="../assets/index-Dq0rmFeK.css">
-  <script type="application/ld+json">{"@context":"https://schema.org","@type":"TechArticle","headline":"max","description":"列の最大値を求める。 Snowparkでの書き方とPolarsでの書き方を並べて解説します。","url":"https://study-apps.com/snowpark-guide/max/","dateModified":"2026-08-22","inLanguage":"ja"}</script>
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"TechArticle","headline":"union","description":"2つのDataFrameを縦に連結し、重複行を取り除く。 Snowparkでの書き方とPolarsでの書き方を並べて解説します。","url":"https://study-apps.com/snowpark-guide/union/","dateModified":"2026-08-23","inLanguage":"ja"}</script>
   </head>
   <body>
     <div id="root"><div style="max-width:760px;margin:0 auto;padding:24px 16px;font-family:sans-serif;line-height:1.8;color:#0f172a">
-    <p style="color:#94a3b8;font-size:0.9rem"><a href="/snowpark-guide/" style="color:#94a3b8">トップ</a> / 集約・構造変換</p>
-    <h1 style="font-family:monospace;font-size:1.6rem;margin-bottom:8px">max</h1>
-    <p style="color:#475569">列の最大値を求める。</p>
+    <p style="color:#94a3b8;font-size:0.9rem"><a href="/snowpark-guide/" style="color:#94a3b8">トップ</a> / 結合・集合演算</p>
+    <h1 style="font-family:monospace;font-size:1.6rem;margin-bottom:8px">union</h1>
+    <p style="color:#475569">2つのDataFrameを縦に連結し、重複行を取り除く。</p>
     <div style="display:flex;flex-wrap:wrap;gap:16px;margin:20px 0">
       <div style="flex:1;min-width:260px">
         <h2 style="color:#0284c7;font-size:0.9rem">SNOWPARK</h2>
-        <pre style="background:#0f172a;color:#e2e8f0;border-radius:10px;padding:14px;overflow-x:auto"><code>df.select(max_(&quot;age&quot;))</code></pre>
+        <pre style="background:#0f172a;color:#e2e8f0;border-radius:10px;padding:14px;overflow-x:auto"><code>df1.union(df2)</code></pre>
       </div>
       <div style="flex:1;min-width:260px">
         <h2 style="color:#c026d3;font-size:0.9rem">POLARS</h2>
-        <pre style="background:#0f172a;color:#e2e8f0;border-radius:10px;padding:14px;overflow-x:auto"><code>ldf.select(pl.col(&quot;age&quot;).max())</code></pre>
+        <pre style="background:#0f172a;color:#e2e8f0;border-radius:10px;padding:14px;overflow-x:auto"><code>pl.concat([ldf1, ldf2]).unique()</code></pre>
       </div>
     </div>
     <h2 style="font-size:1.05rem">挙動・設計の違い</h2>
-    <p>どちらも対応するSQL/Expressionの最大値集約に変換される。挙動の違いは無い。</p>
+    <p>SnowparkのunionはSQLのUNION（重複排除あり）を発行する。Polarsの<code>pl.concat</code>は既定では単純な垂直連結だけを行い、重複排除はしないため<code>.unique()</code>を明示的に呼ぶ必要がある。</p>
     <h2 style="font-size:1.05rem;color:#b45309">移行時の落とし穴</h2>
-    <p><code>sum</code>・<code>min</code>と同じ理由で、Snowparkの<code>max</code>もPythonの組み込みと衝突するため別名インポートが定石。</p>
+    <p>Snowparkの<code>union</code>は重複を取り除く点が、他の多くのフレームワークの「union」という言葉から連想する挙動（単純な連結）と異なる。「重複を残したい」ときは次に説明する<code>union_all</code>を使う。</p>
     <h2 style="font-size:1.05rem">出典・検証情報</h2>
     <ul style="padding-left:20px">
-      <li><a href="https://docs.snowflake.com/en/developer-guide/snowpark/reference/python/latest/snowpark/api/snowflake.snowpark.functions.max" style="color:#38bdf8">Snowpark 公式リファレンス（max）</a></li>
-      <li><a href="https://docs.pola.rs/api/python/stable/reference/expressions/api/polars.Expr.max.html" style="color:#38bdf8">Polars 公式リファレンス（max）</a></li>
+      <li><a href="https://docs.snowflake.com/en/developer-guide/snowpark/reference/python/latest/snowpark/api/snowflake.snowpark.DataFrame.union" style="color:#38bdf8">Snowpark 公式リファレンス（union）</a></li>
+      <li><a href="https://docs.pola.rs/api/python/stable/reference/api/polars.concat.html" style="color:#38bdf8">Polars 公式リファレンス（union）</a></li>
     </ul>
-    <p style="color:#94a3b8;font-size:0.85rem">Polars 1.43.2 で実行確認 / Snowpark Python SDK 1.54.0 で静的検証（2026-08-22）</p>
+    <p style="color:#94a3b8;font-size:0.85rem">Polars 1.43.2 で実行確認 / Snowpark Python SDK 1.54.0 で静的検証（2026-08-23）</p>
     <nav style="margin-top:24px;display:flex;gap:16px;flex-wrap:wrap;font-size:0.85rem"><a href="/snowpark-guide/about/" style="color:#94a3b8">このサイトについて</a><a href="/snowpark-guide/privacy/" style="color:#94a3b8">プライバシーポリシー</a></nav>
   </div></div>
   </body>
