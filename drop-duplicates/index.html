@@ -32,7 +32,7 @@
       src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9102538151148380"
       crossorigin="anonymous"
     ></script>
-    <script type="module" crossorigin src="../assets/index-RWsk7wAu.js"></script>
+    <script type="module" crossorigin src="../assets/index-DligZDmi.js"></script>
     <link rel="stylesheet" crossorigin href="../assets/index-Dq0rmFeK.css">
   <script type="application/ld+json">{"@context":"https://schema.org","@type":"TechArticle","headline":"drop_duplicates","description":"指定した列の値が一致する行を重複とみなして間引く。 Snowparkでの書き方とPolarsでの書き方を並べて解説します。","url":"https://study-apps.com/snowpark-guide/drop-duplicates/","dateModified":"2026-08-21","inLanguage":"ja"}</script>
   </head>
@@ -52,7 +52,7 @@
       </div>
     </div>
     <h2 style="font-size:1.05rem">挙動・設計の違い</h2>
-    <p>Snowparkは内部的に`ROW_NUMBER() OVER (PARTITION BY user_id ORDER BY ...)`のようなウィンドウ関数を含むサブクエリに展開して重複行を除く。Polarsは指定列のハッシュ値をもとに、`keep`引数で指定した方針（最初/最後/いずれか1件）で1行だけを残す。</p>
+    <p>Snowparkは内部的に<code>ROW_NUMBER() OVER (PARTITION BY user_id ORDER BY ...)</code>のようなウィンドウ関数を含むサブクエリに展開して重複行を除く。Polarsは指定列のハッシュ値をもとに、<code>keep</code>引数で指定した方針（最初/最後/いずれか1件）で1行だけを残す。</p>
     <h2 style="font-size:1.05rem;color:#b45309">移行時の落とし穴</h2>
     <p>事前に明示的なソートをしていない場合、複数の重複行のうち「どの1行が残るか」の決定ロジックがエンジン間で異なる可能性がある。特定の行を残したい場合は、drop_duplicates／uniqueの前に必ずソートしておく。</p>
     <h2 style="font-size:1.05rem">出典・検証情報</h2>

@@ -32,7 +32,7 @@
       src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9102538151148380"
       crossorigin="anonymous"
     ></script>
-    <script type="module" crossorigin src="../assets/index-RWsk7wAu.js"></script>
+    <script type="module" crossorigin src="../assets/index-DligZDmi.js"></script>
     <link rel="stylesheet" crossorigin href="../assets/index-Dq0rmFeK.css">
   <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","headline":"Snowparkのアーキテクチャと実行の仕組み","description":"コードはどこで実行されるのか。遅延評価とSQLへの変換・プッシュダウンの仕組みを説明します。","url":"https://study-apps.com/snowpark-guide/guide/architecture/","dateModified":"2026-08-21","inLanguage":"ja"}</script>
   </head>
@@ -45,7 +45,7 @@
 <p>Snowpark DataFrameに対して <code>select</code>・<code>filter</code>・<code>join</code> のような変換メソッドを呼び出しても、その時点ではSnowflakeへリクエストは送られません。Snowflake公式ドキュメントは「DataFrameは、データを取得するために評価される必要のあるクエリのようなものである」と説明しており、変換メソッドは「SQL文の組み立て方を指定するだけで、Snowflakeデータベースからデータを取得しない」と明記しています。</p>
 <p>呼び出された変換は、クライアント側で内部的な論理プラン（実行計画）として積み上がっていきます。この間、Snowflake側では何も処理が走っていません。</p>
 <h2>アクションメソッドが実行の引き金になる</h2>
-<p>実際にSnowflake側で処理が走るのは、<code>collect()</code>・<code>count()</code>・<code>show()</code>・<code>save_as_table()</code> のような**アクションメソッド**を呼んだ瞬間です。ここで初めて、それまで積み上げられた変換の内容がSQL文へと変換され、Snowflakeの分散クエリエンジン（Virtual Warehouse）に送信されて実行されます。</p>
+<p>実際にSnowflake側で処理が走るのは、<code>collect()</code>・<code>count()</code>・<code>show()</code>・<code>save_as_table()</code> のような<strong>アクションメソッド</strong>を呼んだ瞬間です。ここで初めて、それまで積み上げられた変換の内容がSQL文へと変換され、Snowflakeの分散クエリエンジン（Virtual Warehouse）に送信されて実行されます。</p>
 <p>この「変換は溜める・アクションで初めて動く」という順序を知らないと、「<code>select</code> や <code>filter</code> を書いた時点で何かが実行されているはず」という誤った直感でコードを読んでしまい、パフォーマンス上のボトルネックがどこにあるかを見誤ります。</p>
 <h2>なぜこの設計になっているか</h2>
 <p>変換をSQLへまとめて変換してからSnowflakeへ送ることで、Snowflake側のクエリオプティマイザが変換全体を見渡して最適化できます。逐次的に1行ずつ処理を送るのではなく、まとまった単位で送ることで、データを不必要にクライアントへ転送せずに済み、ペタバイト規模のデータでも同じコードで処理できます。</p>

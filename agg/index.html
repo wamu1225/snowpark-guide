@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" type="image/svg+xml" href="../favicon.svg" />
+    <title>agg｜Snowpark ⇄ Polars 対応表</title>
+    <meta
+      name="description"
+      content="Snowpark PythonのDataFrame/Column APIを、Polarsの同等コードと並べて確認できる逆引きリファレンスです。挙動の違いと移行時の落とし穴をメソッドごとに解説します。"
+    />
+    <link rel="canonical" href="https://study-apps.com/snowpark-guide/agg/" />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="Snowpark ⇄ Polars 対応表" />
+    <meta property="og:title" content="agg｜Snowpark ⇄ Polars 対応表" />
+    <meta
+      property="og:description"
+      content="Snowpark PythonのDataFrame/Column APIを、Polarsの同等コードと並べて確認できる逆引きリファレンスです。"
+    />
+    <meta property="og:url" content="https://study-apps.com/snowpark-guide/agg/" />
+    <meta property="og:image" content="https://study-apps.com/snowpark-guide/ogp.png" />
+    <meta property="og:locale" content="ja_JP" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="agg｜Snowpark ⇄ Polars 対応表" />
+    <meta
+      name="twitter:description"
+      content="Snowpark PythonのDataFrame/Column APIを、Polarsの同等コードと並べて確認できる逆引きリファレンスです。"
+    />
+    <meta name="twitter:image" content="https://study-apps.com/snowpark-guide/ogp.png" />
+    <script
+      async
+      src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9102538151148380"
+      crossorigin="anonymous"
+    ></script>
+    <script type="module" crossorigin src="../assets/index-DligZDmi.js"></script>
+    <link rel="stylesheet" crossorigin href="../assets/index-Dq0rmFeK.css">
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"TechArticle","headline":"agg","description":"group_byで作ったグループごとに、集約の計算をまとめて指定する。 Snowparkでの書き方とPolarsでの書き方を並べて解説します。","url":"https://study-apps.com/snowpark-guide/agg/","dateModified":"2026-08-22","inLanguage":"ja"}</script>
+  </head>
+  <body>
+    <div id="root"><div style="max-width:760px;margin:0 auto;padding:24px 16px;font-family:sans-serif;line-height:1.8;color:#0f172a">
+    <p style="color:#94a3b8;font-size:0.9rem"><a href="/snowpark-guide/" style="color:#94a3b8">トップ</a> / 集約・構造変換</p>
+    <h1 style="font-family:monospace;font-size:1.6rem;margin-bottom:8px">agg</h1>
+    <p style="color:#475569">group_byで作ったグループごとに、集約の計算をまとめて指定する。</p>
+    <div style="display:flex;flex-wrap:wrap;gap:16px;margin:20px 0">
+      <div style="flex:1;min-width:260px">
+        <h2 style="color:#0284c7;font-size:0.9rem">SNOWPARK</h2>
+        <pre style="background:#0f172a;color:#e2e8f0;border-radius:10px;padding:14px;overflow-x:auto"><code>df.group_by(&quot;department&quot;).agg(sum_(&quot;salary&quot;).alias(&quot;total_sal&quot;), avg(&quot;age&quot;))</code></pre>
+      </div>
+      <div style="flex:1;min-width:260px">
+        <h2 style="color:#c026d3;font-size:0.9rem">POLARS</h2>
+        <pre style="background:#0f172a;color:#e2e8f0;border-radius:10px;padding:14px;overflow-x:auto"><code>ldf.group_by(&quot;department&quot;).agg(pl.col(&quot;salary&quot;).sum().alias(&quot;total_sal&quot;), pl.col(&quot;age&quot;).mean())</code></pre>
+      </div>
+    </div>
+    <h2 style="font-size:1.05rem">挙動・設計の違い</h2>
+    <p>SnowparkはGROUP BYを含む集約SQLに変換される。Polarsはグループごとの集約計算をマルチスレッドで並列実行し、単純な合計・平均だけでなく任意の複雑な式（フィルタ済みの合計など）もExpressionとしてそのまま書ける。</p>
+    <h2 style="font-size:1.05rem;color:#b45309">移行時の落とし穴</h2>
+    <p>Polarsでは複数の集約式を渡すとき、<code>.agg(式1, 式2)</code>のように可変長引数で渡す書き方が現行版では一般的（リストでまとめて渡す古い書き方も動くが、可変長引数の方が読みやすい）。実行して確認したところ、複数式を渡した場合も1回のgroup_byで正しく集計される。</p>
+    <h2 style="font-size:1.05rem">出典・検証情報</h2>
+    <ul style="padding-left:20px">
+      <li><a href="https://docs.snowflake.com/en/developer-guide/snowpark/reference/python/latest/snowpark/api/snowflake.snowpark.RelationalGroupedDataFrame.agg" style="color:#38bdf8">Snowpark 公式リファレンス（agg）</a></li>
+      <li><a href="https://docs.pola.rs/api/python/stable/reference/lazyframe/api/polars.lazyframe.group_by.LazyGroupBy.agg.html" style="color:#38bdf8">Polars 公式リファレンス（agg）</a></li>
+    </ul>
+    <p style="color:#94a3b8;font-size:0.85rem">Polars 1.43.2 で実行確認 / Snowpark Python SDK 1.54.0 で静的検証（2026-08-22）</p>
+    <nav style="margin-top:24px;display:flex;gap:16px;flex-wrap:wrap;font-size:0.85rem"><a href="/snowpark-guide/about/" style="color:#94a3b8">このサイトについて</a><a href="/snowpark-guide/privacy/" style="color:#94a3b8">プライバシーポリシー</a></nav>
+  </div></div>
+  </body>
+</html>

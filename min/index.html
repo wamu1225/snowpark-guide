@@ -4,24 +4,24 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="icon" type="image/svg+xml" href="../favicon.svg" />
-    <title>col｜Snowpark ⇄ Polars 対応表</title>
+    <title>min｜Snowpark ⇄ Polars 対応表</title>
     <meta
       name="description"
       content="Snowpark PythonのDataFrame/Column APIを、Polarsの同等コードと並べて確認できる逆引きリファレンスです。挙動の違いと移行時の落とし穴をメソッドごとに解説します。"
     />
-    <link rel="canonical" href="https://study-apps.com/snowpark-guide/col/" />
+    <link rel="canonical" href="https://study-apps.com/snowpark-guide/min/" />
     <meta property="og:type" content="website" />
     <meta property="og:site_name" content="Snowpark ⇄ Polars 対応表" />
-    <meta property="og:title" content="col｜Snowpark ⇄ Polars 対応表" />
+    <meta property="og:title" content="min｜Snowpark ⇄ Polars 対応表" />
     <meta
       property="og:description"
       content="Snowpark PythonのDataFrame/Column APIを、Polarsの同等コードと並べて確認できる逆引きリファレンスです。"
     />
-    <meta property="og:url" content="https://study-apps.com/snowpark-guide/col/" />
+    <meta property="og:url" content="https://study-apps.com/snowpark-guide/min/" />
     <meta property="og:image" content="https://study-apps.com/snowpark-guide/ogp.png" />
     <meta property="og:locale" content="ja_JP" />
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content="col｜Snowpark ⇄ Polars 対応表" />
+    <meta name="twitter:title" content="min｜Snowpark ⇄ Polars 対応表" />
     <meta
       name="twitter:description"
       content="Snowpark PythonのDataFrame/Column APIを、Polarsの同等コードと並べて確認できる逆引きリファレンスです。"
@@ -34,33 +34,33 @@
     ></script>
     <script type="module" crossorigin src="../assets/index-DligZDmi.js"></script>
     <link rel="stylesheet" crossorigin href="../assets/index-Dq0rmFeK.css">
-  <script type="application/ld+json">{"@context":"https://schema.org","@type":"TechArticle","headline":"col","description":"列を式として参照する。以降のメソッドチェーンの起点になる、両APIで最も頻出する関数。 Snowparkでの書き方とPolarsでの書き方を並べて解説します。","url":"https://study-apps.com/snowpark-guide/col/","dateModified":"2026-08-20","inLanguage":"ja"}</script>
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"TechArticle","headline":"min","description":"列の最小値を求める。 Snowparkでの書き方とPolarsでの書き方を並べて解説します。","url":"https://study-apps.com/snowpark-guide/min/","dateModified":"2026-08-22","inLanguage":"ja"}</script>
   </head>
   <body>
     <div id="root"><div style="max-width:760px;margin:0 auto;padding:24px 16px;font-family:sans-serif;line-height:1.8;color:#0f172a">
-    <p style="color:#94a3b8;font-size:0.9rem"><a href="/snowpark-guide/" style="color:#94a3b8">トップ</a> / 射影・選択</p>
-    <h1 style="font-family:monospace;font-size:1.6rem;margin-bottom:8px">col</h1>
-    <p style="color:#475569">列を式として参照する。以降のメソッドチェーンの起点になる、両APIで最も頻出する関数。</p>
+    <p style="color:#94a3b8;font-size:0.9rem"><a href="/snowpark-guide/" style="color:#94a3b8">トップ</a> / 集約・構造変換</p>
+    <h1 style="font-family:monospace;font-size:1.6rem;margin-bottom:8px">min</h1>
+    <p style="color:#475569">列の最小値を求める。</p>
     <div style="display:flex;flex-wrap:wrap;gap:16px;margin:20px 0">
       <div style="flex:1;min-width:260px">
         <h2 style="color:#0284c7;font-size:0.9rem">SNOWPARK</h2>
-        <pre style="background:#0f172a;color:#e2e8f0;border-radius:10px;padding:14px;overflow-x:auto"><code>col(&quot;amount&quot;)</code></pre>
+        <pre style="background:#0f172a;color:#e2e8f0;border-radius:10px;padding:14px;overflow-x:auto"><code>df.select(min_(&quot;age&quot;))</code></pre>
       </div>
       <div style="flex:1;min-width:260px">
         <h2 style="color:#c026d3;font-size:0.9rem">POLARS</h2>
-        <pre style="background:#0f172a;color:#e2e8f0;border-radius:10px;padding:14px;overflow-x:auto"><code>pl.col(&quot;amount&quot;)</code></pre>
+        <pre style="background:#0f172a;color:#e2e8f0;border-radius:10px;padding:14px;overflow-x:auto"><code>ldf.select(pl.col(&quot;age&quot;).min())</code></pre>
       </div>
     </div>
     <h2 style="font-size:1.05rem">挙動・設計の違い</h2>
-    <p>Snowparkの col はSQLの識別子式を表す薄いラッパー。Polarsの pl.col はExpressionエンジンの基礎で、.str（文字列）・.dt（日時）などの名前空間付きメソッドを大量に持つ、より重心の大きい抽象。</p>
+    <p>どちらも対応するSQL/Expressionの最小値集約に変換される。挙動の違いは無い。</p>
     <h2 style="font-size:1.05rem;color:#b45309">移行時の落とし穴</h2>
-    <p>Snowflakeは引用符なしの識別子をデフォルトで大文字に変換するため、Snowparkの col("amount") は内部的に "AMOUNT" として扱われる。列名の大文字小文字が意味を持つ処理（動的な列名比較など）で取り違えやすい。</p>
+    <p>Snowparkの<code>min</code>もPythonの組み込み<code>min</code>と名前が衝突するため、<code>sum</code>と同様に別名インポート（<code>min as min_</code>）が実務上の定石。</p>
     <h2 style="font-size:1.05rem">出典・検証情報</h2>
     <ul style="padding-left:20px">
-      <li><a href="https://docs.snowflake.com/en/developer-guide/snowpark/reference/python/latest/snowpark/api/snowflake.snowpark.functions.col" style="color:#38bdf8">Snowpark 公式リファレンス（col）</a></li>
-      <li><a href="https://docs.pola.rs/api/python/stable/reference/expressions/col.html" style="color:#38bdf8">Polars 公式リファレンス（col）</a></li>
+      <li><a href="https://docs.snowflake.com/en/developer-guide/snowpark/reference/python/latest/snowpark/api/snowflake.snowpark.functions.min" style="color:#38bdf8">Snowpark 公式リファレンス（min）</a></li>
+      <li><a href="https://docs.pola.rs/api/python/stable/reference/expressions/api/polars.Expr.min.html" style="color:#38bdf8">Polars 公式リファレンス（min）</a></li>
     </ul>
-    <p style="color:#94a3b8;font-size:0.85rem">Polars 1.43.2 で実行確認 / Snowpark Python SDK 1.54.0 で静的検証（2026-08-20）</p>
+    <p style="color:#94a3b8;font-size:0.85rem">Polars 1.43.2 で実行確認 / Snowpark Python SDK 1.54.0 で静的検証（2026-08-22）</p>
     <nav style="margin-top:24px;display:flex;gap:16px;flex-wrap:wrap;font-size:0.85rem"><a href="/snowpark-guide/about/" style="color:#94a3b8">このサイトについて</a><a href="/snowpark-guide/privacy/" style="color:#94a3b8">プライバシーポリシー</a></nav>
   </div></div>
   </body>

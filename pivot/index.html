@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" type="image/svg+xml" href="../favicon.svg" />
+    <title>pivot｜Snowpark ⇄ Polars 対応表</title>
+    <meta
+      name="description"
+      content="Snowpark PythonのDataFrame/Column APIを、Polarsの同等コードと並べて確認できる逆引きリファレンスです。挙動の違いと移行時の落とし穴をメソッドごとに解説します。"
+    />
+    <link rel="canonical" href="https://study-apps.com/snowpark-guide/pivot/" />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="Snowpark ⇄ Polars 対応表" />
+    <meta property="og:title" content="pivot｜Snowpark ⇄ Polars 対応表" />
+    <meta
+      property="og:description"
+      content="Snowpark PythonのDataFrame/Column APIを、Polarsの同等コードと並べて確認できる逆引きリファレンスです。"
+    />
+    <meta property="og:url" content="https://study-apps.com/snowpark-guide/pivot/" />
+    <meta property="og:image" content="https://study-apps.com/snowpark-guide/ogp.png" />
+    <meta property="og:locale" content="ja_JP" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="pivot｜Snowpark ⇄ Polars 対応表" />
+    <meta
+      name="twitter:description"
+      content="Snowpark PythonのDataFrame/Column APIを、Polarsの同等コードと並べて確認できる逆引きリファレンスです。"
+    />
+    <meta name="twitter:image" content="https://study-apps.com/snowpark-guide/ogp.png" />
+    <script
+      async
+      src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9102538151148380"
+      crossorigin="anonymous"
+    ></script>
+    <script type="module" crossorigin src="../assets/index-DligZDmi.js"></script>
+    <link rel="stylesheet" crossorigin href="../assets/index-Dq0rmFeK.css">
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"TechArticle","headline":"pivot","description":"行の値を列に展開する（縦持ちから横持ちへ）。 Snowparkでの書き方とPolarsでの書き方を並べて解説します。","url":"https://study-apps.com/snowpark-guide/pivot/","dateModified":"2026-08-22","inLanguage":"ja"}</script>
+  </head>
+  <body>
+    <div id="root"><div style="max-width:760px;margin:0 auto;padding:24px 16px;font-family:sans-serif;line-height:1.8;color:#0f172a">
+    <p style="color:#94a3b8;font-size:0.9rem"><a href="/snowpark-guide/" style="color:#94a3b8">トップ</a> / 集約・構造変換</p>
+    <h1 style="font-family:monospace;font-size:1.6rem;margin-bottom:8px">pivot</h1>
+    <p style="color:#475569">行の値を列に展開する（縦持ちから横持ちへ）。</p>
+    <div style="display:flex;flex-wrap:wrap;gap:16px;margin:20px 0">
+      <div style="flex:1;min-width:260px">
+        <h2 style="color:#0284c7;font-size:0.9rem">SNOWPARK</h2>
+        <pre style="background:#0f172a;color:#e2e8f0;border-radius:10px;padding:14px;overflow-x:auto"><code>df.pivot(&quot;department&quot;, [&quot;sales&quot;, &quot;eng&quot;]).sum(&quot;salary&quot;)</code></pre>
+      </div>
+      <div style="flex:1;min-width:260px">
+        <h2 style="color:#c026d3;font-size:0.9rem">POLARS</h2>
+        <pre style="background:#0f172a;color:#e2e8f0;border-radius:10px;padding:14px;overflow-x:auto"><code>ldf.pivot(on=&quot;department&quot;, on_columns=[&quot;sales&quot;, &quot;eng&quot;], values=&quot;salary&quot;, aggregate_function=&quot;sum&quot;)</code></pre>
+      </div>
+    </div>
+    <h2 style="font-size:1.05rem">挙動・設計の違い</h2>
+    <p>SnowparkはSQLのPIVOT構文に直結し、展開する列名の一覧を静的に指定することでクエリレベルで安全に列を生成する。Polarsはメモリ上でハッシュテーブルを組み替えて新しい列を作る。</p>
+    <h2 style="font-size:1.05rem;color:#b45309">移行時の落とし穴</h2>
+    <p><strong>Polars 1.43.2では<code>LazyFrame.pivot()</code>を直接呼び出せる</strong>（実機で確認済み）。ただし<code>DataFrame</code>（Eager）版の<code>pivot()</code>と違い、<strong><code>on_columns</code>（展開後の列名の一覧）を明示的に渡すことが必須</strong>で、省略すると<code>TypeError</code>になる。「LazyFrameからpivotは呼べず必ずcollect()を挟む必要がある」という情報を見かけることがあるが、少なくとも1.43.2ではこれは誤りで、正しくは「呼べるが<code>on_columns</code>の指定が必須」という違いになる。</p>
+    <h2 style="font-size:1.05rem">出典・検証情報</h2>
+    <ul style="padding-left:20px">
+      <li><a href="https://docs.snowflake.com/en/developer-guide/snowpark/reference/python/latest/snowpark/api/snowflake.snowpark.DataFrame.pivot" style="color:#38bdf8">Snowpark 公式リファレンス（pivot）</a></li>
+      <li><a href="https://docs.pola.rs/api/python/stable/reference/lazyframe/api/polars.LazyFrame.pivot.html" style="color:#38bdf8">Polars 公式リファレンス（pivot）</a></li>
+    </ul>
+    <p style="color:#94a3b8;font-size:0.85rem">Polars 1.43.2 で実行確認 / Snowpark Python SDK 1.54.0 で静的検証（2026-08-22）</p>
+    <nav style="margin-top:24px;display:flex;gap:16px;flex-wrap:wrap;font-size:0.85rem"><a href="/snowpark-guide/about/" style="color:#94a3b8">このサイトについて</a><a href="/snowpark-guide/privacy/" style="color:#94a3b8">プライバシーポリシー</a></nav>
+  </div></div>
+  </body>
+</html>

@@ -32,7 +32,7 @@
       src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9102538151148380"
       crossorigin="anonymous"
     ></script>
-    <script type="module" crossorigin src="../assets/index-RWsk7wAu.js"></script>
+    <script type="module" crossorigin src="../assets/index-DligZDmi.js"></script>
     <link rel="stylesheet" crossorigin href="../assets/index-Dq0rmFeK.css">
   <script type="application/ld+json">{"@context":"https://schema.org","@type":"TechArticle","headline":"with_column / with_columns","description":"既存の列はそのままに、新しい列を1つ（または複数）追加する。 Snowparkでの書き方とPolarsでの書き方を並べて解説します。","url":"https://study-apps.com/snowpark-guide/with-column/","dateModified":"2026-08-20","inLanguage":"ja"}</script>
   </head>
@@ -52,7 +52,7 @@
       </div>
     </div>
     <h2 style="font-size:1.05rem">挙動・設計の違い</h2>
-    <p>Snowparkの with_column は &quot;SELECT *, expression AS new_col&quot; に相当するSQLを作る（1回の呼び出しで1列）。Polarsの with_columns は複数の式をリストで受け取り、まとめて並列評価できるよう設計されている。</p>
+    <p>Snowparkの with_column は "SELECT *, expression AS new_col" に相当するSQLを作る（1回の呼び出しで1列）。Polarsの with_columns は複数の式をリストで受け取り、まとめて並列評価できるよう設計されている。</p>
     <h2 style="font-size:1.05rem;color:#b45309">移行時の落とし穴</h2>
     <p>Snowparkで with_column を連続してチェーンすると、内部SQLがネストして複雑化しパフォーマンスが落ちることがある。複数列を足すときはPolarsのように with_columns へ式をまとめて渡す書き方（Snowparkにも with_columns はある）を優先したほうが安全。</p>
     <h2 style="font-size:1.05rem">出典・検証情報</h2>

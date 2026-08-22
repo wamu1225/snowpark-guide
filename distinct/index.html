@@ -32,7 +32,7 @@
       src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9102538151148380"
       crossorigin="anonymous"
     ></script>
-    <script type="module" crossorigin src="../assets/index-RWsk7wAu.js"></script>
+    <script type="module" crossorigin src="../assets/index-DligZDmi.js"></script>
     <link rel="stylesheet" crossorigin href="../assets/index-Dq0rmFeK.css">
   <script type="application/ld+json">{"@context":"https://schema.org","@type":"TechArticle","headline":"distinct / unique","description":"重複行を取り除く。メソッド名がSnowparkとPolarsで異なる点に注意。 Snowparkでの書き方とPolarsでの書き方を並べて解説します。","url":"https://study-apps.com/snowpark-guide/distinct/","dateModified":"2026-08-21","inLanguage":"ja"}</script>
   </head>
@@ -52,9 +52,9 @@
       </div>
     </div>
     <h2 style="font-size:1.05rem">挙動・設計の違い</h2>
-    <p>Snowparkは`SELECT DISTINCT *`に相当するSQLを発行する。Polarsはハッシュテーブルを使って行の重複を判定し除外する。処理として行うことは同じだが、実装のレイヤーが異なる（SQLエンジン側 vs Polarsのネイティブ実装）。</p>
+    <p>Snowparkは<code>SELECT DISTINCT *</code>に相当するSQLを発行する。Polarsはハッシュテーブルを使って行の重複を判定し除外する。処理として行うことは同じだが、実装のレイヤーが異なる（SQLエンジン側 vs Polarsのネイティブ実装）。</p>
     <h2 style="font-size:1.05rem;color:#b45309">移行時の落とし穴</h2>
-    <p>メソッド名がそのまま違う（Snowpark: `distinct()`、Polars: `unique()`）ため、写経のときに書き間違えやすい。Polars側で`distinct()`と書いてもメソッドが存在せずエラーになる。</p>
+    <p>メソッド名がそのまま違う（Snowpark: <code>distinct()</code>、Polars: <code>unique()</code>）ため、写経のときに書き間違えやすい。Polars側で<code>distinct()</code>と書いてもメソッドが存在せずエラーになる。</p>
     <h2 style="font-size:1.05rem">出典・検証情報</h2>
     <ul style="padding-left:20px">
       <li><a href="https://docs.snowflake.com/en/developer-guide/snowpark/reference/python/latest/snowpark/api/snowflake.snowpark.DataFrame.distinct" style="color:#38bdf8">Snowpark 公式リファレンス（distinct / unique）</a></li>
