@@ -3,6 +3,7 @@ import { projectionEntries } from './projection';
 import { filteringEntries } from './filtering';
 import { aggregationEntries } from './aggregation';
 import { joinsEntries } from './joins';
+import { sortingEntries } from './sorting';
 
 // カテゴリを1本ずつ追加していく。
 export const ALL_ENTRIES: Entry[] = [
@@ -10,4 +11,5 @@ export const ALL_ENTRIES: Entry[] = [
   ...filteringEntries,
   ...aggregationEntries,
   ...joinsEntries,
+  ...sortingEntries,
 ];
