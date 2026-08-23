@@ -32,7 +32,7 @@
       src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9102538151148380"
       crossorigin="anonymous"
     ></script>
-    <script type="module" crossorigin src="./assets/index-F6vb3mJk.js"></script>
+    <script type="module" crossorigin src="./assets/index-BQTdagLy.js"></script>
     <link rel="stylesheet" crossorigin href="./assets/index-Dq0rmFeK.css">
   <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebSite","name":"Snowpark ⇄ Polars 対応表","url":"https://study-apps.com/snowpark-guide/","description":"Snowpark PythonのDataFrame/Column APIを、Polarsの同等コードと並べて確認できる逆引きリファレンスです。挙動の違いと移行時の落とし穴をメソッドごとに解説します。","inLanguage":"ja"}</script>
   </head>
@@ -78,7 +78,13 @@
 <section style="margin-top:24px"><h2 style="font-size:1.1rem">ソート</h2><p style="color:#94a3b8;font-size:0.9rem">並び順を決める</p><ul style="padding-left:20px"><li><a href="/snowpark-guide/order-by/" style="color:#38bdf8">order_by / sort</a> ── 行を指定した列の値で並べ替える。</li>
 <li><a href="/snowpark-guide/asc-desc/" style="color:#38bdf8">asc / desc</a> ── 列に昇順・降順の方向を持たせる。</li>
 <li><a href="/snowpark-guide/nulls-first-last/" style="color:#38bdf8">nulls_first / nulls_last</a> ── NULL値をソート結果の先頭・末尾どちらに置くかを指定する。</li></ul></section>
-<section style="margin-top:24px"><h2 style="font-size:1.1rem">式評価・文字列・型変換</h2><p style="color:#94a3b8;font-size:0.9rem">値を計算する・文字列を扱う・型を変える</p><ul style="padding-left:20px"><li style="color:#94a3b8">準備中</li></ul></section>
+<section style="margin-top:24px"><h2 style="font-size:1.1rem">式評価・文字列・型変換</h2><p style="color:#94a3b8;font-size:0.9rem">値を計算する・文字列を扱う・型を変える</p><ul style="padding-left:20px"><li><a href="/snowpark-guide/when-otherwise/" style="color:#38bdf8">when / otherwise</a> ── 条件に応じて異なる値を返す（複数分岐の条件式）。</li>
+<li><a href="/snowpark-guide/iff/" style="color:#38bdf8">iff</a> ── 条件が真か偽かで2つの値のどちらかを返す（2分岐専用のショートカット）。</li>
+<li><a href="/snowpark-guide/is-null/" style="color:#38bdf8">is_null / is_not_null</a> ── 値がNULL（欠損）かどうかを判定する。</li>
+<li><a href="/snowpark-guide/coalesce/" style="color:#38bdf8">coalesce</a> ── 複数の列を左から順に見て、最初に見つかったNULLでない値を返す。</li>
+<li><a href="/snowpark-guide/cast/" style="color:#38bdf8">cast</a> ── 列の型を別の型に変換する。</li>
+<li><a href="/snowpark-guide/substring/" style="color:#38bdf8">substring</a> ── 文字列の一部を指定した位置から切り出す。</li>
+<li><a href="/snowpark-guide/concat/" style="color:#38bdf8">concat（文字列連結）</a> ── 複数の列・文字列を1つにつなげる。</li></ul></section>
 <section style="margin-top:24px"><h2 style="font-size:1.1rem">ウィンドウ関数</h2><p style="color:#94a3b8;font-size:0.9rem">行をまたいだ計算（順位・累積・移動平均）</p><ul style="padding-left:20px"><li style="color:#94a3b8">準備中</li></ul></section>
 <section style="margin-top:24px"><h2 style="font-size:1.1rem">Null処理</h2><p style="color:#94a3b8;font-size:0.9rem">欠損値の扱い方</p><ul style="padding-left:20px"><li style="color:#94a3b8">準備中</li></ul></section>
 <section style="margin-top:24px"><h2 style="font-size:1.1rem">実行・アクション・IO</h2><p style="color:#94a3b8;font-size:0.9rem">評価を起動する・結果を取り出す・保存する</p><ul style="padding-left:20px"><li style="color:#94a3b8">準備中</li></ul></section>

@@ -33,6 +33,13 @@
   <url><loc>https://study-apps.com/snowpark-guide/order-by/</loc><lastmod>2026-08-23</lastmod><priority>0.8</priority></url>
   <url><loc>https://study-apps.com/snowpark-guide/asc-desc/</loc><lastmod>2026-08-23</lastmod><priority>0.8</priority></url>
   <url><loc>https://study-apps.com/snowpark-guide/nulls-first-last/</loc><lastmod>2026-08-23</lastmod><priority>0.8</priority></url>
+  <url><loc>https://study-apps.com/snowpark-guide/when-otherwise/</loc><lastmod>2026-08-23</lastmod><priority>0.8</priority></url>
+  <url><loc>https://study-apps.com/snowpark-guide/iff/</loc><lastmod>2026-08-23</lastmod><priority>0.8</priority></url>
+  <url><loc>https://study-apps.com/snowpark-guide/is-null/</loc><lastmod>2026-08-23</lastmod><priority>0.8</priority></url>
+  <url><loc>https://study-apps.com/snowpark-guide/coalesce/</loc><lastmod>2026-08-23</lastmod><priority>0.8</priority></url>
+  <url><loc>https://study-apps.com/snowpark-guide/cast/</loc><lastmod>2026-08-23</lastmod><priority>0.8</priority></url>
+  <url><loc>https://study-apps.com/snowpark-guide/substring/</loc><lastmod>2026-08-23</lastmod><priority>0.8</priority></url>
+  <url><loc>https://study-apps.com/snowpark-guide/concat/</loc><lastmod>2026-08-23</lastmod><priority>0.8</priority></url>
   <url><loc>https://study-apps.com/snowpark-guide/guide/architecture/</loc><lastmod>2026-08-23</lastmod><priority>0.7</priority></url>
   <url><loc>https://study-apps.com/snowpark-guide/guide/vs-spark/</loc><lastmod>2026-08-23</lastmod><priority>0.7</priority></url>
   <url><loc>https://study-apps.com/snowpark-guide/guide/vs-polars/</loc><lastmod>2026-08-23</lastmod><priority>0.7</priority></url>
