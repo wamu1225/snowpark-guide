@@ -4,6 +4,7 @@ import { filteringEntries } from './filtering';
 import { aggregationEntries } from './aggregation';
 import { joinsEntries } from './joins';
 import { sortingEntries } from './sorting';
+import { expressionsEntries } from './expressions';
 
 // カテゴリを1本ずつ追加していく。
 export const ALL_ENTRIES: Entry[] = [
@@ -12,4 +13,5 @@ export const ALL_ENTRIES: Entry[] = [
   ...aggregationEntries,
   ...joinsEntries,
   ...sortingEntries,
+  ...expressionsEntries,
 ];
