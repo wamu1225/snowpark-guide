@@ -4,24 +4,24 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="icon" type="image/svg+xml" href="../favicon.svg" />
-    <title>union_all / unionAll｜Snowpark ⇄ Polars 対応表</title>
+    <title>order_by / sort｜Snowpark ⇄ Polars 対応表</title>
     <meta
       name="description"
       content="Snowpark PythonのDataFrame/Column APIを、Polarsの同等コードと並べて確認できる逆引きリファレンスです。挙動の違いと移行時の落とし穴をメソッドごとに解説します。"
     />
-    <link rel="canonical" href="https://study-apps.com/snowpark-guide/union-all/" />
+    <link rel="canonical" href="https://study-apps.com/snowpark-guide/order-by/" />
     <meta property="og:type" content="website" />
     <meta property="og:site_name" content="Snowpark ⇄ Polars 対応表" />
-    <meta property="og:title" content="union_all / unionAll｜Snowpark ⇄ Polars 対応表" />
+    <meta property="og:title" content="order_by / sort｜Snowpark ⇄ Polars 対応表" />
     <meta
       property="og:description"
       content="Snowpark PythonのDataFrame/Column APIを、Polarsの同等コードと並べて確認できる逆引きリファレンスです。"
     />
-    <meta property="og:url" content="https://study-apps.com/snowpark-guide/union-all/" />
+    <meta property="og:url" content="https://study-apps.com/snowpark-guide/order-by/" />
     <meta property="og:image" content="https://study-apps.com/snowpark-guide/ogp.png" />
     <meta property="og:locale" content="ja_JP" />
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content="union_all / unionAll｜Snowpark ⇄ Polars 対応表" />
+    <meta name="twitter:title" content="order_by / sort｜Snowpark ⇄ Polars 対応表" />
     <meta
       name="twitter:description"
       content="Snowpark PythonのDataFrame/Column APIを、Polarsの同等コードと並べて確認できる逆引きリファレンスです。"
@@ -34,31 +34,31 @@
     ></script>
     <script type="module" crossorigin src="../assets/index-F6vb3mJk.js"></script>
     <link rel="stylesheet" crossorigin href="../assets/index-Dq0rmFeK.css">
-  <script type="application/ld+json">{"@context":"https://schema.org","@type":"TechArticle","headline":"union_all / unionAll","description":"2つのDataFrameを縦に連結する。重複行はそのまま残す。 Snowparkでの書き方とPolarsでの書き方を並べて解説します。","url":"https://study-apps.com/snowpark-guide/union-all/","dateModified":"2026-08-23","inLanguage":"ja"}</script>
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"TechArticle","headline":"order_by / sort","description":"行を指定した列の値で並べ替える。 Snowparkでの書き方とPolarsでの書き方を並べて解説します。","url":"https://study-apps.com/snowpark-guide/order-by/","dateModified":"2026-08-23","inLanguage":"ja"}</script>
   </head>
   <body>
     <div id="root"><div style="max-width:760px;margin:0 auto;padding:24px 16px;font-family:sans-serif;line-height:1.8;color:#0f172a">
-    <p style="color:#94a3b8;font-size:0.9rem"><a href="/snowpark-guide/" style="color:#94a3b8">トップ</a> / 結合・集合演算</p>
-    <h1 style="font-family:monospace;font-size:1.6rem;margin-bottom:8px">union_all / unionAll</h1>
-    <p style="color:#475569">2つのDataFrameを縦に連結する。重複行はそのまま残す。</p>
+    <p style="color:#94a3b8;font-size:0.9rem"><a href="/snowpark-guide/" style="color:#94a3b8">トップ</a> / ソート</p>
+    <h1 style="font-family:monospace;font-size:1.6rem;margin-bottom:8px">order_by / sort</h1>
+    <p style="color:#475569">行を指定した列の値で並べ替える。</p>
     <div style="display:flex;flex-wrap:wrap;gap:16px;margin:20px 0">
       <div style="flex:1;min-width:260px">
         <h2 style="color:#0284c7;font-size:0.9rem">SNOWPARK</h2>
-        <pre style="background:#0f172a;color:#e2e8f0;border-radius:10px;padding:14px;overflow-x:auto"><code>df1.union_all(df2)</code></pre>
+        <pre style="background:#0f172a;color:#e2e8f0;border-radius:10px;padding:14px;overflow-x:auto"><code>df.order_by(col(&quot;age&quot;).asc(), col(&quot;score&quot;).desc())</code></pre>
       </div>
       <div style="flex:1;min-width:260px">
         <h2 style="color:#c026d3;font-size:0.9rem">POLARS</h2>
-        <pre style="background:#0f172a;color:#e2e8f0;border-radius:10px;padding:14px;overflow-x:auto"><code>pl.concat([ldf1, ldf2], how=&quot;vertical&quot;)</code></pre>
+        <pre style="background:#0f172a;color:#e2e8f0;border-radius:10px;padding:14px;overflow-x:auto"><code>ldf.sort(by=[&quot;age&quot;, &quot;score&quot;], descending=[False, True])</code></pre>
       </div>
     </div>
     <h2 style="font-size:1.05rem">挙動・設計の違い</h2>
-    <p>SnowparkはSQLのUNION ALLに変換される。Polarsは<code>pl.concat</code>に<code>how="vertical"</code>（既定値でもある）を指定した単純な縦連結で、実行して確認したところ重複行はそのまま残る。</p>
+    <p>SnowparkはSQLのORDER BY句に変換される。分散環境でのソートは全ノード間のデータシャッフルを伴うため、大規模データでは相応のコストがかかる。Polarsはローカルメモリ上でマルチスレッドのソートを実行する。</p>
     <h2 style="font-size:1.05rem;color:#b45309">移行時の落とし穴</h2>
-    <p>連結する2つのDataFrame/LazyFrameの列名と列数が一致している必要がある。列構成が異なる場合にエラーになる点は両APIで共通なので、スキーマが違う可能性があるときは次の<code>union_by_name</code>を検討する。</p>
+    <p>昇順・降順の指定方法が構文として異なる。Snowparkは<code>col("列名").asc()</code>／<code>.desc()</code>のように列の式自体に方向を持たせるのに対し、Polarsは<code>sort()</code>の<code>descending</code>引数に列の数と対応する真偽値のリストを渡す。列を並べ替えても<code>descending</code>リストの対応する位置を一緒に動かし忘れると、意図と違う列が昇順/降順になる。</p>
     <h2 style="font-size:1.05rem">出典・検証情報</h2>
     <ul style="padding-left:20px">
-      <li><a href="https://docs.snowflake.com/en/developer-guide/snowpark/reference/python/latest/snowpark/api/snowflake.snowpark.DataFrame.union_all" style="color:#38bdf8">Snowpark 公式リファレンス（union_all / unionAll）</a></li>
-      <li><a href="https://docs.pola.rs/api/python/stable/reference/api/polars.concat.html" style="color:#38bdf8">Polars 公式リファレンス（union_all / unionAll）</a></li>
+      <li><a href="https://docs.snowflake.com/en/developer-guide/snowpark/reference/python/latest/snowpark/api/snowflake.snowpark.DataFrame.sort" style="color:#38bdf8">Snowpark 公式リファレンス（order_by / sort）</a></li>
+      <li><a href="https://docs.pola.rs/api/python/stable/reference/lazyframe/api/polars.LazyFrame.sort.html" style="color:#38bdf8">Polars 公式リファレンス（order_by / sort）</a></li>
     </ul>
     <p style="color:#94a3b8;font-size:0.85rem">Polars 1.43.2 で実行確認 / Snowpark Python SDK 1.54.0 で静的検証（2026-08-23）</p>
     <nav style="margin-top:24px;display:flex;gap:16px;flex-wrap:wrap;font-size:0.85rem"><a href="/snowpark-guide/about/" style="color:#94a3b8">このサイトについて</a><a href="/snowpark-guide/privacy/" style="color:#94a3b8">プライバシーポリシー</a></nav>
