@@ -32,8 +32,8 @@
       src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9102538151148380"
       crossorigin="anonymous"
     ></script>
-    <script type="module" crossorigin src="../assets/index-qNNSub6M.js"></script>
-    <link rel="stylesheet" crossorigin href="../assets/index-Dq0rmFeK.css">
+    <script type="module" crossorigin src="../assets/index-BmMUJwg_.js"></script>
+    <link rel="stylesheet" crossorigin href="../assets/index-SadeNtV_.css">
   <script type="application/ld+json">{"@context":"https://schema.org","@type":"TechArticle","headline":"distinct / unique","description":"重複行を取り除く。メソッド名がSnowparkとPolarsで異なる点に注意。 Snowparkでの書き方とPolarsでの書き方を並べて解説します。","url":"https://study-apps.com/snowpark-guide/distinct/","dateModified":"2026-08-21","inLanguage":"ja"}</script>
   </head>
   <body>
@@ -43,11 +43,11 @@
     <p style="color:#475569">重複行を取り除く。メソッド名がSnowparkとPolarsで異なる点に注意。</p>
     <div style="display:flex;flex-wrap:wrap;gap:16px;margin:20px 0">
       <div style="flex:1;min-width:260px">
-        <h2 style="color:#0284c7;font-size:0.9rem">SNOWPARK</h2>
+        <h2 style="color:#0284c7;font-size:0.9rem">SNOWPARK <span style="opacity:0.75;font-weight:500">静的検証のみ</span></h2>
         <pre style="background:#0f172a;color:#e2e8f0;border-radius:10px;padding:14px;overflow-x:auto"><code>df.distinct()</code></pre>
       </div>
       <div style="flex:1;min-width:260px">
-        <h2 style="color:#c026d3;font-size:0.9rem">POLARS</h2>
+        <h2 style="color:#c026d3;font-size:0.9rem">POLARS <span style="opacity:0.75;font-weight:500">実行確認済み</span></h2>
         <pre style="background:#0f172a;color:#e2e8f0;border-radius:10px;padding:14px;overflow-x:auto"><code>ldf.unique()</code></pre>
       </div>
     </div>
@@ -55,6 +55,8 @@
     <p>Snowparkは<code>SELECT DISTINCT *</code>に相当するSQLを発行する。Polarsはハッシュテーブルを使って行の重複を判定し除外する。処理として行うことは同じだが、実装のレイヤーが異なる（SQLエンジン側 vs Polarsのネイティブ実装）。</p>
     <h2 style="font-size:1.05rem;color:#b45309">移行時の落とし穴</h2>
     <p>メソッド名がそのまま違う（Snowpark: <code>distinct()</code>、Polars: <code>unique()</code>）ため、写経のときに書き間違えやすい。Polars側で<code>distinct()</code>と書いてもメソッドが存在せずエラーになる。</p>
+    <h2 style="font-size:1.05rem">フィルタ・サンプリングの他のメソッド</h2><ul style="padding-left:20px"><li><a href="/snowpark-guide/filter/" style="color:#38bdf8">filter / where</a> ── 条件に合う行だけを残す。whereはfilterの別名で、書き方はどちらも同じ。</li><li><a href="/snowpark-guide/limit/" style="color:#38bdf8">limit</a> ── 先頭から指定した行数だけを取得する。</li><li><a href="/snowpark-guide/sample/" style="color:#38bdf8">sample</a> ── データの一部をランダムに抽出する。</li><li><a href="/snowpark-guide/drop-duplicates/" style="color:#38bdf8">drop_duplicates</a> ── 指定した列の値が一致する行を重複とみなして間引く。</li></ul>
+    
     <h2 style="font-size:1.05rem">出典・検証情報</h2>
     <ul style="padding-left:20px">
       <li><a href="https://docs.snowflake.com/en/developer-guide/snowpark/reference/python/latest/snowpark/api/snowflake.snowpark.DataFrame.distinct" style="color:#38bdf8">Snowpark 公式リファレンス（distinct / unique）</a></li>

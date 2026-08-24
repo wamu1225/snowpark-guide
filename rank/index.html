@@ -32,8 +32,8 @@
       src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9102538151148380"
       crossorigin="anonymous"
     ></script>
-    <script type="module" crossorigin src="../assets/index-qNNSub6M.js"></script>
-    <link rel="stylesheet" crossorigin href="../assets/index-Dq0rmFeK.css">
+    <script type="module" crossorigin src="../assets/index-BmMUJwg_.js"></script>
+    <link rel="stylesheet" crossorigin href="../assets/index-SadeNtV_.css">
   <script type="application/ld+json">{"@context":"https://schema.org","@type":"TechArticle","headline":"rank","description":"パーティション内で順位をつける。同じ値には同じ順位がつき、その分だけ次の順位を飛ばす。 Snowparkでの書き方とPolarsでの書き方を並べて解説します。","url":"https://study-apps.com/snowpark-guide/rank/","dateModified":"2026-08-24","inLanguage":"ja"}</script>
   </head>
   <body>
@@ -43,11 +43,11 @@
     <p style="color:#475569">パーティション内で順位をつける。同じ値には同じ順位がつき、その分だけ次の順位を飛ばす。</p>
     <div style="display:flex;flex-wrap:wrap;gap:16px;margin:20px 0">
       <div style="flex:1;min-width:260px">
-        <h2 style="color:#0284c7;font-size:0.9rem">SNOWPARK</h2>
+        <h2 style="color:#0284c7;font-size:0.9rem">SNOWPARK <span style="opacity:0.75;font-weight:500">静的検証のみ</span></h2>
         <pre style="background:#0f172a;color:#e2e8f0;border-radius:10px;padding:14px;overflow-x:auto"><code>rank().over(window_spec)</code></pre>
       </div>
       <div style="flex:1;min-width:260px">
-        <h2 style="color:#c026d3;font-size:0.9rem">POLARS</h2>
+        <h2 style="color:#c026d3;font-size:0.9rem">POLARS <span style="opacity:0.75;font-weight:500">実行確認済み</span></h2>
         <pre style="background:#0f172a;color:#e2e8f0;border-radius:10px;padding:14px;overflow-x:auto"><code>pl.col(&quot;salary&quot;).rank(method=&quot;min&quot;, descending=True).over(&quot;department&quot;)</code></pre>
       </div>
     </div>
@@ -55,6 +55,8 @@
     <p>SnowparkはSQLの<code>RANK()</code>関数に変換される。Polarsは<code>.rank(method="min")</code>で同じ挙動になる。実行して確認したところ、同率のときに順位が並び（1, 1）、その次は2でなく3から始まる点まで一致する。</p>
     <h2 style="font-size:1.05rem;color:#b45309">移行時の落とし穴</h2>
     <p>Polarsの<code>.rank()</code>は<code>method</code>引数を省略したり別の値（<code>"ordinal"</code>や<code>"dense"</code>など）にすると挙動が変わる。SQLの<code>RANK()</code>と同じ「同率は同順位・次は飛ばす」という挙動にしたいときは、<strong>必ず<code>method="min"</code>を明示する</strong>（既定値のままでは意図と違う結果になる）。</p>
+    <h2 style="font-size:1.05rem">ウィンドウ関数の他のメソッド</h2><ul style="padding-left:20px"><li><a href="/snowpark-guide/window-spec/" style="color:#38bdf8">Window.partition_by / Window.order_by</a> ── グループ（パーティション）ごとに、行をまたいだ計算をするための土台を定義する。</li><li><a href="/snowpark-guide/dense-rank/" style="color:#38bdf8">dense_rank</a> ── パーティション内で順位をつける。同じ値には同じ順位がつくが、次の順位は飛ばさない。</li><li><a href="/snowpark-guide/row-number/" style="color:#38bdf8">row_number</a> ── パーティション内で1から始まる連番をふる。同率でも必ず別の番号になる。</li><li><a href="/snowpark-guide/lag/" style="color:#38bdf8">lag</a> ── パーティション内で、1つ前（過去）の行の値を取得する。</li><li><a href="/snowpark-guide/lead/" style="color:#38bdf8">lead</a> ── パーティション内で、1つ後（未来）の行の値を取得する。</li></ul>
+    
     <h2 style="font-size:1.05rem">出典・検証情報</h2>
     <ul style="padding-left:20px">
       <li><a href="https://docs.snowflake.com/en/developer-guide/snowpark/reference/python/latest/snowpark/api/snowflake.snowpark.functions.rank" style="color:#38bdf8">Snowpark 公式リファレンス（rank）</a></li>

@@ -32,8 +32,8 @@
       src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9102538151148380"
       crossorigin="anonymous"
     ></script>
-    <script type="module" crossorigin src="../assets/index-qNNSub6M.js"></script>
-    <link rel="stylesheet" crossorigin href="../assets/index-Dq0rmFeK.css">
+    <script type="module" crossorigin src="../assets/index-BmMUJwg_.js"></script>
+    <link rel="stylesheet" crossorigin href="../assets/index-SadeNtV_.css">
   <script type="application/ld+json">{"@context":"https://schema.org","@type":"TechArticle","headline":"subtract / except_","description":"片方のDataFrameから、もう片方にも存在する行を取り除く（差集合）。 Snowparkでの書き方とPolarsでの書き方を並べて解説します。","url":"https://study-apps.com/snowpark-guide/subtract/","dateModified":"2026-08-23","inLanguage":"ja"}</script>
   </head>
   <body>
@@ -43,11 +43,11 @@
     <p style="color:#475569">片方のDataFrameから、もう片方にも存在する行を取り除く（差集合）。</p>
     <div style="display:flex;flex-wrap:wrap;gap:16px;margin:20px 0">
       <div style="flex:1;min-width:260px">
-        <h2 style="color:#0284c7;font-size:0.9rem">SNOWPARK</h2>
+        <h2 style="color:#0284c7;font-size:0.9rem">SNOWPARK <span style="opacity:0.75;font-weight:500">静的検証のみ</span></h2>
         <pre style="background:#0f172a;color:#e2e8f0;border-radius:10px;padding:14px;overflow-x:auto"><code>df1.subtract(df2)  # df1.except_(df2) でも同じ</code></pre>
       </div>
       <div style="flex:1;min-width:260px">
-        <h2 style="color:#c026d3;font-size:0.9rem">POLARS</h2>
+        <h2 style="color:#c026d3;font-size:0.9rem">POLARS <span style="opacity:0.75;font-weight:500">実行確認済み</span></h2>
         <pre style="background:#0f172a;color:#e2e8f0;border-radius:10px;padding:14px;overflow-x:auto"><code>ldf1.join(ldf2, on=ldf1.collect_schema().names(), how=&quot;anti&quot;)</code></pre>
       </div>
     </div>
@@ -55,6 +55,8 @@
     <p>SnowparkはSQLのEXCEPT（別名MINUS）に変換される。<code>subtract</code>と<code>except_</code>はSnowpark側の別名で、どちらを呼んでも同じ結果になる。Polars側は全列をキーにした<code>anti</code>結合（もう片方に一致する行を除外する結合）で代用する。実行して確認済み。</p>
     <h2 style="font-size:1.05rem;color:#b45309">移行時の落とし穴</h2>
     <p><code>except_</code>という名前は、Pythonの予約語<code>except</code>と衝突しないよう末尾にアンダースコアが付いている。うっかり<code>except</code>と書くとPythonの構文エラーになる。</p>
+    <h2 style="font-size:1.05rem">結合・集合演算の他のメソッド</h2><ul style="padding-left:20px"><li><a href="/snowpark-guide/join/" style="color:#38bdf8">join</a> ── 2つのDataFrameを結合する。</li><li><a href="/snowpark-guide/union/" style="color:#38bdf8">union</a> ── 2つのDataFrameを縦に連結し、重複行を取り除く。</li><li><a href="/snowpark-guide/union-all/" style="color:#38bdf8">union_all / unionAll</a> ── 2つのDataFrameを縦に連結する。重複行はそのまま残す。</li><li><a href="/snowpark-guide/union-by-name/" style="color:#38bdf8">union_by_name / unionByName</a> ── 列の並び順ではなく列名を基準に2つのDataFrameを連結する。</li><li><a href="/snowpark-guide/intersect/" style="color:#38bdf8">intersect</a> ── 2つのDataFrameの両方に存在する行だけを残す（積集合）。</li></ul>
+    
     <h2 style="font-size:1.05rem">出典・検証情報</h2>
     <ul style="padding-left:20px">
       <li><a href="https://docs.snowflake.com/en/developer-guide/snowpark/reference/python/latest/snowpark/api/snowflake.snowpark.DataFrame.except_" style="color:#38bdf8">Snowpark 公式リファレンス（subtract / except_）</a></li>

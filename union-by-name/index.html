@@ -32,8 +32,8 @@
       src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9102538151148380"
       crossorigin="anonymous"
     ></script>
-    <script type="module" crossorigin src="../assets/index-qNNSub6M.js"></script>
-    <link rel="stylesheet" crossorigin href="../assets/index-Dq0rmFeK.css">
+    <script type="module" crossorigin src="../assets/index-BmMUJwg_.js"></script>
+    <link rel="stylesheet" crossorigin href="../assets/index-SadeNtV_.css">
   <script type="application/ld+json">{"@context":"https://schema.org","@type":"TechArticle","headline":"union_by_name / unionByName","description":"列の並び順ではなく列名を基準に2つのDataFrameを連結する。 Snowparkでの書き方とPolarsでの書き方を並べて解説します。","url":"https://study-apps.com/snowpark-guide/union-by-name/","dateModified":"2026-08-23","inLanguage":"ja"}</script>
   </head>
   <body>
@@ -43,11 +43,11 @@
     <p style="color:#475569">列の並び順ではなく列名を基準に2つのDataFrameを連結する。</p>
     <div style="display:flex;flex-wrap:wrap;gap:16px;margin:20px 0">
       <div style="flex:1;min-width:260px">
-        <h2 style="color:#0284c7;font-size:0.9rem">SNOWPARK</h2>
+        <h2 style="color:#0284c7;font-size:0.9rem">SNOWPARK <span style="opacity:0.75;font-weight:500">静的検証のみ</span></h2>
         <pre style="background:#0f172a;color:#e2e8f0;border-radius:10px;padding:14px;overflow-x:auto"><code>df1.union_by_name(df2)</code></pre>
       </div>
       <div style="flex:1;min-width:260px">
-        <h2 style="color:#c026d3;font-size:0.9rem">POLARS</h2>
+        <h2 style="color:#c026d3;font-size:0.9rem">POLARS <span style="opacity:0.75;font-weight:500">実行確認済み</span></h2>
         <pre style="background:#0f172a;color:#e2e8f0;border-radius:10px;padding:14px;overflow-x:auto"><code>pl.concat([ldf1, ldf2], how=&quot;diagonal&quot;)</code></pre>
       </div>
     </div>
@@ -55,6 +55,8 @@
     <p>列名にもとづいてスキーマの異なるDataFrameを結合し、片方にしかない列はもう片方でNULLになる。実行して確認したところ、Polarsの<code>how="diagonal"</code>も同様に不足列をnullで埋めて連結する。</p>
     <h2 style="font-size:1.05rem;color:#b45309">移行時の落とし穴</h2>
     <p>Snowparkの<code>union_by_name</code>には<code>allow_missing_columns</code>という引数があり、既定では列が完全に一致しないとエラーになる（明示的にTrueを渡すと不足列を許容する）。Polars側は<code>how="diagonal"</code>を指定した時点で不足列の補完が既定の挙動になっており、両者で「列不足を許容するかどうか」の既定値が異なる点に注意。</p>
+    <h2 style="font-size:1.05rem">結合・集合演算の他のメソッド</h2><ul style="padding-left:20px"><li><a href="/snowpark-guide/join/" style="color:#38bdf8">join</a> ── 2つのDataFrameを結合する。</li><li><a href="/snowpark-guide/union/" style="color:#38bdf8">union</a> ── 2つのDataFrameを縦に連結し、重複行を取り除く。</li><li><a href="/snowpark-guide/union-all/" style="color:#38bdf8">union_all / unionAll</a> ── 2つのDataFrameを縦に連結する。重複行はそのまま残す。</li><li><a href="/snowpark-guide/intersect/" style="color:#38bdf8">intersect</a> ── 2つのDataFrameの両方に存在する行だけを残す（積集合）。</li><li><a href="/snowpark-guide/subtract/" style="color:#38bdf8">subtract / except_</a> ── 片方のDataFrameから、もう片方にも存在する行を取り除く（差集合）。</li></ul>
+    
     <h2 style="font-size:1.05rem">出典・検証情報</h2>
     <ul style="padding-left:20px">
       <li><a href="https://docs.snowflake.com/en/developer-guide/snowpark/reference/python/latest/snowpark/api/snowflake.snowpark.DataFrame.union_by_name" style="color:#38bdf8">Snowpark 公式リファレンス（union_by_name / unionByName）</a></li>

@@ -32,8 +32,8 @@
       src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9102538151148380"
       crossorigin="anonymous"
     ></script>
-    <script type="module" crossorigin src="../assets/index-qNNSub6M.js"></script>
-    <link rel="stylesheet" crossorigin href="../assets/index-Dq0rmFeK.css">
+    <script type="module" crossorigin src="../assets/index-BmMUJwg_.js"></script>
+    <link rel="stylesheet" crossorigin href="../assets/index-SadeNtV_.css">
   <script type="application/ld+json">{"@context":"https://schema.org","@type":"TechArticle","headline":"cast","description":"列の型を別の型に変換する。 Snowparkでの書き方とPolarsでの書き方を並べて解説します。","url":"https://study-apps.com/snowpark-guide/cast/","dateModified":"2026-08-24","inLanguage":"ja"}</script>
   </head>
   <body>
@@ -43,11 +43,11 @@
     <p style="color:#475569">列の型を別の型に変換する。</p>
     <div style="display:flex;flex-wrap:wrap;gap:16px;margin:20px 0">
       <div style="flex:1;min-width:260px">
-        <h2 style="color:#0284c7;font-size:0.9rem">SNOWPARK</h2>
+        <h2 style="color:#0284c7;font-size:0.9rem">SNOWPARK <span style="opacity:0.75;font-weight:500">静的検証のみ</span></h2>
         <pre style="background:#0f172a;color:#e2e8f0;border-radius:10px;padding:14px;overflow-x:auto"><code>col(&quot;id&quot;).cast(IntegerType())</code></pre>
       </div>
       <div style="flex:1;min-width:260px">
-        <h2 style="color:#c026d3;font-size:0.9rem">POLARS</h2>
+        <h2 style="color:#c026d3;font-size:0.9rem">POLARS <span style="opacity:0.75;font-weight:500">実行確認済み</span></h2>
         <pre style="background:#0f172a;color:#e2e8f0;border-radius:10px;padding:14px;overflow-x:auto"><code>pl.col(&quot;id&quot;).cast(pl.Int32)</code></pre>
       </div>
     </div>
@@ -55,6 +55,8 @@
     <p>SnowparkはSQLの<code>CAST(id AS INTEGER)</code>に変換される。Polarsは内部のArrow型を指定した型へ変換する。</p>
     <h2 style="font-size:1.05rem;color:#b45309">移行時の落とし穴</h2>
     <p><strong>変換できない値があったときの既定の挙動が違う</strong>。実行して確認したところ、Polarsで文字列<code>"abc"</code>を整数へキャストしようとすると既定（<code>strict=True</code>）では例外<code>InvalidOperationError</code>になる。<code>cast(pl.Int32, strict=False)</code>を指定すると、変換できない値だけが<code>null</code>になり処理は止まらない。Snowpark側も設定によってエラーとNULL変換のどちらにもなり得るため、<strong>どちらのAPIでも「失敗時にエラーにするかnullにするか」を明示的に決めて書く</strong>必要がある。</p>
+    <h2 style="font-size:1.05rem">式評価・文字列・型変換の他のメソッド</h2><ul style="padding-left:20px"><li><a href="/snowpark-guide/when-otherwise/" style="color:#38bdf8">when / otherwise</a> ── 条件に応じて異なる値を返す（複数分岐の条件式）。</li><li><a href="/snowpark-guide/iff/" style="color:#38bdf8">iff</a> ── 条件が真か偽かで2つの値のどちらかを返す（2分岐専用のショートカット）。</li><li><a href="/snowpark-guide/is-null/" style="color:#38bdf8">is_null / is_not_null</a> ── 値がNULL（欠損）かどうかを判定する。</li><li><a href="/snowpark-guide/coalesce/" style="color:#38bdf8">coalesce</a> ── 複数の列を左から順に見て、最初に見つかったNULLでない値を返す。</li><li><a href="/snowpark-guide/substring/" style="color:#38bdf8">substring</a> ── 文字列の一部を指定した位置から切り出す。</li><li><a href="/snowpark-guide/concat/" style="color:#38bdf8">concat（文字列連結）</a> ── 複数の列・文字列を1つにつなげる。</li></ul>
+    
     <h2 style="font-size:1.05rem">出典・検証情報</h2>
     <ul style="padding-left:20px">
       <li><a href="https://docs.snowflake.com/en/developer-guide/snowpark/reference/python/latest/snowpark/api/snowflake.snowpark.Column.cast" style="color:#38bdf8">Snowpark 公式リファレンス（cast）</a></li>

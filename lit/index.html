@@ -32,8 +32,8 @@
       src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9102538151148380"
       crossorigin="anonymous"
     ></script>
-    <script type="module" crossorigin src="../assets/index-qNNSub6M.js"></script>
-    <link rel="stylesheet" crossorigin href="../assets/index-Dq0rmFeK.css">
+    <script type="module" crossorigin src="../assets/index-BmMUJwg_.js"></script>
+    <link rel="stylesheet" crossorigin href="../assets/index-SadeNtV_.css">
   <script type="application/ld+json">{"@context":"https://schema.org","@type":"TechArticle","headline":"lit","description":"定数値を式として埋め込む。 Snowparkでの書き方とPolarsでの書き方を並べて解説します。","url":"https://study-apps.com/snowpark-guide/lit/","dateModified":"2026-08-20","inLanguage":"ja"}</script>
   </head>
   <body>
@@ -43,11 +43,11 @@
     <p style="color:#475569">定数値を式として埋め込む。</p>
     <div style="display:flex;flex-wrap:wrap;gap:16px;margin:20px 0">
       <div style="flex:1;min-width:260px">
-        <h2 style="color:#0284c7;font-size:0.9rem">SNOWPARK</h2>
+        <h2 style="color:#0284c7;font-size:0.9rem">SNOWPARK <span style="opacity:0.75;font-weight:500">静的検証のみ</span></h2>
         <pre style="background:#0f172a;color:#e2e8f0;border-radius:10px;padding:14px;overflow-x:auto"><code>df.with_column(&quot;status&quot;, lit(&quot;active&quot;))</code></pre>
       </div>
       <div style="flex:1;min-width:260px">
-        <h2 style="color:#c026d3;font-size:0.9rem">POLARS</h2>
+        <h2 style="color:#c026d3;font-size:0.9rem">POLARS <span style="opacity:0.75;font-weight:500">実行確認済み</span></h2>
         <pre style="background:#0f172a;color:#e2e8f0;border-radius:10px;padding:14px;overflow-x:auto"><code>ldf.with_columns(pl.lit(&quot;active&quot;).alias(&quot;status&quot;))</code></pre>
       </div>
     </div>
@@ -55,6 +55,8 @@
     <p>Snowparkは対応するSQLリテラルを挿入する。Polarsは指定した値1個から成る定数式（Expr）を生成する。</p>
     <h2 style="font-size:1.05rem;color:#b45309">移行時の落とし穴</h2>
     <p>PythonのNoneを渡すとき、Snowparkでは型が確定しないため lit(None).cast(StringType()) のように明示的なキャストが必要になる場面がある。Polarsの pl.lit(None) は文脈から型推論されることが多く、同じ書き方が通らないことがある。</p>
+    <h2 style="font-size:1.05rem">射影・選択の他のメソッド</h2><ul style="padding-left:20px"><li><a href="/snowpark-guide/select/" style="color:#38bdf8">select</a> ── 列を選んで取り出す。両方とも遅延評価で、実際のクエリは後段のアクションまで発行されない。</li><li><a href="/snowpark-guide/drop/" style="color:#38bdf8">drop</a> ── 指定した列を取り除く。select の逆で、残す列でなく捨てる列を書く。</li><li><a href="/snowpark-guide/with-column/" style="color:#38bdf8">with_column / with_columns</a> ── 既存の列はそのままに、新しい列を1つ（または複数）追加する。</li><li><a href="/snowpark-guide/with-column-renamed/" style="color:#38bdf8">with_column_renamed / rename</a> ── 列名を変更する。</li><li><a href="/snowpark-guide/col/" style="color:#38bdf8">col</a> ── 列を式として参照する。以降のメソッドチェーンの起点になる、両APIで最も頻出する関数。</li><li><a href="/snowpark-guide/alias/" style="color:#38bdf8">alias</a> ── 式の出力列に名前をつける。</li><li><a href="/snowpark-guide/columns/" style="color:#38bdf8">columns / collect_schema().names()</a> ── 現在の列名の一覧を取得する。</li><li><a href="/snowpark-guide/schema/" style="color:#38bdf8">schema / collect_schema()</a> ── 列名と型の一覧（スキーマ）を取得する。</li></ul>
+    
     <h2 style="font-size:1.05rem">出典・検証情報</h2>
     <ul style="padding-left:20px">
       <li><a href="https://docs.snowflake.com/en/developer-guide/snowpark/reference/python/latest/snowpark/api/snowflake.snowpark.functions.lit" style="color:#38bdf8">Snowpark 公式リファレンス（lit）</a></li>
