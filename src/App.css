@@ -28,6 +28,10 @@
   border-bottom: 1px solid var(--line);
   margin: 0 -20px 32px;
   padding: 16px 20px;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px 20px;
 }
 
 .masthead-link {
@@ -35,6 +39,76 @@
   font-size: 1.05rem;
   text-decoration: none;
   letter-spacing: -0.01em;
+  white-space: nowrap;
+}
+
+.site-search {
+  position: relative;
+  flex: 1 1 240px;
+  min-width: 0;
+  max-width: 420px;
+}
+
+.site-search input {
+  width: 100%;
+  font-size: 0.9rem;
+  padding: 8px 12px;
+  border-radius: 999px;
+  border: 1px solid var(--line);
+  background: var(--surface);
+}
+
+.site-search input:focus {
+  outline: 2px solid var(--snowpark);
+  outline-offset: 1px;
+}
+
+.site-search__results {
+  position: absolute;
+  top: calc(100% + 6px);
+  left: 0;
+  right: 0;
+  z-index: 20;
+  list-style: none;
+  margin: 0;
+  padding: 6px;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  box-shadow: 0 8px 24px rgba(15, 23, 42, 0.12);
+  max-height: 60vh;
+  overflow-y: auto;
+}
+
+.site-search__results a {
+  display: block;
+  text-decoration: none;
+  padding: 8px 10px;
+  border-radius: 8px;
+}
+
+.site-search__results a:hover {
+  background: var(--snowpark-bg);
+}
+
+.site-search__title {
+  display: block;
+  font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
+  font-weight: 600;
+  font-size: 0.9rem;
+}
+
+.site-search__summary {
+  display: block;
+  color: var(--ink-soft);
+  font-size: 0.8rem;
+  margin-top: 2px;
+}
+
+.site-search__empty {
+  color: var(--ink-soft);
+  font-size: 0.85rem;
+  padding: 8px 10px;
 }
 
 /* --- Home --- */
@@ -88,15 +162,6 @@
   color: var(--ink-soft);
   margin: 0 0 16px;
   font-size: 0.95rem;
-}
-
-.category-block__soon {
-  color: var(--ink-soft);
-  font-size: 0.9rem;
-  border: 1px dashed var(--line);
-  border-radius: 10px;
-  padding: 12px 14px;
-  display: inline-block;
 }
 
 .entry-list {
@@ -199,6 +264,14 @@
 .code-compare__label--polars {
   color: var(--polars);
   background: var(--polars-bg);
+}
+
+.code-compare__note {
+  text-transform: none;
+  font-weight: 500;
+  letter-spacing: normal;
+  opacity: 0.75;
+  margin-left: 6px;
 }
 
 .code-compare pre {

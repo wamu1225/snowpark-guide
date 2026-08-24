@@ -1,12 +1,14 @@
 import type { Entry } from '../data/types';
 import { CATEGORIES } from '../data/types';
 import { CONCEPTS } from '../data/concepts';
+import { ALL_ENTRIES } from '../data/entries';
 import { href } from '../lib/router';
 import { inline } from '../lib/md';
 
 export function EntryPage({ entry }: { entry: Entry }) {
   const category = CATEGORIES.find((c) => c.id === entry.category);
   const relatedConcepts = CONCEPTS.filter((c) => c.relatedEntrySlugs.includes(entry.slug));
+  const siblings = ALL_ENTRIES.filter((e) => e.category === entry.category && e.slug !== entry.slug);
   return (
     <article className="entry-page">
       <p className="entry-page__crumb">
@@ -19,13 +21,17 @@ export function EntryPage({ entry }: { entry: Entry }) {
 
       <div className="code-compare">
         <div className="code-compare__col">
-          <h2 className="code-compare__label code-compare__label--snowpark">Snowpark</h2>
+          <h2 className="code-compare__label code-compare__label--snowpark">
+            Snowpark<span className="code-compare__note">静的検証のみ</span>
+          </h2>
           <pre>
             <code>{entry.snowparkCode}</code>
           </pre>
         </div>
         <div className="code-compare__col">
-          <h2 className="code-compare__label code-compare__label--polars">Polars</h2>
+          <h2 className="code-compare__label code-compare__label--polars">
+            Polars<span className="code-compare__note">実行確認済み</span>
+          </h2>
           <pre>
             <code>{entry.polarsCode}</code>
           </pre>
@@ -41,6 +47,22 @@ export function EntryPage({ entry }: { entry: Entry }) {
         <h2>移行時の落とし穴</h2>
         <p>{inline(entry.pitfall)}</p>
       </section>
+
+      {siblings.length > 0 && (
+        <section className="entry-section entry-section--refs">
+          <h2>{category?.label ?? entry.category}の他のメソッド</h2>
+          <ul className="entry-list">
+            {siblings.map((e) => (
+              <li key={e.slug}>
+                <a href={href(`/${e.slug}/`)} className="entry-list__item">
+                  <span className="entry-list__title">{e.title}</span>
+                  <span className="entry-list__summary">{e.summary}</span>
+                </a>
+              </li>
+            ))}
+          </ul>
+        </section>
+      )}
 
       {relatedConcepts.length > 0 && (
         <section className="entry-section entry-section--refs">

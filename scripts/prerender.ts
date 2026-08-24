@@ -58,16 +58,15 @@ const shellClose = `</div>`;
 // ── トップ：検索窓はJS必須なので、静的フォールバックには9カテゴリ×全エントリの一覧を持たせる ──
 const homeDesc =
   'Snowpark PythonのDataFrame/Column APIを、Polarsの同等コードと並べて確認できる逆引きリファレンスです。挙動の違いと移行時の落とし穴をメソッドごとに解説します。';
-const categoryListHtml = CATEGORIES.map((cat) => {
-  const entries = ALL_ENTRIES.filter((e) => e.category === cat.id);
-  const items =
-    entries.length === 0
-      ? '<li style="color:#94a3b8">準備中</li>'
-      : entries
-          .map((e) => `<li><a href="${BASE}/${e.slug}/" style="color:#38bdf8">${esc(e.title)}</a> ── ${esc(e.summary)}</li>`)
-          .join('\n');
-  return `<section style="margin-top:24px"><h2 style="font-size:1.1rem">${esc(cat.label)}</h2><p style="color:#94a3b8;font-size:0.9rem">${esc(cat.description)}</p><ul style="padding-left:20px">${items}</ul></section>`;
-}).join('\n');
+const categoryListHtml = CATEGORIES.filter((cat) => ALL_ENTRIES.some((e) => e.category === cat.id))
+  .map((cat) => {
+    const entries = ALL_ENTRIES.filter((e) => e.category === cat.id);
+    const items = entries
+      .map((e) => `<li><a href="${BASE}/${e.slug}/" style="color:#38bdf8">${esc(e.title)}</a> ── ${esc(e.summary)}</li>`)
+      .join('\n');
+    return `<section style="margin-top:24px"><h2 style="font-size:1.1rem">${esc(cat.label)}</h2><p style="color:#94a3b8;font-size:0.9rem">${esc(cat.description)}</p><ul style="padding-left:20px">${items}</ul></section>`;
+  })
+  .join('\n');
 const conceptListHtml = `<section style="margin-top:24px"><h2 style="font-size:1.1rem">基礎から読む</h2><ul style="padding-left:20px">${CONCEPTS.map(
   (c) => `<li><a href="${BASE}/guide/${c.slug}/" style="color:#38bdf8">${esc(c.title)}</a> ── ${esc(c.summary)}</li>`,
 ).join('\n')}</ul></section>`;
@@ -96,17 +95,31 @@ console.log('✓ トップページ');
 for (const e of ALL_ENTRIES) {
   const category = CATEGORIES.find((c) => c.id === e.category);
   const desc = `${e.summary} Snowparkでの書き方とPolarsでの書き方を並べて解説します。`;
+  const siblings = ALL_ENTRIES.filter((s) => s.category === e.category && s.slug !== e.slug);
+  const siblingsHtml =
+    siblings.length === 0
+      ? ''
+      : `<h2 style="font-size:1.05rem">${esc(category?.label ?? e.category)}の他のメソッド</h2><ul style="padding-left:20px">${siblings
+          .map((s) => `<li><a href="${BASE}/${s.slug}/" style="color:#38bdf8">${esc(s.title)}</a> ── ${esc(s.summary)}</li>`)
+          .join('')}</ul>`;
+  const relatedConcepts = CONCEPTS.filter((c) => c.relatedEntrySlugs.includes(e.slug));
+  const relatedConceptsHtml =
+    relatedConcepts.length === 0
+      ? ''
+      : `<h2 style="font-size:1.05rem">関連する基礎知識</h2><ul style="padding-left:20px">${relatedConcepts
+          .map((c) => `<li><a href="${BASE}/guide/${c.slug}/" style="color:#38bdf8">${esc(c.title)}</a></li>`)
+          .join('')}</ul>`;
   const fallback = `${shellOpen}
     <p style="color:#94a3b8;font-size:0.9rem"><a href="${BASE}/" style="color:#94a3b8">トップ</a> / ${esc(category?.label ?? e.category)}</p>
     <h1 style="font-family:monospace;font-size:1.6rem;margin-bottom:8px">${esc(e.title)}</h1>
     <p style="color:#475569">${esc(e.summary)}</p>
     <div style="display:flex;flex-wrap:wrap;gap:16px;margin:20px 0">
       <div style="flex:1;min-width:260px">
-        <h2 style="color:#0284c7;font-size:0.9rem">SNOWPARK</h2>
+        <h2 style="color:#0284c7;font-size:0.9rem">SNOWPARK <span style="opacity:0.75;font-weight:500">静的検証のみ</span></h2>
         <pre style="background:#0f172a;color:#e2e8f0;border-radius:10px;padding:14px;overflow-x:auto"><code>${esc(e.snowparkCode)}</code></pre>
       </div>
       <div style="flex:1;min-width:260px">
-        <h2 style="color:#c026d3;font-size:0.9rem">POLARS</h2>
+        <h2 style="color:#c026d3;font-size:0.9rem">POLARS <span style="opacity:0.75;font-weight:500">実行確認済み</span></h2>
         <pre style="background:#0f172a;color:#e2e8f0;border-radius:10px;padding:14px;overflow-x:auto"><code>${esc(e.polarsCode)}</code></pre>
       </div>
     </div>
@@ -114,6 +127,8 @@ for (const e of ALL_ENTRIES) {
     <p>${inlineHtml(e.difference, BASE)}</p>
     <h2 style="font-size:1.05rem;color:#b45309">移行時の落とし穴</h2>
     <p>${inlineHtml(e.pitfall, BASE)}</p>
+    ${siblingsHtml}
+    ${relatedConceptsHtml}
     <h2 style="font-size:1.05rem">出典・検証情報</h2>
     <ul style="padding-left:20px">
       <li><a href="${e.snowparkDocUrl}" style="color:#38bdf8">Snowpark 公式リファレンス（${esc(e.title)}）</a></li>

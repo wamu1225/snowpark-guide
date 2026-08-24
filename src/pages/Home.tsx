@@ -3,22 +3,12 @@ import { ALL_ENTRIES } from '../data/entries';
 import { CATEGORIES } from '../data/types';
 import { CONCEPTS } from '../data/concepts';
 import { href } from '../lib/router';
-
-function matches(query: string, e: (typeof ALL_ENTRIES)[number]): boolean {
-  const q = query.trim().toLowerCase();
-  if (!q) return true;
-  return (
-    e.title.toLowerCase().includes(q) ||
-    e.summary.toLowerCase().includes(q) ||
-    e.snowparkCode.toLowerCase().includes(q) ||
-    e.polarsCode.toLowerCase().includes(q)
-  );
-}
+import { matchesQuery } from '../lib/search';
 
 export function Home() {
   const [query, setQuery] = useState('');
 
-  const filtered = useMemo(() => ALL_ENTRIES.filter((e) => matches(query, e)), [query]);
+  const filtered = useMemo(() => ALL_ENTRIES.filter((e) => matchesQuery(query, e)), [query]);
   const isSearching = query.trim().length > 0;
 
   return (
@@ -81,24 +71,21 @@ export function Home() {
         <section className="home__categories">
           {CATEGORIES.map((cat) => {
             const entries = ALL_ENTRIES.filter((e) => e.category === cat.id);
+            if (entries.length === 0) return null;
             return (
               <section key={cat.id} className="category-block" id={cat.id}>
                 <h2>{cat.label}</h2>
                 <p className="category-block__desc">{cat.description}</p>
-                {entries.length === 0 ? (
-                  <p className="category-block__soon">準備中</p>
-                ) : (
-                  <ul className="entry-list">
-                    {entries.map((e) => (
-                      <li key={e.slug}>
-                        <a href={href(`/${e.slug}/`)} className="entry-list__item">
-                          <span className="entry-list__title">{e.title}</span>
-                          <span className="entry-list__summary">{e.summary}</span>
-                        </a>
-                      </li>
-                    ))}
-                  </ul>
-                )}
+                <ul className="entry-list">
+                  {entries.map((e) => (
+                    <li key={e.slug}>
+                      <a href={href(`/${e.slug}/`)} className="entry-list__item">
+                        <span className="entry-list__title">{e.title}</span>
+                        <span className="entry-list__summary">{e.summary}</span>
+                      </a>
+                    </li>
+                  ))}
+                </ul>
               </section>
             );
           })}

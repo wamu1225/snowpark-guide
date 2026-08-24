@@ -4,6 +4,7 @@ import { Home } from './pages/Home';
 import { EntryPage } from './pages/EntryPage';
 import { StaticPage } from './pages/StaticPage';
 import { ConceptPage } from './pages/ConceptPage';
+import { SiteSearch } from './components/SiteSearch';
 import { ALL_ENTRIES } from './data/entries';
 import { STATIC_PAGES } from './data/static-pages';
 import { CONCEPTS } from './data/concepts';
@@ -58,7 +59,7 @@ export function App() {
       '/',
     );
     return (
-      <Shell>
+      <Shell showSearch={false}>
         <Home />
       </Shell>
     );
@@ -114,13 +115,14 @@ export function App() {
   );
 }
 
-function Shell({ children }: { children: ReactNode }) {
+function Shell({ children, showSearch = true }: { children: ReactNode; showSearch?: boolean }) {
   return (
     <div className="shell">
       <header className="masthead">
         <a href={href('/')} className="masthead-link">
           {SITE_TITLE}
         </a>
+        {showSearch && <SiteSearch />}
       </header>
       <main>{children}</main>
       <footer className="footer-nav">

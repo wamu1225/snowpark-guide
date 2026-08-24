@@ -1,11 +1,18 @@
 // about/privacy の本文。React（クライアント）と scripts/prerender.ts（静的HTML）の両方から
 // このSSOTを参照する。Markdown風の簡易記法（##見出し・空行区切り段落・- 箇条書き）。
+import { ALL_ENTRIES } from './entries';
+
 export type StaticPage = {
   slug: 'about' | 'privacy';
   title: string;
   description: string;
   body: string;
 };
+
+const ENTRY_COUNT = ALL_ENTRIES.length;
+// 母数はreports/sources-snowpark-guide.md（①のO-1-8成果物）の実測値。inspect()でSnowpark Python
+// SDK 1.54.0の公開メンバー数を数えたもの（2026-08-19確認）。
+const TOTAL_API_SURFACE = 1116;
 
 export const STATIC_PAGES: StaticPage[] = [
   {
@@ -22,6 +29,14 @@ Polars で書き慣れた処理を Snowpark でどう書くか、あるいはそ
 ## 想定読者
 
 すでに Polars か Snowpark のどちらかに慣れていて、もう一方への移行やAPIの対応関係を調べているデータエンジニア・アナリストを想定しています。両方の入門解説ではなく、対応表として使うことを前提にしています。
+
+## 収録範囲
+
+現在、[関数リファレンス](/)は${ENTRY_COUNT}メソッドを収録しています。Snowpark Python SDK（1.54.0）の公開API面をinspectで実測したところ、\`DataFrame\`・\`Column\`・\`Window\`・\`functions\`モジュールなど主要なクラス・モジュールの公開メンバーを単純合計すると約${TOTAL_API_SURFACE}件になります。${ENTRY_COUNT}件はこの全体を網羅したものではなく、DataFrame操作の中核にあたる実務頻出セットです。
+
+収録しているのは、DataFrameの変換・集約・結合・並べ替え・式評価・ウィンドウ関数・実行という、Snowparkコードを書くときに中心となる操作です。\`Session\`の接続・認証設定、\`Table\`固有のDDL操作、UDF/UDTF/ストアドプロシージャの登録APIの詳細（登録の仕組み自体は[基礎知識](/guide/udf-udtf-sproc/)で解説しています）は、現時点では対象外です。
+
+収録メソッドは今後も増やしていく方針です。「${TOTAL_API_SURFACE}件すべてを解説している」という意味ではないことをご了承のうえご利用ください。
 
 ## 検証方針
 
