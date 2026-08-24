@@ -5,6 +5,7 @@ import { aggregationEntries } from './aggregation';
 import { joinsEntries } from './joins';
 import { sortingEntries } from './sorting';
 import { expressionsEntries } from './expressions';
+import { windowEntries } from './window';
 
 // カテゴリを1本ずつ追加していく。
 export const ALL_ENTRIES: Entry[] = [
@@ -14,4 +15,5 @@ export const ALL_ENTRIES: Entry[] = [
   ...joinsEntries,
   ...sortingEntries,
   ...expressionsEntries,
+  ...windowEntries,
 ];
