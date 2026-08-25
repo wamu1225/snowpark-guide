@@ -48,6 +48,17 @@
   <url><loc>https://study-apps.com/snowpark-guide/lead/</loc><lastmod>2026-08-25</lastmod><priority>0.8</priority></url>
   <url><loc>https://study-apps.com/snowpark-guide/na-fill/</loc><lastmod>2026-08-25</lastmod><priority>0.8</priority></url>
   <url><loc>https://study-apps.com/snowpark-guide/na-drop/</loc><lastmod>2026-08-25</lastmod><priority>0.8</priority></url>
+  <url><loc>https://study-apps.com/snowpark-guide/collect/</loc><lastmod>2026-08-25</lastmod><priority>0.8</priority></url>
+  <url><loc>https://study-apps.com/snowpark-guide/show/</loc><lastmod>2026-08-25</lastmod><priority>0.8</priority></url>
+  <url><loc>https://study-apps.com/snowpark-guide/first/</loc><lastmod>2026-08-25</lastmod><priority>0.8</priority></url>
+  <url><loc>https://study-apps.com/snowpark-guide/take/</loc><lastmod>2026-08-25</lastmod><priority>0.8</priority></url>
+  <url><loc>https://study-apps.com/snowpark-guide/to-pandas/</loc><lastmod>2026-08-25</lastmod><priority>0.8</priority></url>
+  <url><loc>https://study-apps.com/snowpark-guide/to-local-iterator/</loc><lastmod>2026-08-25</lastmod><priority>0.8</priority></url>
+  <url><loc>https://study-apps.com/snowpark-guide/cache-result/</loc><lastmod>2026-08-25</lastmod><priority>0.8</priority></url>
+  <url><loc>https://study-apps.com/snowpark-guide/create-or-replace-view/</loc><lastmod>2026-08-25</lastmod><priority>0.8</priority></url>
+  <url><loc>https://study-apps.com/snowpark-guide/create-or-replace-temp-view/</loc><lastmod>2026-08-25</lastmod><priority>0.8</priority></url>
+  <url><loc>https://study-apps.com/snowpark-guide/save-as-table/</loc><lastmod>2026-08-25</lastmod><priority>0.8</priority></url>
+  <url><loc>https://study-apps.com/snowpark-guide/explain/</loc><lastmod>2026-08-25</lastmod><priority>0.8</priority></url>
   <url><loc>https://study-apps.com/snowpark-guide/guide/architecture/</loc><lastmod>2026-08-25</lastmod><priority>0.7</priority></url>
   <url><loc>https://study-apps.com/snowpark-guide/guide/vs-spark/</loc><lastmod>2026-08-25</lastmod><priority>0.7</priority></url>
   <url><loc>https://study-apps.com/snowpark-guide/guide/vs-polars/</loc><lastmod>2026-08-25</lastmod><priority>0.7</priority></url>
