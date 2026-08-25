@@ -83,7 +83,12 @@ for (const e of ALL_ENTRIES) {
   // 制作側の事情が読者向け本文に漏れていないか（2026-08-26 ユーザー指摘で追加）
   // 実害：na-fill の落とし穴が「report原文には〜とあるが」で始まっており、読者に無関係な
   // 内部の資料名が本番に出ていた。検証の過程は書いてよいが、社内資料の呼び名は出さない。
-  const LEAK = /report原文|reportの原文|report の原文|原文には|Gemini|Deep Research|下書き|ドラフト|リサーチ結果には/;
+  // ⚠️ 運営側の状況（環境が無い・用意していない・確認できていない）も同じく内部事情。
+  // 監督は 08-26 に「なお Snowpark 側の na.fill() が同じ状況でどう振る舞うかは、
+  // 接続環境がないため未検証」と書いて即日ユーザーに指摘された。読者は運営者が
+  // Snowflake アカウントを持っているかを知る必要がない。検証範囲は about に一度書けば足りる。
+  const LEAK =
+    /report原文|reportの原文|report の原文|原文には|Gemini|Deep Research|下書き|ドラフト|リサーチ結果には|接続環境|アカウントがな|環境がな|用意していな|確認できていな|検証していな|未検証/;
   const leak = fullText.match(LEAK);
   if (leak) {
     errors.push(
