@@ -71,6 +71,18 @@ for (const e of ALL_ENTRIES) {
   if (/\[span_\d+\]|start_span|end_span/.test(fullText)) {
     errors.push(`${label}: リサーチ下書きの脚注マーカーの残骸が本文に残っています`);
   }
+
+  // 制作側の事情が読者向け本文に漏れていないか（2026-08-26 ユーザー指摘で追加）
+  // 実害：na-fill の落とし穴が「report原文には〜とあるが」で始まっており、読者に無関係な
+  // 内部の資料名が本番に出ていた。検証の過程は書いてよいが、社内資料の呼び名は出さない。
+  const LEAK = /report原文|reportの原文|report の原文|原文には|Gemini|Deep Research|下書き|ドラフト|リサーチ結果には/;
+  const leak = fullText.match(LEAK);
+  if (leak) {
+    errors.push(
+      `${label}: 制作側の事情が本文に漏れています（「${leak[0]}」）。` +
+        `検証で分かった事実だけを、読者にとっての意味で書き直してください`,
+    );
+  }
 }
 
 // ── Layer A（基礎知識・概要）の検証 ──
