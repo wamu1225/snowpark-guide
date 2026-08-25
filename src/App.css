@@ -96,6 +96,7 @@
   font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
   font-weight: 600;
   font-size: 0.9rem;
+  overflow-wrap: break-word;
 }
 
 .site-search__summary {
@@ -191,6 +192,7 @@
   display: block;
   font-weight: 600;
   font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
+  overflow-wrap: break-word;
 }
 
 .entry-list__title--prose {
@@ -220,6 +222,7 @@
   font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
   font-size: clamp(1.5rem, 4vw, 2rem);
   margin: 0 0 8px;
+  overflow-wrap: break-word;
 }
 
 .entry-page__summary {

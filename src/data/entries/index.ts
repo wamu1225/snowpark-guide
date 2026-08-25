@@ -7,8 +7,9 @@ import { sortingEntries } from './sorting';
 import { expressionsEntries } from './expressions';
 import { windowEntries } from './window';
 import { nullsEntries } from './nulls';
+import { executionEntries } from './execution';
 
-// カテゴリを1本ずつ追加していく。
+// カテゴリを1本ずつ追加していく。9カテゴリ56メソッドで完走。
 export const ALL_ENTRIES: Entry[] = [
   ...projectionEntries,
   ...filteringEntries,
@@ -18,4 +19,5 @@ export const ALL_ENTRIES: Entry[] = [
   ...expressionsEntries,
   ...windowEntries,
   ...nullsEntries,
+  ...executionEntries,
 ];
