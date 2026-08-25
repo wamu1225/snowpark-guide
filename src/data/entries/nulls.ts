@@ -13,7 +13,7 @@ export const nullsEntries: Entry[] = [
     difference:
       'Snowparkは列名と埋める値の辞書を`na.fill()`に渡し、対応するSQLに展開される。Polarsは列ごとに`.fill_null()`を`with_columns`へ並べる。書き方は違うが、狙いは同じ「指定した列のNULLだけを値で置き換える」。',
     pitfall:
-      '**整数列に浮動小数点数で埋めると、エラーにならずに型が変わる**。整数列（`i64`）に`fill_null(0.0)`のような浮動小数点数を渡すと、**例外を出さずに列全体の型がこっそり`f64`へ変わる**（Polars 1.43.2 で実行して確認）。「型エラーで気づける」と思っていると危険で、後続の処理で誤差や想定外の桁が出てから気づくことになりやすい。整数列を保ちたいときは、埋める値の型（`0`か`0.0`か）を明示的に意識する。',
+      '**【Polars 側の落とし穴】整数列に浮動小数点数で埋めると、エラーにならずに型が変わる**。Polars で整数列（`i64`）に`fill_null(0.0)`のような浮動小数点数を渡すと、**例外を出さずに列全体の型がこっそり`f64`へ変わる**（Polars 1.43.2 で実行して確認）。「型エラーで気づける」と思っていると危険で、後続の処理で誤差や想定外の桁が出てから気づくことになりやすい。整数列を保ちたいときは、埋める値の型（`0`か`0.0`か）を明示的に意識する。なお Snowpark 側の `na.fill()` が同じ状況でどう振る舞うかは、接続環境がないため未検証。',
     snowparkDocUrl:
       'https://docs.snowflake.com/en/developer-guide/snowpark/reference/python/latest/snowpark/api/snowflake.snowpark.DataFrameNaFunctions.fill',
     polarsDocUrl: 'https://docs.pola.rs/api/python/stable/reference/expressions/api/polars.Expr.fill_null.html',
