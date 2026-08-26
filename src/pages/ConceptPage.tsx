@@ -8,6 +8,7 @@ import { VsSparkDiagram } from '../components/diagrams/VsSparkDiagram';
 import { VsPolarsDiagram } from '../components/diagrams/VsPolarsDiagram';
 import { UdfShapesDiagram } from '../components/diagrams/UdfShapesDiagram';
 import { SnowparkMlDiagram } from '../components/diagrams/SnowparkMlDiagram';
+import { PricingDiagram } from '../components/diagrams/PricingDiagram';
 
 // 主題が「構造・比較・入出力の形」の概念ページは図が本体になる。slugで該当図を出し分ける。
 const DIAGRAMS: Record<string, ComponentType> = {
@@ -16,6 +17,7 @@ const DIAGRAMS: Record<string, ComponentType> = {
   'vs-polars': VsPolarsDiagram,
   'udf-udtf-sproc': UdfShapesDiagram,
   'snowpark-ml': SnowparkMlDiagram,
+  pricing: PricingDiagram,
 };
 
 export function ConceptPage({ page }: { page: ConceptPageData }) {

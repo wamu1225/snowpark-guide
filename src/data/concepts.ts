@@ -349,7 +349,23 @@ Snowflake公式ドキュメントによると、Snowpark-Optimized Warehouseの�
 - **不要な\`collect()\`を挟まない**：\`collect()\`は結果をクライアント側に持ってくるアクションで、そこで必ずウェアハウスが動きます。処理の途中経過を確認したいだけなら、最終的な\`collect()\`の前に余計な\`collect()\`を挟まず、変換のチェーンをつなげたままにする方がウェアハウスの稼働時間を抑えられます。
 - **\`with_column\`の連続チェーンを避ける**：\`with_column\`を何度も連続で呼ぶと、内部的に生成されるSQLがネストして複雑になり、実行時間が伸びることがあります（詳しくは[with_column / with_columnsのページ](/with-column/)）。複数列を追加するときは\`with_columns\`にまとめて式を渡す方が、生成されるSQLがシンプルになります。
 - **\`limit\`は早い段階に置く**：一部の行だけ確認したいときに\`limit\`を後段に置くと、絞り込む前の全件に対して手前の変換が評価されてしまう場合があります。動作確認の段階では早めに\`limit\`を挟むと、無駄な計算に対するウェアハウスの稼働時間を減らせます。
-- **\`cache_result()\`は「使い回す」ときだけ使う**：同じ中間結果を後続の複数の処理で繰り返し参照するなら、\`cache_result()\`で一度だけ計算してテーブル化する方が、毎回同じ変換を再計算するより合計のコンピュートコストが下がることがあります。逆に、その場限りでしか使わない結果に\`cache_result()\`を呼ぶと、再計算を避けるメリットが無いままストレージコストだけが増えます。`,
+- **\`cache_result()\`は「使い回す」ときだけ使う**：同じ中間結果を後続の複数の処理で繰り返し参照するなら、\`cache_result()\`で一度だけ計算してテーブル化する方が、毎回同じ変換を再計算するより合計のコンピュートコストが下がることがあります。逆に、その場限りでしか使わない結果に\`cache_result()\`を呼ぶと、再計算を避けるメリットが無いままストレージコストだけが増えます。
+
+\`\`\`python
+filtered = df.filter(col("amount") > 100)
+
+# 悪い例：同じ filtered から2回 collect() すると、
+# filter の変換がそのたびに再計算される（ウェアハウスが2回分動く）
+report_a = filtered.group_by("region").agg(F.sum("amount")).collect()
+report_b = filtered.group_by("customer_id").agg(F.count("*")).collect()
+
+# 良い例：cache_result() で一度だけ実体化し、以降はそのテーブルを再利用する
+cached = filtered.cache_result()
+report_a = cached.group_by("region").agg(F.sum("amount")).collect()
+report_b = cached.group_by("customer_id").agg(F.count("*")).collect()
+\`\`\`
+
+\`cache_result()\`が\`Table\`オブジェクトを返すことはSDKのクラス定義で確認済みです。同じ\`filtered\`を複数の集計で使い回すときに効果が出るパターンで、1回しか使わない中間結果に呼んでもストレージコストが増えるだけの逆効果になる点は前述のとおりです。`,
     relatedEntrySlugs: ['with-column'],
     sources: [
       {
@@ -361,7 +377,7 @@ Snowflake公式ドキュメントによると、Snowpark-Optimized Warehouseの�
         url: 'https://docs.snowflake.com/en/user-guide/warehouses-snowpark-optimized',
       },
     ],
-    verifiedDate: '2026-08-21',
+    verifiedDate: '2026-08-27',
   },
   {
     slug: 'snowpark-ml',

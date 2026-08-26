@@ -15,6 +15,7 @@ import { VsSparkDiagram } from '../src/components/diagrams/VsSparkDiagram';
 import { VsPolarsDiagram } from '../src/components/diagrams/VsPolarsDiagram';
 import { UdfShapesDiagram } from '../src/components/diagrams/UdfShapesDiagram';
 import { SnowparkMlDiagram } from '../src/components/diagrams/SnowparkMlDiagram';
+import { PricingDiagram } from '../src/components/diagrams/PricingDiagram';
 
 // ConceptPage.tsxのDIAGRAMSと同じ対応表。SSRでも同じ図を静的HTMLへ焼き込む（レンダラ間不一致の防止）。
 const CONCEPT_DIAGRAMS: Record<string, ComponentType> = {
@@ -23,6 +24,7 @@ const CONCEPT_DIAGRAMS: Record<string, ComponentType> = {
   'vs-polars': VsPolarsDiagram,
   'udf-udtf-sproc': UdfShapesDiagram,
   'snowpark-ml': SnowparkMlDiagram,
+  pricing: PricingDiagram,
 };
 
 const DIST_DIR = path.resolve(process.cwd(), 'dist');
