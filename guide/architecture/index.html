@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="icon" type="image/svg+xml" href="../favicon.svg" />
+    <link rel="icon" type="image/svg+xml" href="../../favicon.svg" />
     <title>Snowparkのアーキテクチャと実行の仕組み｜Snowpark ⇄ Polars 対応表</title>
     <meta
       name="description"
@@ -32,27 +32,47 @@
       src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9102538151148380"
       crossorigin="anonymous"
     ></script>
-    <script type="module" crossorigin src="../assets/index-CGiqhfNK.js"></script>
-    <link rel="stylesheet" crossorigin href="../assets/index-f6QTML3Q.css">
-  <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","headline":"Snowparkのアーキテクチャと実行の仕組み","description":"コードはどこで実行されるのか。遅延評価とSQLへの変換・プッシュダウンの仕組みを説明します。","url":"https://study-apps.com/snowpark-guide/guide/architecture/","dateModified":"2026-08-21","inLanguage":"ja"}</script>
+    <script type="module" crossorigin src="../../assets/index-Cs-_mSdL.js"></script>
+    <link rel="stylesheet" crossorigin href="../../assets/index-BpUyKKfG.css">
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","headline":"Snowparkのアーキテクチャと実行の仕組み","description":"自分のPythonコードは、結局どこで動いているのか。クライアント・Snowflake・UDFという3つの実行場所を切り分けて説明します。","url":"https://study-apps.com/snowpark-guide/guide/architecture/","dateModified":"2026-08-26","inLanguage":"ja"}</script>
   </head>
   <body>
     <div id="root"><div style="max-width:760px;margin:0 auto;padding:24px 16px;font-family:sans-serif;line-height:1.8;color:#0f172a">
     <p style="color:#94a3b8;font-size:0.9rem"><a href="/snowpark-guide/" style="color:#94a3b8">トップ</a> / 基礎知識</p>
     <h1 style="font-size:1.6rem;margin-bottom:8px">Snowparkのアーキテクチャと実行の仕組み</h1>
-    <p style="color:#475569">コードはどこで実行されるのか。遅延評価とSQLへの変換・プッシュダウンの仕組みを説明します。</p>
-    <h2>クライアント側では何も実行されない</h2>
-<p>Snowpark DataFrameに対して <code>select</code>・<code>filter</code>・<code>join</code> のような変換メソッドを呼び出しても、その時点ではSnowflakeへリクエストは送られません。Snowflake公式ドキュメントは「DataFrameは、データを取得するために評価される必要のあるクエリのようなものである」と説明しており、変換メソッドは「SQL文の組み立て方を指定するだけで、Snowflakeデータベースからデータを取得しない」と明記しています。</p>
-<p>呼び出された変換は、クライアント側で内部的な論理プラン（実行計画）として積み上がっていきます。この間、Snowflake側では何も処理が走っていません。</p>
-<h2>アクションメソッドが実行の引き金になる</h2>
-<p>実際にSnowflake側で処理が走るのは、<code>collect()</code>・<code>count()</code>・<code>show()</code>・<code>save_as_table()</code> のような<strong>アクションメソッド</strong>を呼んだ瞬間です。ここで初めて、それまで積み上げられた変換の内容がSQL文へと変換され、Snowflakeの分散クエリエンジン（Virtual Warehouse）に送信されて実行されます。</p>
-<p>この「変換は溜める・アクションで初めて動く」という順序を知らないと、「<code>select</code> や <code>filter</code> を書いた時点で何かが実行されているはず」という誤った直感でコードを読んでしまい、パフォーマンス上のボトルネックがどこにあるかを見誤ります。</p>
+    <p style="color:#475569">自分のPythonコードは、結局どこで動いているのか。クライアント・Snowflake・UDFという3つの実行場所を切り分けて説明します。</p>
+    <div style="margin:16px 0"><svg viewBox="0 0 720 360" width="720" height="360" role="img" aria-label="Snowparkコードの実行場所を示す図。クライアント側でPythonが論理プランを組み立て、collect()等のアクションで初めてSnowflake側にSQLが送られ、ウェアハウスとUDFのPythonコードもSnowflake側で実行される。"><defs><marker id="arch-arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 Z" fill="#475569"></path></marker></defs><rect x="16" y="24" width="290" height="312" rx="14" fill="#e0f2fe" stroke="#0284c7" stroke-width="2"></rect><text x="161" y="54" text-anchor="middle" font-size="16" font-weight="700" fill="#0284c7">クライアント（あなたのPythonプロセス）</text><rect x="40" y="76" width="242" height="120" rx="10" fill="#ffffff" stroke="#0284c7" stroke-width="1.5"></rect><text x="161" y="98" text-anchor="middle" font-size="13" font-weight="600" fill="#0f172a">DataFrameの変換メソッド</text><text x="161" y="120" text-anchor="middle" font-size="12" fill="#334155" font-family="monospace">df.select(...)</text><text x="161" y="140" text-anchor="middle" font-size="12" fill="#334155" font-family="monospace">.filter(...)</text><text x="161" y="160" text-anchor="middle" font-size="12" fill="#334155" font-family="monospace">.join(...)</text><text x="161" y="182" text-anchor="middle" font-size="11" fill="#64748b">＝ここまでは論理プランの組み立てのみ</text><rect x="40" y="216" width="242" height="96" rx="10" fill="#fef3c7" stroke="#b45309" stroke-width="1.5"></rect><text x="161" y="240" text-anchor="middle" font-size="13" font-weight="700" fill="#b45309">アクション呼び出し</text><text x="161" y="264" text-anchor="middle" font-size="12" fill="#334155" font-family="monospace">df.collect() / .show()</text><text x="161" y="284" text-anchor="middle" font-size="12" fill="#334155" font-family="monospace">.save_as_table()</text><text x="161" y="302" text-anchor="middle" font-size="11" fill="#92400e">ここで初めてSQLが送信される</text><path d="M282 130 H 430" stroke="#475569" stroke-width="2" fill="none" marker-end="url(#arch-arrow)"></path><text x="356" y="118" text-anchor="middle" font-size="11" fill="#475569">SQLに変換して送信</text><path d="M430 290 H 282" stroke="#475569" stroke-width="2" fill="none" marker-end="url(#arch-arrow)"></path><text x="356" y="278" text-anchor="middle" font-size="11" fill="#475569">結果（Rowのリスト）</text><rect x="430" y="24" width="274" height="312" rx="14" fill="#fae8ff" stroke="#c026d3" stroke-width="2"></rect><text x="567" y="54" text-anchor="middle" font-size="16" font-weight="700" fill="#a21caf">Snowflake（Virtual Warehouse）</text><rect x="452" y="76" width="230" height="90" rx="10" fill="#ffffff" stroke="#c026d3" stroke-width="1.5"></rect><text x="567" y="100" text-anchor="middle" font-size="13" font-weight="600" fill="#0f172a">送られてきたSQLを実行</text><text x="567" y="122" text-anchor="middle" font-size="11" fill="#64748b">テーブルの読み取り・結合・</text><text x="567" y="140" text-anchor="middle" font-size="11" fill="#64748b">絞り込みなどの実データ処理</text><rect x="452" y="182" width="230" height="90" rx="10" fill="#fdf2f8" stroke="#c026d3" stroke-width="1.5" stroke-dasharray="4 3"></rect><text x="567" y="206" text-anchor="middle" font-size="13" font-weight="600" fill="#0f172a">UDFのPythonコード</text><text x="567" y="228" text-anchor="middle" font-size="11" fill="#64748b">ここも実は client ではなく</text><text x="567" y="246" text-anchor="middle" font-size="11" fill="#64748b">Snowflake側のサンドボックスで実行</text><text x="567" y="300" text-anchor="middle" font-size="11" fill="#a21caf">データはこの中を出ない</text></svg></div>
+    <h2>「どこで動くか」は1つではなく3種類ある</h2>
+<p>Snowparkのコードを読むとき、「Pythonなのだから手元のマシンで動く」と思ってしまいがちですが、実際には<strong>3種類の場所</strong>に処理が分かれています。</p>
+<p>1. <strong>クライアント側</strong>：あなたが書いたPythonのスクリプト自体（DataFrameの変換メソッドを呼ぶ部分）
+2. <strong>Snowflake側（SQLエンジン）</strong>：フィルタ・結合・集計など、実際のデータ処理
+3. <strong>Snowflake側（UDFのサンドボックス）</strong>：あなたが書いたPython関数の<strong>中身</strong>が、条件によってはこちらで動く</p>
+<p>この3つを区別せずに「Pythonはクライアントで動く」「SQLはSnowflakeで動く」とだけ覚えると、UDFを使った瞬間に混乱します。順番に見ていきます。</p>
+<h2>1. クライアント側で動くのは「計画を組み立てるコード」だけ</h2>
+<p><code>select</code>・<code>filter</code>・<code>join</code>のような変換メソッドを呼ぶ<strong>Pythonの文自体は、間違いなくクライアント側（あなたのスクリプトを実行しているマシン）で動きます</strong>。ここは動かしようのない事実です。</p>
+<p>ただし、このPythonコードが実際に<strong>行っていること</strong>は、データの処理ではありません。「この列を選ぶ」「この条件で絞り込む」という指示を、内部的な論理プラン（実行計画）として積み上げているだけです。Snowflake公式ドキュメントも「DataFrameは、データを取得するために評価される必要のあるクエリのようなものである」と説明しており、変換メソッドは「SQL文の組み立て方を指定するだけで、Snowflakeデータベースからデータを取得しない」と明記しています。</p>
+<pre class="concept-page__code"><code># ここまでの4行は、すべてクライアント側のPythonが実行される。
+# しかし「実行される」のは論理プランの組み立てであって、
+# テーブルの中身が読まれたり、フィルタが適用されたりは一切していない。
+df2 = df.select("customer_id", "amount")
+df3 = df2.filter(col("amount") &gt; 100)
+df4 = df3.join(other_df, "customer_id")
+print("ここまで到達。まだSnowflakeには何も送っていない。")</code></pre>
+<p># ここで初めてSQLが組み立てられ、Snowflakeへ送信・実行される。
+result = df4.collect()
+```</p>
+<h2>2. 実際のデータ処理はSnowflakeのウェアハウスで動く</h2>
+<p><code>collect()</code>・<code>count()</code>・<code>show()</code>・<code>save_as_table()</code>のような<strong>アクションメソッド</strong>を呼んだ瞬間、それまで積み上げた論理プランがSQL文に変換され、Snowflakeの仮想ウェアハウスへ送信されて実行されます。テーブルの読み取り・結合・絞り込みといった実際のデータ処理はすべてここで行われ、処理結果だけがクライアントへ返ってきます。</p>
+<h2>3. UDFの中身はクライアントではなくSnowflake側で動く</h2>
+<p>ここが最も誤解されやすい点です。Pythonで書いたUDF（ユーザー定義関数）は、<strong>定義自体はクライアント側で書きますが、実行されるのはSnowflake側</strong>です。Snowflake公式ドキュメントは「UDFを呼び出すと、Snowparkはあなたの関数をデータのある場所＝サーバー側で実行する」と明記しています。UDFの中でPythonの通常のライブラリを使っていても、それはSnowflakeのウェアハウス内で動いており、あなたの手元のマシンでは実行されていません。</p>
 <h2>なぜこの設計になっているか</h2>
-<p>変換をSQLへまとめて変換してからSnowflakeへ送ることで、Snowflake側のクエリオプティマイザが変換全体を見渡して最適化できます。逐次的に1行ずつ処理を送るのではなく、まとまった単位で送ることで、データを不必要にクライアントへ転送せずに済み、ペタバイト規模のデータでも同じコードで処理できます。</p>
+<p>変換をまとめてSQLへ変換してからSnowflakeへ送ることで、Snowflakeのクエリオプティマイザが変換全体を見渡して最適化できます。UDFの実行場所をSnowflake側に寄せているのも同じ理由で、データをクライアントへ転送せずに済み、ペタバイト規模のデータでも同じコードで処理できます。</p>
+<h2>実務でどう効くか</h2>
+<ul><li><strong>「なぜかコードが速く終わる」の正体</strong>：<code>select</code>や<code>filter</code>を何行書いても、Snowflakeへは何も送られていません。「実行が速い」のではなく「まだ何も実行していない」だけ、というケースがよくあります。処理時間を計測するときは、必ずアクションメソッドを呼んだ地点で計測します。</li><li><strong>UDFのデバッグが手元のprint文で追えない理由</strong>：UDFの中身はSnowflake側で動くため、クライアント側のターミナルに<code>print()</code>の出力はそのまま出てきません（Snowflakeのクエリ履歴やログから確認する必要があります）。「手元でデバッグできない」のはバグではなく、実行場所が違うことの当然の帰結です。</li><li><strong>ネットワーク越しに動くのは「結果」だけ</strong>：中間データがクライアントとSnowflakeの間を行き来することはなく、やり取りされるのは最終的な結果だけです。大きな中間テーブルを扱っても、ネットワーク帯域を心配する必要は基本的にありません。</li></ul>
     <h2 style="font-size:1.05rem">関連する関数リファレンス</h2><ul style="padding-left:20px"><li><a href="/snowpark-guide/select/" style="color:#38bdf8">select</a></li><li><a href="/snowpark-guide/filter/" style="color:#38bdf8">filter / where</a></li></ul>
     <h2 style="font-size:1.05rem">出典</h2>
-    <ul style="padding-left:20px"><li><a href="https://docs.snowflake.com/en/developer-guide/snowpark/python/working-with-dataframes" style="color:#38bdf8">Snowflake Documentation: Working with DataFrames in Snowpark Python</a></li></ul>
-    <p style="color:#94a3b8;font-size:0.85rem">公式ドキュメントの記載にもとづく解説です（実行検証はしていません）。確認日：2026-08-21</p>
+    <ul style="padding-left:20px"><li><a href="https://docs.snowflake.com/en/developer-guide/snowpark/python/working-with-dataframes" style="color:#38bdf8">Snowflake Documentation: Working with DataFrames in Snowpark Python</a></li><li><a href="https://docs.snowflake.com/en/developer-guide/snowpark/python/creating-udfs" style="color:#38bdf8">Snowflake Documentation: Creating UDFs for DataFrames in Python（UDFの実行場所について）</a></li></ul>
+    <p style="color:#94a3b8;font-size:0.85rem">公式ドキュメントの記載にもとづく解説です（実行検証はしていません）。確認日：2026-08-26</p>
     <nav style="margin-top:24px;display:flex;gap:16px;flex-wrap:wrap;font-size:0.85rem"><a href="/snowpark-guide/about/" style="color:#94a3b8">このサイトについて</a><a href="/snowpark-guide/privacy/" style="color:#94a3b8">プライバシーポリシー</a></nav>
   </div></div>
   </body>

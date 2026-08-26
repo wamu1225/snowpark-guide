@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="icon" type="image/svg+xml" href="../favicon.svg" />
+    <link rel="icon" type="image/svg+xml" href="../../favicon.svg" />
     <title>UDF・Vectorized UDF・UDTF・ストアドプロシージャの使い分け｜Snowpark ⇄ Polars 対応表</title>
     <meta
       name="description"
@@ -32,8 +32,8 @@
       src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9102538151148380"
       crossorigin="anonymous"
     ></script>
-    <script type="module" crossorigin src="../assets/index-CGiqhfNK.js"></script>
-    <link rel="stylesheet" crossorigin href="../assets/index-f6QTML3Q.css">
+    <script type="module" crossorigin src="../../assets/index-Cs-_mSdL.js"></script>
+    <link rel="stylesheet" crossorigin href="../../assets/index-BpUyKKfG.css">
   <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","headline":"UDF・Vectorized UDF・UDTF・ストアドプロシージャの使い分け","description":"Snowflake上でカスタムロジックを実行する4つの手段を、入出力の形とSQLからの呼び出し方で整理します。","url":"https://study-apps.com/snowpark-guide/guide/udf-udtf-sproc/","dateModified":"2026-08-21","inLanguage":"ja"}</script>
   </head>
   <body>
@@ -41,6 +41,7 @@
     <p style="color:#94a3b8;font-size:0.9rem"><a href="/snowpark-guide/" style="color:#94a3b8">トップ</a> / 基礎知識</p>
     <h1 style="font-size:1.6rem;margin-bottom:8px">UDF・Vectorized UDF・UDTF・ストアドプロシージャの使い分け</h1>
     <p style="color:#475569">Snowflake上でカスタムロジックを実行する4つの手段を、入出力の形とSQLからの呼び出し方で整理します。</p>
+    
     <h2>スカラUDF：1行→1つの値</h2>
 <p>スカラUDFは行ごとに呼び出され、1つの値を返す関数です。SELECT句やWHERE句などのSQL式の中から直接呼び出せます。Python UDFの場合、1行ずつPythonの関数を呼び出すため、行数が多いとPythonの呼び出しオーバーヘッドが積み重なります。</p>
 <h2>Vectorized UDF：複数行をまとめて処理</h2>

@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="icon" type="image/svg+xml" href="../favicon.svg" />
+    <link rel="icon" type="image/svg+xml" href="../../favicon.svg" />
     <title>料金構造とウェアハウスのリソース消費｜Snowpark ⇄ Polars 対応表</title>
     <meta
       name="description"
@@ -32,8 +32,8 @@
       src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9102538151148380"
       crossorigin="anonymous"
     ></script>
-    <script type="module" crossorigin src="../assets/index-CGiqhfNK.js"></script>
-    <link rel="stylesheet" crossorigin href="../assets/index-f6QTML3Q.css">
+    <script type="module" crossorigin src="../../assets/index-Cs-_mSdL.js"></script>
+    <link rel="stylesheet" crossorigin href="../../assets/index-BpUyKKfG.css">
   <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","headline":"料金構造とウェアハウスのリソース消費","description":"コストは何に対して発生するのか。標準ウェアハウスとSnowpark-Optimized Warehouseの違い、書き方で抑えられる部分を整理します。","url":"https://study-apps.com/snowpark-guide/guide/pricing/","dateModified":"2026-08-21","inLanguage":"ja"}</script>
   </head>
   <body>
@@ -41,6 +41,7 @@
     <p style="color:#94a3b8;font-size:0.9rem"><a href="/snowpark-guide/" style="color:#94a3b8">トップ</a> / 基礎知識</p>
     <h1 style="font-size:1.6rem;margin-bottom:8px">料金構造とウェアハウスのリソース消費</h1>
     <p style="color:#475569">コストは何に対して発生するのか。標準ウェアハウスとSnowpark-Optimized Warehouseの違い、書き方で抑えられる部分を整理します。</p>
+    
     <p><strong>このページに書かれている料金体系・数値（秒単位課金・60秒最低利用・メモリ量など）は、Snowflakeのエディション・リージョン・契約内容によって異なり、将来変更される可能性があります。</strong> 実際の請求額の見積もりには、必ずSnowflake公式サイトの最新の料金情報をご確認ください。</p>
 <h2>まず押さえること：変換を書くだけでは課金されない</h2>
 <p>Snowparkは遅延評価（詳しくは<a href="/snowpark-guide/guide/architecture/">アーキテクチャの解説</a>）を採用しているため、<code>select</code>・<code>filter</code>・<code>join</code>のような変換メソッドを何回書いても、それ自体では一切課金されません。課金が発生するのは、<code>collect()</code>・<code>show()</code>・<code>save_as_table()</code>のようなアクションメソッドを呼び、実際にSnowflakeのウェアハウスが処理を実行した瞬間だけです。他のインメモリ処理系（都度実行されるライブラリ）に慣れていると、「変換を書いた時点で何か処理が走っているはず」という直感でコストを見積もってしまいがちですが、Snowparkではその直感は成り立ちません。</p>

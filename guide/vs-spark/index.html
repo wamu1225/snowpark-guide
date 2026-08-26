@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="icon" type="image/svg+xml" href="../favicon.svg" />
+    <link rel="icon" type="image/svg+xml" href="../../favicon.svg" />
     <title>Snowpark と Apache Spark の違い｜Snowpark ⇄ Polars 対応表</title>
     <meta
       name="description"
@@ -32,8 +32,8 @@
       src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9102538151148380"
       crossorigin="anonymous"
     ></script>
-    <script type="module" crossorigin src="../assets/index-CGiqhfNK.js"></script>
-    <link rel="stylesheet" crossorigin href="../assets/index-f6QTML3Q.css">
+    <script type="module" crossorigin src="../../assets/index-Cs-_mSdL.js"></script>
+    <link rel="stylesheet" crossorigin href="../../assets/index-BpUyKKfG.css">
   <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","headline":"Snowpark と Apache Spark の違い","description":"どちらも分散DataFrame APIだが、クラスタを自分で持つか持たないかで運用とコストの構造が変わります。","url":"https://study-apps.com/snowpark-guide/guide/vs-spark/","dateModified":"2026-08-21","inLanguage":"ja"}</script>
   </head>
   <body>
@@ -41,6 +41,7 @@
     <p style="color:#94a3b8;font-size:0.9rem"><a href="/snowpark-guide/" style="color:#94a3b8">トップ</a> / 基礎知識</p>
     <h1 style="font-size:1.6rem;margin-bottom:8px">Snowpark と Apache Spark の違い</h1>
     <p style="color:#475569">どちらも分散DataFrame APIだが、クラスタを自分で持つか持たないかで運用とコストの構造が変わります。</p>
+    
     <h2>クラスタを自分で管理するかどうか</h2>
 <p>Apache SparkとSnowparkは、どちらも遅延評価の分散DataFrame APIという点で似ています。しかし、その裏側にあるインフラは大きく異なります。</p>
 <p>Sparkはユーザー自身がドライバーノードとワーカーノードから成る計算クラスタ（多くはJVM環境）を用意し、管理する必要があります。メモリ設定やネットワークのチューニングもユーザーの責任範囲です。一方でSnowparkは、Snowflakeが提供するフルマネージドな環境（Virtual Warehouse）の上で動くため、そうしたクラスタ運用の作業そのものが発生しません。</p>
