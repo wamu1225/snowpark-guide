@@ -32,16 +32,16 @@
       src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9102538151148380"
       crossorigin="anonymous"
     ></script>
-    <script type="module" crossorigin src="../../assets/index-BUyOXa0y.js"></script>
+    <script type="module" crossorigin src="../../assets/index-CyNB71eT.js"></script>
     <link rel="stylesheet" crossorigin href="../../assets/index-BMXZ-q2V.css">
-  <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","headline":"料金構造とウェアハウスのリソース消費","description":"コストは何に対して発生するのか。標準ウェアハウスとSnowpark-Optimized Warehouseの違い、書き方で抑えられる部分を整理します。","url":"https://study-apps.com/snowpark-guide/guide/pricing/","dateModified":"2026-08-21","inLanguage":"ja"}</script>
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","headline":"料金構造とウェアハウスのリソース消費","description":"コストは何に対して発生するのか。標準ウェアハウスとSnowpark-Optimized Warehouseの違い、書き方で抑えられる部分を整理します。","url":"https://study-apps.com/snowpark-guide/guide/pricing/","dateModified":"2026-08-27","inLanguage":"ja"}</script>
   </head>
   <body>
     <div id="root"><div style="max-width:760px;margin:0 auto;padding:24px 16px;font-family:sans-serif;line-height:1.8;color:#0f172a">
     <p style="color:#94a3b8;font-size:0.9rem"><a href="/snowpark-guide/" style="color:#94a3b8">トップ</a> / 基礎知識</p>
     <h1 style="font-size:1.6rem;margin-bottom:8px">料金構造とウェアハウスのリソース消費</h1>
     <p style="color:#475569">コストは何に対して発生するのか。標準ウェアハウスとSnowpark-Optimized Warehouseの違い、書き方で抑えられる部分を整理します。</p>
-    
+    <div style="margin:16px 0"><svg viewBox="0 0 720 220" width="720" height="220" role="img" aria-label="Snowflakeウェアハウスの課金タイムライン図。クエリが来るまでは課金されないアイドル状態から、クエリが来ると自動的にウェアハウスが起動し、起動直後の60秒は最低利用時間として課金される。その後は秒単位で課金が続き、一定時間クエリが来なくなると自動的に一時停止（オートサスペンド）して課金が止まる。"><defs><marker id="pricing-arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 Z" fill="#475569"></path></marker></defs><line x1="20" y1="120" x2="700" y2="120" stroke="#94a3b8" stroke-width="2" marker-end="url(#pricing-arrow)"></line><text x="700" y="140" text-anchor="end" font-size="10" fill="#64748b">時間</text><rect x="20" y="70" width="110" height="50" fill="#f1f5f9" stroke="#94a3b8" stroke-width="1"></rect><text x="75" y="60" text-anchor="middle" font-size="11" fill="#64748b">アイドル</text><text x="75" y="140" text-anchor="middle" font-size="10" fill="#94a3b8">課金なし</text><rect x="130" y="70" width="90" height="50" fill="#fef3c7" stroke="#b45309" stroke-width="1.5"></rect><text x="175" y="60" text-anchor="middle" font-size="10" font-weight="700" fill="#92400e">起動+最低60秒</text><text x="175" y="140" text-anchor="middle" font-size="10" fill="#92400e">課金開始</text><rect x="220" y="70" width="240" height="50" fill="#dcfce7" stroke="#15803d" stroke-width="1.5"></rect><text x="340" y="60" text-anchor="middle" font-size="11" font-weight="700" fill="#166534">稼働中（アクション実行）</text><text x="340" y="140" text-anchor="middle" font-size="10" fill="#166534">秒単位で課金が続く</text><rect x="460" y="70" width="120" height="50" fill="#f1f5f9" stroke="#94a3b8" stroke-width="1"></rect><text x="520" y="60" text-anchor="middle" font-size="10" font-weight="700" fill="#475569">オートサスペンド</text><text x="520" y="140" text-anchor="middle" font-size="10" fill="#94a3b8">課金停止</text><text x="360" y="180" text-anchor="middle" font-size="11" fill="#0f172a">課金対象は「起動から次の自動停止まで」＝アクションメソッドを呼んだ回数と間隔がそのままコストに直結する</text></svg></div>
     <p><strong>このページに書かれている料金体系・数値（秒単位課金・60秒最低利用・メモリ量など）は、Snowflakeのエディション・リージョン・契約内容によって異なり、将来変更される可能性があります。</strong> 実際の請求額の見積もりには、必ずSnowflake公式サイトの最新の料金情報をご確認ください。</p>
 <h2>まず押さえること：変換を書くだけでは課金されない</h2>
 <p>Snowparkは遅延評価（詳しくは<a href="/snowpark-guide/guide/architecture/">アーキテクチャの解説</a>）を採用しているため、<code>select</code>・<code>filter</code>・<code>join</code>のような変換メソッドを何回書いても、それ自体では一切課金されません。課金が発生するのは、<code>collect()</code>・<code>show()</code>・<code>save_as_table()</code>のようなアクションメソッドを呼び、実際にSnowflakeのウェアハウスが処理を実行した瞬間だけです。他のインメモリ処理系（都度実行されるライブラリ）に慣れていると、「変換を書いた時点で何か処理が走っているはず」という直感でコストを見積もってしまいがちですが、Snowparkではその直感は成り立ちません。</p>
@@ -55,10 +55,22 @@
 <h2>書き方でコストを抑える</h2>
 <p>課金の単位（ウェアハウスの稼働時間）が分かると、コードの書き方でコンピュートコストを減らせる場面が見えてきます。</p>
 <ul><li><strong>不要な<code>collect()</code>を挟まない</strong>：<code>collect()</code>は結果をクライアント側に持ってくるアクションで、そこで必ずウェアハウスが動きます。処理の途中経過を確認したいだけなら、最終的な<code>collect()</code>の前に余計な<code>collect()</code>を挟まず、変換のチェーンをつなげたままにする方がウェアハウスの稼働時間を抑えられます。</li><li><strong><code>with_column</code>の連続チェーンを避ける</strong>：<code>with_column</code>を何度も連続で呼ぶと、内部的に生成されるSQLがネストして複雑になり、実行時間が伸びることがあります（詳しくは<a href="/snowpark-guide/with-column/">with_column / with_columnsのページ</a>）。複数列を追加するときは<code>with_columns</code>にまとめて式を渡す方が、生成されるSQLがシンプルになります。</li><li><strong><code>limit</code>は早い段階に置く</strong>：一部の行だけ確認したいときに<code>limit</code>を後段に置くと、絞り込む前の全件に対して手前の変換が評価されてしまう場合があります。動作確認の段階では早めに<code>limit</code>を挟むと、無駄な計算に対するウェアハウスの稼働時間を減らせます。</li><li><strong><code>cache_result()</code>は「使い回す」ときだけ使う</strong>：同じ中間結果を後続の複数の処理で繰り返し参照するなら、<code>cache_result()</code>で一度だけ計算してテーブル化する方が、毎回同じ変換を再計算するより合計のコンピュートコストが下がることがあります。逆に、その場限りでしか使わない結果に<code>cache_result()</code>を呼ぶと、再計算を避けるメリットが無いままストレージコストだけが増えます。</li></ul>
+<pre class="concept-page__code"><code>filtered = df.filter(col("amount") &gt; 100)
+
+# 悪い例：同じ filtered から2回 collect() すると、
+# filter の変換がそのたびに再計算される（ウェアハウスが2回分動く）
+report_a = filtered.group_by("region").agg(F.sum("amount")).collect()
+report_b = filtered.group_by("customer_id").agg(F.count("*")).collect()
+
+# 良い例：cache_result() で一度だけ実体化し、以降はそのテーブルを再利用する
+cached = filtered.cache_result()
+report_a = cached.group_by("region").agg(F.sum("amount")).collect()
+report_b = cached.group_by("customer_id").agg(F.count("*")).collect()</code></pre>
+<p><code>cache_result()</code>が<code>Table</code>オブジェクトを返すことはSDKのクラス定義で確認済みです。同じ<code>filtered</code>を複数の集計で使い回すときに効果が出るパターンで、1回しか使わない中間結果に呼んでもストレージコストが増えるだけの逆効果になる点は前述のとおりです。</p>
     <h2 style="font-size:1.05rem">関連する関数リファレンス</h2><ul style="padding-left:20px"><li><a href="/snowpark-guide/with-column/" style="color:#38bdf8">with_column / with_columns</a></li></ul>
     <h2 style="font-size:1.05rem">出典</h2>
     <ul style="padding-left:20px"><li><a href="https://docs.snowflake.com/en/user-guide/warehouses-overview" style="color:#38bdf8">Snowflake Documentation: Overview of Warehouses</a></li><li><a href="https://docs.snowflake.com/en/user-guide/warehouses-snowpark-optimized" style="color:#38bdf8">Snowflake Documentation: Snowpark-optimized Warehouses</a></li></ul>
-    <p style="color:#94a3b8;font-size:0.85rem">公式ドキュメントの記載にもとづく解説です（実行検証はしていません）。確認日：2026-08-21</p>
+    <p style="color:#94a3b8;font-size:0.85rem">公式ドキュメントの記載にもとづく解説です（実行検証はしていません）。確認日：2026-08-27</p>
     <nav style="margin-top:24px;display:flex;gap:16px;flex-wrap:wrap;font-size:0.85rem"><a href="/snowpark-guide/about/" style="color:#94a3b8">このサイトについて</a><a href="/snowpark-guide/privacy/" style="color:#94a3b8">プライバシーポリシー</a></nav>
   </div></div>
   </body>
