@@ -351,6 +351,33 @@
   background: #f1f5f9;
 }
 
+.concept-diagram {
+  margin: 16px 0 24px;
+  padding: 12px;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  overflow-x: auto;
+}
+
+.concept-diagram svg {
+  width: 100%;
+  max-width: 100%;
+  height: auto;
+  display: block;
+}
+
+.concept-page__code {
+  background: var(--code-bg);
+  color: var(--code-ink);
+  border-radius: 12px;
+  padding: 16px;
+  overflow-x: auto;
+  font-size: 0.85rem;
+  line-height: 1.6;
+  margin: 8px 0 20px;
+}
+
 .home__concepts {
   padding: 8px 0 28px;
 }

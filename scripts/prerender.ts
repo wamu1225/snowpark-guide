@@ -3,11 +3,19 @@
 // 実行: npx tsx scripts/prerender.ts（npm run predeploy 内）
 import * as fs from 'fs';
 import * as path from 'path';
+import { createElement, type ComponentType } from 'react';
+import { renderToStaticMarkup } from 'react-dom/server';
 import { ALL_ENTRIES } from '../src/data/entries';
 import { CATEGORIES } from '../src/data/types';
 import { STATIC_PAGES } from '../src/data/static-pages';
 import { CONCEPTS } from '../src/data/concepts';
 import { mdToHtml, inlineHtml } from '../src/lib/md-html';
+import { ArchitectureDiagram } from '../src/components/diagrams/ArchitectureDiagram';
+
+// ConceptPage.tsxのDIAGRAMSと同じ対応表。SSRでも同じ図を静的HTMLへ焼き込む（レンダラ間不一致の防止）。
+const CONCEPT_DIAGRAMS: Record<string, ComponentType> = {
+  architecture: ArchitectureDiagram,
+};
 
 const DIST_DIR = path.resolve(process.cwd(), 'dist');
 const INDEX_HTML_PATH = path.join(DIST_DIR, 'index.html');
@@ -22,11 +30,16 @@ if (!fs.existsSync(INDEX_HTML_PATH)) {
 }
 
 const templateHtml = fs.readFileSync(INDEX_HTML_PATH, 'utf-8');
-// base './' のため、サブディレクトリ用に相対パスを ../ に変換
-const subTemplateHtml = templateHtml
-  .replace(/href="\.\/assets\//g, 'href="../assets/')
-  .replace(/src="\.\/assets\//g, 'src="../assets/')
-  .replace(/href="\.\/favicon\.svg"/g, 'href="../favicon.svg"');
+// base './' のため、サブディレクトリの深さに応じて相対パスを ../ … に変換する。
+// 深さを決め打ちで1つの ../ にしていたため、2階層下（guide/{slug}/）のページで
+// アセットが404していた不具合を修正（2026-08-26発見）。
+function templateForDepth(depth: number): string {
+  const prefix = '../'.repeat(depth);
+  return templateHtml
+    .replace(/href="\.\/assets\//g, `href="${prefix}assets/`)
+    .replace(/src="\.\/assets\//g, `src="${prefix}assets/`)
+    .replace(/href="\.\/favicon\.svg"/g, `href="${prefix}favicon.svg"`);
+}
 
 const esc = (s: string) =>
   s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
@@ -137,7 +150,7 @@ for (const e of ALL_ENTRIES) {
     <p style="color:#94a3b8;font-size:0.85rem">Polars ${esc(e.verified.polarsVersion)} で実行確認 / Snowpark Python SDK ${esc(e.verified.snowparkSdkVersion)} で静的検証（${esc(e.verified.date)}）</p>
     ${footerNav}
   ${shellClose}`;
-  let html = applyMeta(subTemplateHtml, e.title, desc, `/${e.slug}/`);
+  let html = applyMeta(templateForDepth(1), e.title, desc, `/${e.slug}/`);
   html = html.replace('<div id="root"></div>', `<div id="root">${fallback}</div>`);
   const jsonLd = JSON.stringify({
     '@context': 'https://schema.org',
@@ -165,10 +178,15 @@ for (const c of CONCEPTS) {
   const sourcesHtml = c.sources
     .map((s) => `<li><a href="${s.url}" style="color:#38bdf8">${esc(s.label)}</a></li>`)
     .join('');
+  const DiagramComp = CONCEPT_DIAGRAMS[c.slug];
+  const diagramHtml = DiagramComp
+    ? `<div style="margin:16px 0">${renderToStaticMarkup(createElement(DiagramComp))}</div>`
+    : '';
   const fallback = `${shellOpen}
     <p style="color:#94a3b8;font-size:0.9rem"><a href="${BASE}/" style="color:#94a3b8">トップ</a> / 基礎知識</p>
     <h1 style="font-size:1.6rem;margin-bottom:8px">${esc(c.title)}</h1>
     <p style="color:#475569">${esc(c.summary)}</p>
+    ${diagramHtml}
     ${mdToHtml(c.body, BASE)}
     ${relatedHtml}
     <h2 style="font-size:1.05rem">出典</h2>
@@ -176,7 +194,7 @@ for (const c of CONCEPTS) {
     <p style="color:#94a3b8;font-size:0.85rem">公式ドキュメントの記載にもとづく解説です（実行検証はしていません）。確認日：${esc(c.verifiedDate)}</p>
     ${footerNav}
   ${shellClose}`;
-  let html = applyMeta(subTemplateHtml, c.title, c.summary, `/guide/${c.slug}/`);
+  let html = applyMeta(templateForDepth(2), c.title, c.summary, `/guide/${c.slug}/`);
   html = html.replace('<div id="root"></div>', `<div id="root">${fallback}</div>`);
   const jsonLd = JSON.stringify({
     '@context': 'https://schema.org',
@@ -199,7 +217,7 @@ for (const page of STATIC_PAGES) {
     ${mdToHtml(page.body, BASE)}
     ${footerNav}
   ${shellClose}`;
-  let html = applyMeta(subTemplateHtml, page.title, page.description, `/${page.slug}/`);
+  let html = applyMeta(templateForDepth(1), page.title, page.description, `/${page.slug}/`);
   html = html.replace('<div id="root"></div>', `<div id="root">${fallback}</div>`);
   const jsonLd = JSON.stringify({
     '@context': 'https://schema.org',

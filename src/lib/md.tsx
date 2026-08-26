@@ -60,6 +60,15 @@ export function mdToReact(src: string): ReactNode[] {
         </ul>
       );
     }
+    if (block.startsWith('```')) {
+      const lines = block.split('\n');
+      const code = lines.slice(1, lines[lines.length - 1] === '```' ? -1 : undefined).join('\n');
+      return (
+        <pre key={i} className="concept-page__code">
+          <code>{code}</code>
+        </pre>
+      );
+    }
     const lines = block.split('\n');
     if (lines.length >= 2 && lines[0].startsWith('|') && /^\|[\s:|-]+\|$/.test(lines[1])) {
       const header = parseTableRow(lines[0]);

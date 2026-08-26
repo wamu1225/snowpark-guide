@@ -1,12 +1,20 @@
+import type { ComponentType } from 'react';
 import { mdToReact } from '../lib/md';
 import type { ConceptPage as ConceptPageData } from '../data/concepts';
 import { ALL_ENTRIES } from '../data/entries';
 import { href } from '../lib/router';
+import { ArchitectureDiagram } from '../components/diagrams/ArchitectureDiagram';
+
+// 主題が「構造・比較・入出力の形」の概念ページは図が本体になる。slugで該当図を出し分ける。
+const DIAGRAMS: Record<string, ComponentType> = {
+  architecture: ArchitectureDiagram,
+};
 
 export function ConceptPage({ page }: { page: ConceptPageData }) {
   const related = page.relatedEntrySlugs
     .map((slug) => ALL_ENTRIES.find((e) => e.slug === slug))
     .filter((e): e is (typeof ALL_ENTRIES)[number] => !!e);
+  const Diagram = DIAGRAMS[page.slug];
 
   return (
     <article className="concept-page">
@@ -16,6 +24,12 @@ export function ConceptPage({ page }: { page: ConceptPageData }) {
       </p>
       <h1>{page.title}</h1>
       <p className="entry-page__summary">{page.summary}</p>
+
+      {Diagram && (
+        <div className="concept-diagram">
+          <Diagram />
+        </div>
+      )}
 
       {mdToReact(page.body)}
 
