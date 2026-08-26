@@ -19,8 +19,43 @@ function parseTableRow(line: string): string[] {
     .map((cell) => cell.trim());
 }
 
+// 空行区切りでブロックを切るが、```フェンス内の空行では区切らない
+// （フェンス内に空行を含むコード例が2ブロックに分割され、閉じ```が生テキストとして
+// 露出するバグを2026-08-27に発見・修正）。
+function splitBlocks(src: string): string[] {
+  const lines = src.trim().split('\n');
+  const blocks: string[] = [];
+  let current: string[] = [];
+  let inFence = false;
+  for (const line of lines) {
+    if (line.startsWith('```')) {
+      inFence = !inFence;
+      current.push(line);
+      if (!inFence) {
+        blocks.push(current.join('\n'));
+        current = [];
+      }
+      continue;
+    }
+    if (inFence) {
+      current.push(line);
+      continue;
+    }
+    if (line.trim() === '') {
+      if (current.length) {
+        blocks.push(current.join('\n'));
+        current = [];
+      }
+      continue;
+    }
+    current.push(line);
+  }
+  if (current.length) blocks.push(current.join('\n'));
+  return blocks;
+}
+
 export function mdToHtml(src: string, base = ''): string {
-  const blocks = src.trim().split(/\n\n+/);
+  const blocks = splitBlocks(src);
   return blocks
     .map((block) => {
       if (block.startsWith('## ')) return `<h2>${inlineHtml(block.slice(3).trim(), base)}</h2>`;

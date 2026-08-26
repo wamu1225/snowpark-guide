@@ -42,10 +42,43 @@ function parseTableRow(line: string): string[] {
     .map((cell) => cell.trim());
 }
 
+// 空行区切りでブロックを切るが、```フェンス内の空行では区切らない（md-html.tsのsplitBlocksと同じ規則）。
+function splitBlocks(src: string): string[] {
+  const lines = src.trim().split('\n');
+  const blocks: string[] = [];
+  let current: string[] = [];
+  let inFence = false;
+  for (const line of lines) {
+    if (line.startsWith('```')) {
+      inFence = !inFence;
+      current.push(line);
+      if (!inFence) {
+        blocks.push(current.join('\n'));
+        current = [];
+      }
+      continue;
+    }
+    if (inFence) {
+      current.push(line);
+      continue;
+    }
+    if (line.trim() === '') {
+      if (current.length) {
+        blocks.push(current.join('\n'));
+        current = [];
+      }
+      continue;
+    }
+    current.push(line);
+  }
+  if (current.length) blocks.push(current.join('\n'));
+  return blocks;
+}
+
 // static-pages.ts の簡易記法（## 見出し／空行区切り段落／- 箇条書き／|表|／[リンク](/path/)）をReact要素へ変換する。
 // prerender.ts 側は同じ規則を素朴な文字列結合でHTML化する（別実装・同じ規則）。
 export function mdToReact(src: string): ReactNode[] {
-  const blocks = src.trim().split(/\n\n+/);
+  const blocks = splitBlocks(src);
   return blocks.map((block, i) => {
     if (block.startsWith('## ')) {
       return <h2 key={i}>{block.slice(3).trim()}</h2>;

@@ -19,6 +19,13 @@
   padding: 0 20px 64px;
 }
 
+/* 文中のインラインcode（`snowflake.ml.modeling.xgboost.XGBClassifier`のような長い
+   ドット区切り識別子）はスペースが無く改行できず、モバイル幅で横スクロールを起こす。
+   コードブロック（pre内）は横スクロールが意図した挙動なので対象外にする。 */
+code:not(pre code) {
+  overflow-wrap: break-word;
+}
+
 .masthead {
   position: sticky;
   top: 0;

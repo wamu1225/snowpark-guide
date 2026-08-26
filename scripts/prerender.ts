@@ -11,10 +11,18 @@ import { STATIC_PAGES } from '../src/data/static-pages';
 import { CONCEPTS } from '../src/data/concepts';
 import { mdToHtml, inlineHtml } from '../src/lib/md-html';
 import { ArchitectureDiagram } from '../src/components/diagrams/ArchitectureDiagram';
+import { VsSparkDiagram } from '../src/components/diagrams/VsSparkDiagram';
+import { VsPolarsDiagram } from '../src/components/diagrams/VsPolarsDiagram';
+import { UdfShapesDiagram } from '../src/components/diagrams/UdfShapesDiagram';
+import { SnowparkMlDiagram } from '../src/components/diagrams/SnowparkMlDiagram';
 
 // ConceptPage.tsxのDIAGRAMSと同じ対応表。SSRでも同じ図を静的HTMLへ焼き込む（レンダラ間不一致の防止）。
 const CONCEPT_DIAGRAMS: Record<string, ComponentType> = {
   architecture: ArchitectureDiagram,
+  'vs-spark': VsSparkDiagram,
+  'vs-polars': VsPolarsDiagram,
+  'udf-udtf-sproc': UdfShapesDiagram,
+  'snowpark-ml': SnowparkMlDiagram,
 };
 
 const DIST_DIR = path.resolve(process.cwd(), 'dist');

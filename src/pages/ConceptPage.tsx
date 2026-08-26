@@ -4,10 +4,18 @@ import type { ConceptPage as ConceptPageData } from '../data/concepts';
 import { ALL_ENTRIES } from '../data/entries';
 import { href } from '../lib/router';
 import { ArchitectureDiagram } from '../components/diagrams/ArchitectureDiagram';
+import { VsSparkDiagram } from '../components/diagrams/VsSparkDiagram';
+import { VsPolarsDiagram } from '../components/diagrams/VsPolarsDiagram';
+import { UdfShapesDiagram } from '../components/diagrams/UdfShapesDiagram';
+import { SnowparkMlDiagram } from '../components/diagrams/SnowparkMlDiagram';
 
 // 主題が「構造・比較・入出力の形」の概念ページは図が本体になる。slugで該当図を出し分ける。
 const DIAGRAMS: Record<string, ComponentType> = {
   architecture: ArchitectureDiagram,
+  'vs-spark': VsSparkDiagram,
+  'vs-polars': VsPolarsDiagram,
+  'udf-udtf-sproc': UdfShapesDiagram,
+  'snowpark-ml': SnowparkMlDiagram,
 };
 
 export function ConceptPage({ page }: { page: ConceptPageData }) {
