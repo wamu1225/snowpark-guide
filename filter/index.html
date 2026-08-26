@@ -32,8 +32,8 @@
       src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9102538151148380"
       crossorigin="anonymous"
     ></script>
-    <script type="module" crossorigin src="../assets/index-Cs-_mSdL.js"></script>
-    <link rel="stylesheet" crossorigin href="../assets/index-BpUyKKfG.css">
+    <script type="module" crossorigin src="../assets/index-BUyOXa0y.js"></script>
+    <link rel="stylesheet" crossorigin href="../assets/index-BMXZ-q2V.css">
   <script type="application/ld+json">{"@context":"https://schema.org","@type":"TechArticle","headline":"filter / where","description":"条件に合う行だけを残す。whereはfilterの別名で、書き方はどちらも同じ。 Snowparkでの書き方とPolarsでの書き方を並べて解説します。","url":"https://study-apps.com/snowpark-guide/filter/","dateModified":"2026-08-21","inLanguage":"ja"}</script>
   </head>
   <body>
@@ -57,7 +57,7 @@ df.where(col(&quot;status&quot;) == &quot;active&quot;)  # filterの別名</code
     <h2 style="font-size:1.05rem;color:#b45309">移行時の落とし穴</h2>
     <p>SQLの3値論理（TRUE/FALSE/UNKNOWN）にもとづき、Snowparkでは条件式がNULLと評価された行はfilterの結果から除外される。Polarsも既定でnull行は条件を満たさない扱いになるが、否定条件（〜でない、を意味する式）を書いたときに「NULLを含めたいのか除外したいのか」を明示しないと、両者で結果がずれることがある。</p>
     <h2 style="font-size:1.05rem">フィルタ・サンプリングの他のメソッド</h2><ul style="padding-left:20px"><li><a href="/snowpark-guide/limit/" style="color:#38bdf8">limit</a> ── 先頭から指定した行数だけを取得する。</li><li><a href="/snowpark-guide/sample/" style="color:#38bdf8">sample</a> ── データの一部をランダムに抽出する。</li><li><a href="/snowpark-guide/distinct/" style="color:#38bdf8">distinct / unique</a> ── 重複行を取り除く。メソッド名がSnowparkとPolarsで異なる点に注意。</li><li><a href="/snowpark-guide/drop-duplicates/" style="color:#38bdf8">drop_duplicates</a> ── 指定した列の値が一致する行を重複とみなして間引く。</li></ul>
-    <h2 style="font-size:1.05rem">関連する基礎知識</h2><ul style="padding-left:20px"><li><a href="/snowpark-guide/guide/architecture/" style="color:#38bdf8">Snowparkのアーキテクチャと実行の仕組み</a></li></ul>
+    <h2 style="font-size:1.05rem">関連する基礎知識</h2><ul style="padding-left:20px"><li><a href="/snowpark-guide/guide/architecture/" style="color:#38bdf8">Snowparkのアーキテクチャと実行の仕組み</a></li><li><a href="/snowpark-guide/guide/vs-spark/" style="color:#38bdf8">Snowpark と Apache Spark の違い</a></li></ul>
     <h2 style="font-size:1.05rem">出典・検証情報</h2>
     <ul style="padding-left:20px">
       <li><a href="https://docs.snowflake.com/en/developer-guide/snowpark/reference/python/latest/snowpark/api/snowflake.snowpark.DataFrame.filter" style="color:#38bdf8">Snowpark 公式リファレンス（filter / where）</a></li>

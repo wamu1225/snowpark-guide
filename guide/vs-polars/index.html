@@ -32,30 +32,54 @@
       src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9102538151148380"
       crossorigin="anonymous"
     ></script>
-    <script type="module" crossorigin src="../../assets/index-Cs-_mSdL.js"></script>
-    <link rel="stylesheet" crossorigin href="../../assets/index-BpUyKKfG.css">
-  <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","headline":"Snowpark と Polars の違い（総論）","description":"どちらも遅延評価を採用しているが、計算がどこで走るか（クラウドかローカルか）が根本的に異なります。","url":"https://study-apps.com/snowpark-guide/guide/vs-polars/","dateModified":"2026-08-21","inLanguage":"ja"}</script>
+    <script type="module" crossorigin src="../../assets/index-BUyOXa0y.js"></script>
+    <link rel="stylesheet" crossorigin href="../../assets/index-BMXZ-q2V.css">
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","headline":"Snowpark と Polars の違い（総論）","description":"どちらも遅延評価を採用しているが、計算がどこで走るか（クラウドかローカルか）が根本的に異なります。使い分けの軸を整理します。","url":"https://study-apps.com/snowpark-guide/guide/vs-polars/","dateModified":"2026-08-27","inLanguage":"ja"}</script>
   </head>
   <body>
     <div id="root"><div style="max-width:760px;margin:0 auto;padding:24px 16px;font-family:sans-serif;line-height:1.8;color:#0f172a">
     <p style="color:#94a3b8;font-size:0.9rem"><a href="/snowpark-guide/" style="color:#94a3b8">トップ</a> / 基礎知識</p>
     <h1 style="font-size:1.6rem;margin-bottom:8px">Snowpark と Polars の違い（総論）</h1>
-    <p style="color:#475569">どちらも遅延評価を採用しているが、計算がどこで走るか（クラウドかローカルか）が根本的に異なります。</p>
-    
+    <p style="color:#475569">どちらも遅延評価を採用しているが、計算がどこで走るか（クラウドかローカルか）が根本的に異なります。使い分けの軸を整理します。</p>
+    <div style="margin:16px 0"><svg viewBox="0 0 720 300" width="720" height="300" role="img" aria-label="PolarsとSnowparkの実行場所の違いを示す図。Polarsは手元の1台のマシンのCPU上でApache Arrow形式のメモリを使い処理が完結する。Snowparkはネットワークの向こう側にあるSnowflakeの分散クラウド環境（複数ノードのVirtual Warehouse）で処理が実行され、データは外部に出ない。"><defs><marker id="vspolars-arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 Z" fill="#475569"></path></marker></defs><rect x="16" y="24" width="310" height="252" rx="14" fill="#fae8ff" stroke="#c026d3" stroke-width="2"></rect><text x="171" y="52" text-anchor="middle" font-size="15" font-weight="700" fill="#a21caf">Polars</text><text x="171" y="70" text-anchor="middle" font-size="11" fill="#64748b">手元の1台のマシンで完結</text><rect x="46" y="90" width="250" height="150" rx="10" fill="#ffffff" stroke="#c026d3" stroke-width="1.5"></rect><text x="171" y="116" text-anchor="middle" font-size="12" font-weight="600" fill="#0f172a">あなたのPC / 1台のマシン</text><rect x="66" y="130" width="210" height="34" rx="6" fill="#fdf2f8" stroke="#c026d3" stroke-width="1"></rect><text x="171" y="151" text-anchor="middle" font-size="11" fill="#334155">CPU（マルチコアで並列処理）</text><rect x="66" y="174" width="210" height="34" rx="6" fill="#fdf2f8" stroke="#c026d3" stroke-width="1"></rect><text x="171" y="195" text-anchor="middle" font-size="11" fill="#334155">Arrow形式のメモリ上でデータ保持</text><text x="171" y="222" text-anchor="middle" font-size="10" fill="#a21caf">外部にデータを送信しない</text><rect x="394" y="24" width="310" height="252" rx="14" fill="#e0f2fe" stroke="#0284c7" stroke-width="2"></rect><text x="549" y="52" text-anchor="middle" font-size="15" font-weight="700" fill="#0284c7">Snowpark</text><text x="549" y="70" text-anchor="middle" font-size="11" fill="#64748b">クラウドの分散環境で実行</text><rect x="424" y="90" width="250" height="150" rx="10" fill="#ffffff" stroke="#0284c7" stroke-width="1.5"></rect><text x="549" y="116" text-anchor="middle" font-size="12" font-weight="600" fill="#0f172a">Snowflake Virtual Warehouse</text><rect x="444" y="130" width="90" height="60" rx="6" fill="#e0f2fe" stroke="#0284c7" stroke-width="1"></rect><text x="489" y="164" text-anchor="middle" font-size="10" fill="#334155">ノード1</text><rect x="544" y="130" width="90" height="60" rx="6" fill="#e0f2fe" stroke="#0284c7" stroke-width="1"></rect><text x="589" y="164" text-anchor="middle" font-size="10" fill="#334155">ノード2…</text><text x="549" y="222" text-anchor="middle" font-size="10" fill="#0284c7">マルチノードでペタバイト級も処理可能</text><path d="M326 150 H 394" stroke="#94a3b8" stroke-width="2" fill="none" stroke-dasharray="4 3" marker-end="url(#vspolars-arrow)" marker-start="url(#vspolars-arrow)"></path><text x="360" y="140" text-anchor="middle" font-size="10" fill="#64748b">ネットワーク越し</text></svg></div>
     <h2>「遅延評価」という共通点</h2>
 <p>Snowpark DataFrameとPolars LazyFrameは、どちらも「評価をできるだけ先延ばしにして、まとめて最適化する」という遅延評価の設計思想を共有しています。このサイトの各メソッドページで頻繁に「両方とも遅延評価で……」という説明が出てくるのはこのためです。</p>
 <h2>計算がどこで走るかが違う</h2>
 <p>共通点はここまでで、実行される場所は対照的です。</p>
 <ul><li><strong>Snowpark</strong>：Snowflakeの分散SQLエンジン上、クラウドのVirtual Warehouseで実行される</li><li><strong>Polars</strong>：手元のマシンのCPU（またはローカルの分散環境）上、Rustで書かれたPolars自身の実行エンジンがApache Arrow形式のメモリ上で処理する</li></ul>
 <p>Snowparkはネットワークの向こう側にあるクラウドの計算資源を使い、ペタバイト級のデータをマルチノードで処理できます。Polarsは基本的に手元の1台のマシン（マルチコアで並列化）で完結する処理で、外部にデータを送信しません。</p>
+<h2>コードの形はほぼ重なる</h2>
+<p>同じ「フィルタ→集計→並べ替え→上位N件」という処理を書くと、両者の構文は非常に近くなります。</p>
+<pre class="concept-page__code"><code># Polars（手元のマシンで実行）
+result = (
+    df.filter(pl.col("amount") &gt; 100)
+      .group_by("customer_id")
+      .agg(pl.col("amount").mean().alias("avg_amount"))
+      .sort("avg_amount", descending=True)
+      .limit(10)
+)
+print(result.collect())
+
+# Snowpark（Snowflakeのウェアハウスで実行）
+result = (
+    df.filter(col("amount") &gt; 100)
+      .group_by("customer_id")
+      .agg(F.avg("amount").alias("avg_amount"))
+      .sort(col("avg_amount").desc())
+      .limit(10)
+)
+result.show()</code></pre>
+<p>上のPolars側のコードは実際に実行し、<code>customer_id=2</code>の平均200・<code>customer_id=1</code>の平均150という結果になることを確認済みです。式の組み立て方（<code>col</code>で列を指定し、メソッドをチェーンする）まで含めてほとんど同じ書き方に見えますが、<code>result.collect()</code>が実行された瞬間に<strong>どちらのマシンで</strong>計算が走るかがまったく違う、という点がこのページの主題です。</p>
 <h2>評価を起動するメソッドの違い</h2>
 <p>遅延評価を実際に実行させる「引き金」のメソッドも異なります。</p>
 <ul><li><strong>Snowpark</strong>：<code>collect()</code> ／ <code>show()</code> ／ <code>save_as_table()</code> など</li><li><strong>Polars</strong>：<code>collect()</code> ／ <code>sink_parquet()</code> ／ <code>sink_csv()</code> など（<code>sink_*</code>系はストリーミングで直接ファイルへ書き出す）</li></ul>
 <p>Polars側の <code>collect</code>・<code>sink_parquet</code>・<code>sink_csv</code>・<code>sink_ipc</code>・<code>sink_ndjson</code> は、いずれも <code>LazyFrame</code> に実在するメソッドであることを実機で確認済みです。</p>
-    <h2 style="font-size:1.05rem">関連する関数リファレンス</h2><ul style="padding-left:20px"><li><a href="/snowpark-guide/schema/" style="color:#38bdf8">schema / collect_schema()</a></li><li><a href="/snowpark-guide/columns/" style="color:#38bdf8">columns / collect_schema().names()</a></li></ul>
+<h2>どちらを使うべきか</h2>
+<ul><li><strong>Snowparkが向く場面</strong>：処理対象のデータがそもそもSnowflakeにあり、手元のマシンのメモリに収まらない規模（数百GB〜）を扱う場合。複数人・複数ジョブでガバナンス（権限管理・監査ログ）を効かせながら共有データを処理する場合。</li><li><strong>Polarsが向く場面</strong>：データが既に手元にある、またはSnowflakeから抽出した後の分析・試行錯誤の段階。数GB〜数十GB程度でメモリに収まり、クラウドの起動待ち時間（ウェアハウスの起動）を待たずに即座に結果を見たい場合。</li><li><strong>組み合わせる</strong>：実務では二者択一ではなく、<strong>重い集計はSnowparkでSnowflake側にやらせ、集計後の小さな結果だけをPolarsやpandasに引き渡してローカルで可視化・探索する</strong>という組み合わせがよく使われます。<code>to_pandas()</code>で結果をpandas DataFrameに変換すれば、その後はローカルのエコシステム（Polarsやmatplotlib等）に接続できます。</li></ul>
+    <h2 style="font-size:1.05rem">関連する関数リファレンス</h2><ul style="padding-left:20px"><li><a href="/snowpark-guide/group-by/" style="color:#38bdf8">group_by / groupBy</a></li><li><a href="/snowpark-guide/to-pandas/" style="color:#38bdf8">to_pandas</a></li></ul>
     <h2 style="font-size:1.05rem">出典</h2>
     <ul style="padding-left:20px"><li><a href="https://docs.snowflake.com/en/developer-guide/snowpark/python/working-with-dataframes" style="color:#38bdf8">Snowflake Documentation: Working with DataFrames in Snowpark Python</a></li><li><a href="https://docs.pola.rs/api/python/stable/reference/lazyframe/" style="color:#38bdf8">Polars API Reference: LazyFrame</a></li></ul>
-    <p style="color:#94a3b8;font-size:0.85rem">公式ドキュメントの記載にもとづく解説です（実行検証はしていません）。確認日：2026-08-21</p>
+    <p style="color:#94a3b8;font-size:0.85rem">公式ドキュメントの記載にもとづく解説です（実行検証はしていません）。確認日：2026-08-27</p>
     <nav style="margin-top:24px;display:flex;gap:16px;flex-wrap:wrap;font-size:0.85rem"><a href="/snowpark-guide/about/" style="color:#94a3b8">このサイトについて</a><a href="/snowpark-guide/privacy/" style="color:#94a3b8">プライバシーポリシー</a></nav>
   </div></div>
   </body>

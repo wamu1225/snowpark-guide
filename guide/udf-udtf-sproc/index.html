@@ -32,31 +32,76 @@
       src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9102538151148380"
       crossorigin="anonymous"
     ></script>
-    <script type="module" crossorigin src="../../assets/index-Cs-_mSdL.js"></script>
-    <link rel="stylesheet" crossorigin href="../../assets/index-BpUyKKfG.css">
-  <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","headline":"UDF・Vectorized UDF・UDTF・ストアドプロシージャの使い分け","description":"Snowflake上でカスタムロジックを実行する4つの手段を、入出力の形とSQLからの呼び出し方で整理します。","url":"https://study-apps.com/snowpark-guide/guide/udf-udtf-sproc/","dateModified":"2026-08-21","inLanguage":"ja"}</script>
+    <script type="module" crossorigin src="../../assets/index-BUyOXa0y.js"></script>
+    <link rel="stylesheet" crossorigin href="../../assets/index-BMXZ-q2V.css">
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","headline":"UDF・Vectorized UDF・UDTF・ストアドプロシージャの使い分け","description":"Snowflake上でカスタムロジックを実行する4つの手段を、入出力の形とSQLからの呼び出し方で整理します。","url":"https://study-apps.com/snowpark-guide/guide/udf-udtf-sproc/","dateModified":"2026-08-27","inLanguage":"ja"}</script>
   </head>
   <body>
     <div id="root"><div style="max-width:760px;margin:0 auto;padding:24px 16px;font-family:sans-serif;line-height:1.8;color:#0f172a">
     <p style="color:#94a3b8;font-size:0.9rem"><a href="/snowpark-guide/" style="color:#94a3b8">トップ</a> / 基礎知識</p>
     <h1 style="font-size:1.6rem;margin-bottom:8px">UDF・Vectorized UDF・UDTF・ストアドプロシージャの使い分け</h1>
     <p style="color:#475569">Snowflake上でカスタムロジックを実行する4つの手段を、入出力の形とSQLからの呼び出し方で整理します。</p>
-    
-    <h2>スカラUDF：1行→1つの値</h2>
-<p>スカラUDFは行ごとに呼び出され、1つの値を返す関数です。SELECT句やWHERE句などのSQL式の中から直接呼び出せます。Python UDFの場合、1行ずつPythonの関数を呼び出すため、行数が多いとPythonの呼び出しオーバーヘッドが積み重なります。</p>
-<h2>Vectorized UDF：複数行をまとめて処理</h2>
-<p>Vectorized UDF（バッチUDF）は、複数行をPandasのDataFrameやSeriesとしてまとめて受け取り、まとめて結果を返す仕組みです。Snowflake公式ドキュメントは「Vectorized Python UDFは、入力行のバッチをPandas DataFrameとして受け取り、結果のバッチをPandas配列またはSeriesとして返すPython関数を定義できる」と説明しています。1行ずつPythonを呼び出すオーバーヘッドを避けられるため、機械学習の推論のようにバッチ処理に向く場面で特に有効です。</p>
-<h2>UDTF：1行(以上)の入力→複数行の出力</h2>
-<p>UDTF（ユーザー定義テーブル関数）は、入力に対して0行以上の複数行を出力できる関数です。公式ドキュメントによれば、UDTFのハンドラクラスは行ごとに呼び出される<code>process</code>メソッドを実装し、そこでタプルとして表形式の値を返します。SQLのFROM句から呼び出す点がスカラUDFと異なります。</p>
-<h2>ストアドプロシージャ：制御フローそのものをパッケージ化</h2>
-<p>ストアドプロシージャ（SPROC）は、条件分岐・ループ・トランザクション管理・DDL/DMLの実行といった「処理の手順そのもの」をパッケージ化したものです。SQL式の中から呼び出すのではなく、<code>CALL</code>文で独立して実行します。UDF・UDTFにはできないDDL/DMLの実行が可能な点が大きな違いです。</p>
+    <div style="margin:16px 0"><svg viewBox="0 0 720 300" width="720" height="300" role="img" aria-label="スカラUDF・VectorizedUDF・UDTF・ストアドプロシージャの入出力の形を示す図。スカラUDFは1行の入力に対して1つの値を返す。VectorizedUDFは複数行をまとめたバッチを受け取りバッチで返す。UDTFは1行の入力から複数行を出力できる。ストアドプロシージャは表形式の入出力にとらわれず任意の処理手順を実行する。"><defs><marker id="udf-arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 Z" fill="#0284c7"></path></marker></defs><text x="16" y="26" font-size="13" font-weight="700" fill="#0f172a">入力の形</text><text x="300" y="26" font-size="13" font-weight="700" fill="#0f172a"></text><text x="420" y="26" font-size="13" font-weight="700" fill="#0f172a">出力の形</text><rect x="16" y="46" width="60" height="24" rx="4" fill="#e0f2fe" stroke="#0284c7"></rect><text x="46" y="63" text-anchor="middle" font-size="10" fill="#0f172a">1行</text><path d="M80 58 H 300" stroke="#0284c7" stroke-width="2" marker-end="url(#udf-arrow)"></path><text x="190" y="52" text-anchor="middle" font-size="11" fill="#0284c7" font-weight="600">スカラUDF</text><rect x="310" y="46" width="60" height="24" rx="4" fill="#e0f2fe" stroke="#0284c7"></rect><text x="340" y="63" text-anchor="middle" font-size="10" fill="#0f172a">1値</text><text x="400" y="63" font-size="10" fill="#64748b">SELECT句・WHERE句から直接呼べる</text><rect x="16" y="106" width="60" height="24" rx="4" fill="#dcfce7" stroke="#15803d"></rect><text x="46" y="123" text-anchor="middle" font-size="10" fill="#0f172a">N行</text><path d="M80 118 H 300" stroke="#15803d" stroke-width="4" marker-end="url(#udf-arrow)"></path><text x="190" y="112" text-anchor="middle" font-size="11" fill="#15803d" font-weight="600">Vectorized UDF（バッチ）</text><rect x="310" y="106" width="60" height="24" rx="4" fill="#dcfce7" stroke="#15803d"></rect><text x="340" y="123" text-anchor="middle" font-size="10" fill="#0f172a">N値</text><text x="400" y="123" font-size="10" fill="#64748b">Pandas DataFrame/Seriesでまとめて処理</text><rect x="16" y="166" width="60" height="24" rx="4" fill="#fae8ff" stroke="#c026d3"></rect><text x="46" y="183" text-anchor="middle" font-size="10" fill="#0f172a">1行</text><path d="M80 172 H 300" stroke="#c026d3" stroke-width="1.5" marker-end="url(#udf-arrow)"></path><path d="M80 184 H 300" stroke="#c026d3" stroke-width="1.5" marker-end="url(#udf-arrow)"></path><text x="190" y="166" text-anchor="middle" font-size="11" fill="#c026d3" font-weight="600">UDTF</text><rect x="310" y="160" width="60" height="16" rx="4" fill="#fae8ff" stroke="#c026d3"></rect><rect x="310" y="178" width="60" height="16" rx="4" fill="#fae8ff" stroke="#c026d3"></rect><text x="340" y="171" text-anchor="middle" font-size="9" fill="#0f172a">複数行</text><text x="400" y="183" font-size="10" fill="#64748b">FROM句から呼び、表形式に展開する</text><rect x="16" y="226" width="354" height="24" rx="4" fill="#fef3c7" stroke="#b45309"></rect><text x="193" y="243" text-anchor="middle" font-size="11" fill="#92400e" font-weight="600">SPROC＝条件分岐・ループ・DDL/DMLをCALL文で実行（表の形にとらわれない）</text><text x="400" y="243" font-size="10" fill="#64748b">UDF/UDTFにできないDDL/DMLも可能</text></svg></div>
+    <h2>この4つは「入出力の形」で区別する</h2>
+<p>名前が似ていて混同しやすいですが、判断基準は1つです。<strong>1行の入力に対して、何を返すか</strong>。</p>
+<p>1. <strong>スカラUDF</strong>：1行 → 1つの値
+2. <strong>Vectorized UDF</strong>：複数行のバッチ → バッチ分の値
+3. <strong>UDTF</strong>：1行 → 0行以上の複数行
+4. <strong>ストアドプロシージャ（SPROC）</strong>：表の形にとらわれない任意の処理</p>
+<h2>1. スカラUDF：1行→1つの値</h2>
+<p>スカラUDFは行ごとに呼び出され、1つの値を返す関数です。SELECT句やWHERE句などのSQL式の中から直接呼び出せます。</p>
+<pre class="concept-page__code"><code>from snowflake.snowpark.functions import udf
+from snowflake.snowpark.types import IntegerType
+
+@udf(name="celsius_to_fahrenheit", return_type=IntegerType(), input_types=[IntegerType()])
+def celsius_to_fahrenheit(celsius: int) -&gt; int:
+    return celsius * 9 // 5 + 32</code></pre>
+<p>Python UDFの場合、1行ずつPythonの関数を呼び出すため、行数が多いとPythonの呼び出しオーバーヘッドが積み重なります。</p>
+<h2>2. Vectorized UDF：複数行をまとめて処理</h2>
+<p>Vectorized UDF（バッチUDF）は、複数行をPandasのSeriesやDataFrameとしてまとめて受け取り、まとめて結果を返す仕組みです。</p>
+<pre class="concept-page__code"><code>import pandas as pd
+from snowflake.snowpark.functions import udf
+from snowflake.snowpark.types import PandasSeriesType, IntegerType
+
+@udf(
+    name="batch_double",
+    input_types=[PandasSeriesType(IntegerType())],
+    return_type=PandasSeriesType(IntegerType()),
+    max_batch_size=1000,
+)
+def batch_double(values: pd.Series) -&gt; pd.Series:
+    return values * 2</code></pre>
+<p>Snowflake公式ドキュメントは「Vectorized Python UDFは、入力行のバッチをPandas DataFrameとして受け取り、結果のバッチをPandas配列またはSeriesとして返すPython関数を定義できる」と説明しています。1行ずつPythonを呼び出すオーバーヘッドを避けられるため、機械学習の推論のようにバッチ処理に向く場面で特に有効です。</p>
+<h2>3. UDTF：1行(以上)の入力→複数行の出力</h2>
+<p>UDTF（ユーザー定義テーブル関数）は、入力に対して0行以上の複数行を出力できる関数です。公式ドキュメントによれば、UDTFのハンドラクラスは行ごとに呼び出される<code>process</code>メソッドを実装し、そこでタプルとして表形式の値をyieldします。</p>
+<pre class="concept-page__code"><code>from snowflake.snowpark.functions import udtf
+from snowflake.snowpark.types import StructType, StructField, StringType
+
+@udtf(output_schema=StructType([StructField("word", StringType())]))
+class SplitWords:
+    def process(self, sentence: str):
+        for word in sentence.split():
+            yield (word,)</code></pre>
+<p>SQLのFROM句から呼び出す点がスカラUDFと異なり、1行の文章から複数の単語行への展開のような「表を膨らませる」処理に使います。</p>
+<h2>4. ストアドプロシージャ：制御フローそのものをパッケージ化</h2>
+<p>ストアドプロシージャ（SPROC）は、条件分岐・ループ・トランザクション管理・DDL/DMLの実行といった「処理の手順そのもの」をパッケージ化したものです。SQL式の中から呼び出すのではなく、<code>CALL</code>文で独立して実行します。</p>
+<pre class="concept-page__code"><code>from snowflake.snowpark.functions import sproc
+
+@sproc(name="archive_old_rows", is_permanent=True, stage_location="@my_stage", replace=True)
+def archive_old_rows(session, cutoff_date: str) -&gt; str:
+    session.sql(f"INSERT INTO archive SELECT * FROM orders WHERE order_date &lt; '{cutoff_date}'").collect()
+    session.sql(f"DELETE FROM orders WHERE order_date &lt; '{cutoff_date}'").collect()
+    return "archived"</code></pre>
+<p>UDF・UDTFにはできないDDL/DMLの実行が可能な点が大きな違いです。</p>
 <h2>使い分けの早見表</h2>
 <table><thead><tr><th>種類</th><th>主な目的</th><th>戻り値</th><th>SQL式内から直接呼べるか</th><th>DDL/DMLの実行</th></tr></thead><tbody><tr><td>スカラUDF</td><td>行ごとの計算・変換</td><td>単一の値</td><td>可能</td><td>不可</td></tr><tr><td>Vectorized UDF</td><td>バッチ単位の高速演算</td><td>単一の値（バッチ処理）</td><td>可能</td><td>不可</td></tr><tr><td>UDTF</td><td>表構造への展開・変換</td><td>複数行・複数列</td><td>可能（FROM句内）</td><td>不可</td></tr><tr><td>ストアドプロシージャ</td><td>パイプライン制御・自動化</td><td>任意</td><td>不可（CALL文）</td><td>可能</td></tr></tbody></table>
+<h2>で、どれを選べばいいか</h2>
+<ul><li><strong>既存の1行1値の変換ロジックをSQLに埋め込みたいだけ</strong> → スカラUDF。まず最初に検討する選択肢</li><li><strong>機械学習の推論・大量データへの数値演算で、1行ずつの呼び出しオーバーヘッドが無視できない</strong> → Vectorized UDF。同じロジックでもバッチ化するだけで速くなる場合がある</li><li><strong>1行の入力から複数行を生成したい（文章の単語分割・JSON配列の展開など）</strong> → UDTF。スカラUDFやVectorized UDFでは戻り値が1行に固定されるため代用できない</li><li><strong>複数のテーブル操作をまとめて実行し、条件分岐や例外処理も含めて1つの処理としてパッケージ化したい</strong> → ストアドプロシージャ。「値を返す関数」ではなく「手順を実行するジョブ」を作りたいときはこちら</li></ul>
 <p>Polarsはローカルで動くライブラリなので、この4分類そのものが存在しません。Polarsで「カスタムロジック」というと、<code>map_elements</code>のようなメソッドにPython関数を渡す形が中心で、SQLエンジン側にプッシュダウンして実行させるという概念がそもそもありません。</p>
     
     <h2 style="font-size:1.05rem">出典</h2>
     <ul style="padding-left:20px"><li><a href="https://docs.snowflake.com/en/developer-guide/snowpark/python/creating-udfs" style="color:#38bdf8">Snowflake Documentation: Creating UDFs for DataFrames in Python</a></li><li><a href="https://docs.snowflake.com/en/developer-guide/snowpark/python/creating-udtfs" style="color:#38bdf8">Snowflake Documentation: Creating UDTFs for DataFrames in Python</a></li></ul>
-    <p style="color:#94a3b8;font-size:0.85rem">公式ドキュメントの記載にもとづく解説です（実行検証はしていません）。確認日：2026-08-21</p>
+    <p style="color:#94a3b8;font-size:0.85rem">公式ドキュメントの記載にもとづく解説です（実行検証はしていません）。確認日：2026-08-27</p>
     <nav style="margin-top:24px;display:flex;gap:16px;flex-wrap:wrap;font-size:0.85rem"><a href="/snowpark-guide/about/" style="color:#94a3b8">このサイトについて</a><a href="/snowpark-guide/privacy/" style="color:#94a3b8">プライバシーポリシー</a></nav>
   </div></div>
   </body>

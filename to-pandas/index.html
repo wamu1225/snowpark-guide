@@ -32,8 +32,8 @@
       src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9102538151148380"
       crossorigin="anonymous"
     ></script>
-    <script type="module" crossorigin src="../assets/index-Cs-_mSdL.js"></script>
-    <link rel="stylesheet" crossorigin href="../assets/index-BpUyKKfG.css">
+    <script type="module" crossorigin src="../assets/index-BUyOXa0y.js"></script>
+    <link rel="stylesheet" crossorigin href="../assets/index-BMXZ-q2V.css">
   <script type="application/ld+json">{"@context":"https://schema.org","@type":"TechArticle","headline":"to_pandas","description":"結果をpandas DataFrameに変換する。 Snowparkでの書き方とPolarsでの書き方を並べて解説します。","url":"https://study-apps.com/snowpark-guide/to-pandas/","dateModified":"2026-08-26","inLanguage":"ja"}</script>
   </head>
   <body>
@@ -56,7 +56,7 @@
     <h2 style="font-size:1.05rem;color:#b45309">移行時の落とし穴</h2>
     <p>Snowflakeの<code>NUMBER(38, 0)</code>のような大きな精度の数値型は、pandasへ変換する際に<code>object</code>型やdouble精度の<code>int64</code>に変換されることがあり、桁数によっては精度が落ちる可能性がある。Polars側は列の型がそのままpandasの対応する型にマッピングされるだけなので、この種の精度の懸念は基本的に発生しない。移行元がSnowparkの大きな数値列だった場合は変換後の値を確認する。</p>
     <h2 style="font-size:1.05rem">実行・アクション・IOの他のメソッド</h2><ul style="padding-left:20px"><li><a href="/snowpark-guide/collect/" style="color:#38bdf8">collect</a> ── それまで積み上げた変換を実際に評価し、結果を手元に取得する。最も基本的なアクション。</li><li><a href="/snowpark-guide/show/" style="color:#38bdf8">show</a> ── 結果の先頭数行を、確認用に画面へ表示する。</li><li><a href="/snowpark-guide/first/" style="color:#38bdf8">first</a> ── 先頭の1行だけを取得する。</li><li><a href="/snowpark-guide/take/" style="color:#38bdf8">take</a> ── 指定した件数の行を取得する。</li><li><a href="/snowpark-guide/to-local-iterator/" style="color:#38bdf8">to_local_iterator</a> ── 結果を全件メモリに載せず、1行（またはチャンク）ずつ順番に処理する。</li><li><a href="/snowpark-guide/cache-result/" style="color:#38bdf8">cache_result</a> ── それまでの計算結果を1度だけ確定させ、以降はその結果を使い回す。</li><li><a href="/snowpark-guide/create-or-replace-view/" style="color:#38bdf8">createOrReplaceView（create_or_replace_view）</a> ── 今のDataFrameの定義を、他のSQLセッションからも参照できるビューとして登録する。</li><li><a href="/snowpark-guide/create-or-replace-temp-view/" style="color:#38bdf8">createOrReplaceTempView（create_or_replace_temp_view）</a> ── 今のセッション限定で有効な、一時的なビューを作る。</li><li><a href="/snowpark-guide/save-as-table/" style="color:#38bdf8">write.save_as_table</a> ── 結果をテーブル（またはファイル）として書き出す。</li><li><a href="/snowpark-guide/explain/" style="color:#38bdf8">explain</a> ── その時点までの変換が、実際にどう実行される予定かを表示する。</li></ul>
-    
+    <h2 style="font-size:1.05rem">関連する基礎知識</h2><ul style="padding-left:20px"><li><a href="/snowpark-guide/guide/vs-polars/" style="color:#38bdf8">Snowpark と Polars の違い（総論）</a></li></ul>
     <h2 style="font-size:1.05rem">出典・検証情報</h2>
     <ul style="padding-left:20px">
       <li><a href="https://docs.snowflake.com/en/developer-guide/snowpark/reference/python/latest/snowpark/api/snowflake.snowpark.DataFrame.to_pandas" style="color:#38bdf8">Snowpark 公式リファレンス（to_pandas）</a></li>

@@ -32,8 +32,8 @@
       src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9102538151148380"
       crossorigin="anonymous"
     ></script>
-    <script type="module" crossorigin src="../assets/index-Cs-_mSdL.js"></script>
-    <link rel="stylesheet" crossorigin href="../assets/index-BpUyKKfG.css">
+    <script type="module" crossorigin src="../assets/index-BUyOXa0y.js"></script>
+    <link rel="stylesheet" crossorigin href="../assets/index-BMXZ-q2V.css">
   <script type="application/ld+json">{"@context":"https://schema.org","@type":"TechArticle","headline":"schema / collect_schema()","description":"列名と型の一覧（スキーマ）を取得する。 Snowparkでの書き方とPolarsでの書き方を並べて解説します。","url":"https://study-apps.com/snowpark-guide/schema/","dateModified":"2026-08-20","inLanguage":"ja"}</script>
   </head>
   <body>
@@ -56,7 +56,7 @@
     <h2 style="font-size:1.05rem;color:#b45309">移行時の落とし穴</h2>
     <p>型の文字表現が全く異なる（Snowparkは StringType() のようなクラスインスタンス、Polarsは pl.String のような型オブジェクト）。型を文字列比較で判定するコードを両対応で書くと、この違いで壊れる。</p>
     <h2 style="font-size:1.05rem">射影・選択の他のメソッド</h2><ul style="padding-left:20px"><li><a href="/snowpark-guide/select/" style="color:#38bdf8">select</a> ── 列を選んで取り出す。両方とも遅延評価で、実際のクエリは後段のアクションまで発行されない。</li><li><a href="/snowpark-guide/drop/" style="color:#38bdf8">drop</a> ── 指定した列を取り除く。select の逆で、残す列でなく捨てる列を書く。</li><li><a href="/snowpark-guide/with-column/" style="color:#38bdf8">with_column / with_columns</a> ── 既存の列はそのままに、新しい列を1つ（または複数）追加する。</li><li><a href="/snowpark-guide/with-column-renamed/" style="color:#38bdf8">with_column_renamed / rename</a> ── 列名を変更する。</li><li><a href="/snowpark-guide/col/" style="color:#38bdf8">col</a> ── 列を式として参照する。以降のメソッドチェーンの起点になる、両APIで最も頻出する関数。</li><li><a href="/snowpark-guide/lit/" style="color:#38bdf8">lit</a> ── 定数値を式として埋め込む。</li><li><a href="/snowpark-guide/alias/" style="color:#38bdf8">alias</a> ── 式の出力列に名前をつける。</li><li><a href="/snowpark-guide/columns/" style="color:#38bdf8">columns / collect_schema().names()</a> ── 現在の列名の一覧を取得する。</li></ul>
-    <h2 style="font-size:1.05rem">関連する基礎知識</h2><ul style="padding-left:20px"><li><a href="/snowpark-guide/guide/vs-polars/" style="color:#38bdf8">Snowpark と Polars の違い（総論）</a></li></ul>
+    
     <h2 style="font-size:1.05rem">出典・検証情報</h2>
     <ul style="padding-left:20px">
       <li><a href="https://docs.snowflake.com/en/developer-guide/snowpark/reference/python/latest/snowpark/api/snowflake.snowpark.DataFrame.schema" style="color:#38bdf8">Snowpark 公式リファレンス（schema / collect_schema()）</a></li>

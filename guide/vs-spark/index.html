@@ -32,27 +32,49 @@
       src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9102538151148380"
       crossorigin="anonymous"
     ></script>
-    <script type="module" crossorigin src="../../assets/index-Cs-_mSdL.js"></script>
-    <link rel="stylesheet" crossorigin href="../../assets/index-BpUyKKfG.css">
-  <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","headline":"Snowpark と Apache Spark の違い","description":"どちらも分散DataFrame APIだが、クラスタを自分で持つか持たないかで運用とコストの構造が変わります。","url":"https://study-apps.com/snowpark-guide/guide/vs-spark/","dateModified":"2026-08-21","inLanguage":"ja"}</script>
+    <script type="module" crossorigin src="../../assets/index-BUyOXa0y.js"></script>
+    <link rel="stylesheet" crossorigin href="../../assets/index-BMXZ-q2V.css">
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","headline":"Snowpark と Apache Spark の違い","description":"DataFrame APIの書き味はよく似ていますが、クラスタを自分で持つか持たないかで運用とコストの構造がまったく変わります。","url":"https://study-apps.com/snowpark-guide/guide/vs-spark/","dateModified":"2026-08-27","inLanguage":"ja"}</script>
   </head>
   <body>
     <div id="root"><div style="max-width:760px;margin:0 auto;padding:24px 16px;font-family:sans-serif;line-height:1.8;color:#0f172a">
     <p style="color:#94a3b8;font-size:0.9rem"><a href="/snowpark-guide/" style="color:#94a3b8">トップ</a> / 基礎知識</p>
     <h1 style="font-size:1.6rem;margin-bottom:8px">Snowpark と Apache Spark の違い</h1>
-    <p style="color:#475569">どちらも分散DataFrame APIだが、クラスタを自分で持つか持たないかで運用とコストの構造が変わります。</p>
-    
+    <p style="color:#475569">DataFrame APIの書き味はよく似ていますが、クラスタを自分で持つか持たないかで運用とコストの構造がまったく変わります。</p>
+    <div style="margin:16px 0"><svg viewBox="0 0 720 340" width="720" height="340" role="img" aria-label="ApacheSparkとSnowparkのインフラ構造の違いを示す図。Sparkはユーザーが自分でドライバーノードとワーカーノードのクラスタを管理し、Snowflake上のデータを一度クラスタ側へ転送してから処理する。Snowparkはユーザーがクラスタを持たず、Snowflakeのフルマネージドな仮想ウェアハウス上でデータを動かさずにコードが評価される。"><defs><marker id="vsspark-arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 Z" fill="#475569"></path></marker></defs><rect x="16" y="24" width="330" height="292" rx="14" fill="#f1f5f9" stroke="#475569" stroke-width="2"></rect><text x="181" y="52" text-anchor="middle" font-size="15" font-weight="700" fill="#334155">Apache Spark</text><text x="181" y="70" text-anchor="middle" font-size="11" fill="#64748b">クラスタはあなたが用意・管理する</text><rect x="36" y="88" width="120" height="70" rx="8" fill="#ffffff" stroke="#475569" stroke-width="1.5"></rect><text x="96" y="112" text-anchor="middle" font-size="12" font-weight="600" fill="#0f172a">ドライバー</text><text x="96" y="130" text-anchor="middle" font-size="10" fill="#64748b">ノード</text><rect x="186" y="88" width="140" height="70" rx="8" fill="#ffffff" stroke="#475569" stroke-width="1.5"></rect><text x="256" y="108" text-anchor="middle" font-size="12" font-weight="600" fill="#0f172a">ワーカーノード群</text><text x="256" y="126" text-anchor="middle" font-size="10" fill="#64748b">メモリ・台数を</text><text x="256" y="140" text-anchor="middle" font-size="10" fill="#64748b">自分でチューニング</text><rect x="36" y="176" width="290" height="60" rx="8" fill="#fef3c7" stroke="#b45309" stroke-width="1.5"></rect><text x="181" y="198" text-anchor="middle" font-size="11" font-weight="700" fill="#92400e">常時起動 or 都度起動・停止の運用コスト</text><text x="181" y="216" text-anchor="middle" font-size="10" fill="#92400e">オートサスペンドの概念がない</text><path d="M181 236 L181 260" stroke="#475569" stroke-width="2" fill="none" marker-end="url(#vsspark-arrow)"></path><text x="181" y="278" text-anchor="middle" font-size="10" fill="#475569">データをクラスタ側へ転送（Egress）</text><text x="181" y="296" text-anchor="middle" font-size="10" fill="#475569">してから処理することがある</text><rect x="374" y="24" width="330" height="292" rx="14" fill="#e0f2fe" stroke="#0284c7" stroke-width="2"></rect><text x="539" y="52" text-anchor="middle" font-size="15" font-weight="700" fill="#0284c7">Snowpark</text><text x="539" y="70" text-anchor="middle" font-size="11" fill="#64748b">ウェアハウスはSnowflakeが管理する</text><rect x="394" y="88" width="290" height="70" rx="8" fill="#ffffff" stroke="#0284c7" stroke-width="1.5"></rect><text x="539" y="112" text-anchor="middle" font-size="12" font-weight="600" fill="#0f172a">Virtual Warehouse（フルマネージド）</text><text x="539" y="132" text-anchor="middle" font-size="10" fill="#64748b">クラスタ運用の作業自体が発生しない</text><rect x="394" y="176" width="290" height="60" rx="8" fill="#dcfce7" stroke="#15803d" stroke-width="1.5"></rect><text x="539" y="198" text-anchor="middle" font-size="11" font-weight="700" fill="#166534">秒単位課金・オートサスペンド/レジューム</text><text x="539" y="216" text-anchor="middle" font-size="10" fill="#166534">使わない時間は自動で課金停止</text><path d="M539 236 L539 260" stroke="#475569" stroke-width="2" fill="none" marker-end="url(#vsspark-arrow)"></path><text x="539" y="278" text-anchor="middle" font-size="10" fill="#475569">データがある場所と同じ基盤の上で</text><text x="539" y="296" text-anchor="middle" font-size="10" fill="#475569">コードが評価される（転送不要）</text></svg></div>
     <h2>クラスタを自分で管理するかどうか</h2>
-<p>Apache SparkとSnowparkは、どちらも遅延評価の分散DataFrame APIという点で似ています。しかし、その裏側にあるインフラは大きく異なります。</p>
-<p>Sparkはユーザー自身がドライバーノードとワーカーノードから成る計算クラスタ（多くはJVM環境）を用意し、管理する必要があります。メモリ設定やネットワークのチューニングもユーザーの責任範囲です。一方でSnowparkは、Snowflakeが提供するフルマネージドな環境（Virtual Warehouse）の上で動くため、そうしたクラスタ運用の作業そのものが発生しません。</p>
+<p>Apache SparkとSnowparkは、どちらも遅延評価の分散DataFrame APIという点で似ています。実際、後述するようにコードの見た目もかなり近くなります。しかし、その裏側にあるインフラは大きく異なります。</p>
+<p>Sparkはユーザー自身がドライバーノードとワーカーノードから成る計算クラスタ（多くはJVM環境）を用意し、管理する必要があります。メモリ設定やネットワークのチューニング、Sparkのバージョンアップ対応もユーザーの責任範囲です。一方でSnowparkは、Snowflakeが提供するフルマネージドな環境（Virtual Warehouse）の上で動くため、そうしたクラスタ運用の作業そのものが発生しません。</p>
 <h2>データの転送（Egress）が要るかどうか</h2>
-<p>Snowflake上に蓄積されたデータをSparkで処理しようとすると、データを一度Snowflakeの外（Sparkクラスタ側）へ転送する必要が生じる場合があります。この転送にはネットワーク費用や転送時間がかかり、データがSnowflakeの外に出ることによるセキュリティ上の考慮も増えます。Snowparkはデータが存在するのと同じ基盤の上でコードが評価されるため、こうした転送が発生しません。</p>
+<p>Snowflake上に蓄積されたデータをSparkクラスタ側で処理しようとすると、データを一度Snowflakeの外へ転送する必要が生じる場合があります。この転送にはネットワーク費用や転送時間がかかり、データがSnowflakeの外に出ることによるセキュリティ上の考慮も増えます。Snowparkはデータが存在するのと同じ基盤（Snowflake内部）の上でコードが評価されるため、こうした転送が発生しません。</p>
+<h2>コードの見た目はかなり近い（ただし呼び方に注意）</h2>
+<p>Snowpark PythonのDataFrame APIは、PySparkのDataFrame APIを強く意識して設計されています。<code>select</code>・<code>filter</code>・<code>join</code>・<code>limit</code>のような単語1つのメソッドはPySparkとSnowparkで<strong>同名・同じ使い方</strong>です。</p>
+<pre class="concept-page__code"><code># PySpark（1台以上のクラスタで実行）
+result = (
+    df.filter(col("amount") &gt; 100)
+      .groupBy("customer_id")
+      .agg(F.avg("amount").alias("avg_amount"))
+      .orderBy("avg_amount", ascending=False)
+      .limit(10)
+)
+
+# Snowpark（Snowflakeのウェアハウス上で実行）
+result = (
+    df.filter(col("amount") &gt; 100)
+      .group_by("customer_id")
+      .agg(F.avg("amount").alias("avg_amount"))
+      .sort(col("avg_amount").desc())
+      .limit(10)
+)</code></pre>
+<p>違いが出るのは複合語のメソッド名です。PySparkは<code>groupBy</code>・<code>withColumn</code>のようにcamelCaseが標準ですが、Snowparkは<code>group_by</code>・<code>with_column</code>のようにsnake_caseが標準です。<strong>Snowparkは実は<code>groupBy</code>・<code>withColumn</code>・<code>orderBy</code>というcamelCaseのエイリアスも内部に持っており、PySparkと同じ綴りでも動きます</strong>（SDKのクラス定義を実機で確認済み）。ただしSnowflake公式のサンプルコードはsnake_caseで統一されているため、新規に書くならsnake_caseに合わせておくのが無難です。</p>
 <h2>コストの発生の仕方</h2>
 <p>Snowflakeの仮想ウェアハウスは秒単位（起動時のみ60秒の最低課金あり）で課金され、一定時間操作がなければ自動的に一時停止（オートサスペンド）し、次のクエリが来ると自動的に再開（オートレジューム）します。Sparkクラスタは、常時起動させておくか、都度起動・停止させるオーバーヘッドを引き受けるかのどちらかになります。</p>
-    
+<h2>Snowparkに移行すべきケース／すべきでないケース</h2>
+<ul><li><strong>移行に向く</strong>：処理対象のデータがもともとSnowflake上にあり、Sparkクラスタへの転送だけのために別インフラを維持している場合。クラスタの空き容量やジョブスケジューリングの運用自体が負担になっている場合。</li><li><strong>移行に向かない</strong>：Snowflake以外の複数のデータソース（S3・Kafkaのストリーム・オンプレのDBなど）を1つのジョブでまたいで処理する必要がある場合。SparkはSnowflake専用ではなく汎用の分散処理基盤であるため、こうした異種データソースの統合処理はSparkの守備範囲であり、Snowparkの範囲外です。</li><li><strong>判断の軸</strong>：「処理の対象データがSnowflakeで完結しているか」がそのまま判断基準になります。完結しているならSnowparkでクラスタ運用そのものを無くせますが、完結していないならSparkの汎用性が必要です。</li></ul>
+    <h2 style="font-size:1.05rem">関連する関数リファレンス</h2><ul style="padding-left:20px"><li><a href="/snowpark-guide/group-by/" style="color:#38bdf8">group_by / groupBy</a></li><li><a href="/snowpark-guide/filter/" style="color:#38bdf8">filter / where</a></li></ul>
     <h2 style="font-size:1.05rem">出典</h2>
-    <ul style="padding-left:20px"><li><a href="https://docs.snowflake.com/en/user-guide/warehouses-overview" style="color:#38bdf8">Snowflake Documentation: Overview of Warehouses（課金・オートサスペンド/レジューム）</a></li></ul>
-    <p style="color:#94a3b8;font-size:0.85rem">公式ドキュメントの記載にもとづく解説です（実行検証はしていません）。確認日：2026-08-21</p>
+    <ul style="padding-left:20px"><li><a href="https://docs.snowflake.com/en/user-guide/warehouses-overview" style="color:#38bdf8">Snowflake Documentation: Overview of Warehouses（課金・オートサスペンド/レジューム）</a></li><li><a href="https://docs.snowflake.com/en/developer-guide/snowpark/python/working-with-dataframes" style="color:#38bdf8">Snowflake Documentation: Working with DataFrames in Snowpark Python</a></li></ul>
+    <p style="color:#94a3b8;font-size:0.85rem">公式ドキュメントの記載にもとづく解説です（実行検証はしていません）。確認日：2026-08-27</p>
     <nav style="margin-top:24px;display:flex;gap:16px;flex-wrap:wrap;font-size:0.85rem"><a href="/snowpark-guide/about/" style="color:#94a3b8">このサイトについて</a><a href="/snowpark-guide/privacy/" style="color:#94a3b8">プライバシーポリシー</a></nav>
   </div></div>
   </body>
