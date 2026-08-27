@@ -18,17 +18,17 @@ export const CONCEPTS: ConceptPage[] = [
     summary: '自分のPythonコードは、結局どこで動いているのか。クライアント・Snowflake・UDFという3つの実行場所を切り分けて説明します。',
     body: `## 「どこで動くか」は1つではなく3種類ある
 
-Snowparkのコードを読むとき、「Pythonなのだから手元のマシンで動く」と思ってしまいがちですが、実際には**3種類の場所**に処理が分かれています。
+**このページは、あなたの手元のマシン（ノートPCなど）からSnowflakeに接続してPythonスクリプトを実行する、最も基本的な使い方を前提にしています。**そのうえで、Snowparkのコードを読むとき「Pythonなのだから手元のマシンで動く」と思ってしまいがちですが、実際には**3種類の場所**に処理が分かれています。
 
 1. **クライアント側**：あなたが書いたPythonのスクリプト自体（DataFrameの変換メソッドを呼ぶ部分）
 2. **Snowflake側（SQLエンジン）**：フィルタ・結合・集計など、実際のデータ処理
 3. **Snowflake側（UDFのサンドボックス）**：あなたが書いたPython関数の**中身**が、条件によってはこちらで動く
 
-この3つを区別せずに「Pythonはクライアントで動く」「SQLはSnowflakeで動く」とだけ覚えると、UDFを使った瞬間に混乱します。順番に見ていきます。
+この3つを区別せずに「Pythonはクライアントで動く」「SQLはSnowflakeで動く」とだけ覚えると、UDFを使った瞬間に混乱します。順番に見ていきます（**ストアドプロシージャとして登録した場合はこの前提が変わります**。後述の節を参照）。
 
 ## 1. クライアント側で動くのは「計画を組み立てるコード」だけ
 
-\`select\`・\`filter\`・\`join\`のような変換メソッドを呼ぶ**Pythonの文自体は、間違いなくクライアント側（あなたのスクリプトを実行しているマシン）で動きます**。ここは動かしようのない事実です。
+\`select\`・\`filter\`・\`join\`のような変換メソッドを呼ぶ**Pythonの文自体は、あなたの手元のマシンからSnowflakeに接続して実行している限り、クライアント側で動きます**。
 
 ただし、このPythonコードが実際に**行っていること**は、データの処理ではありません。「この列を選ぶ」「この条件で絞り込む」という指示を、内部的な論理プラン（実行計画）として積み上げているだけです。Snowflake公式ドキュメントも「DataFrameは、データを取得するために評価される必要のあるクエリのようなものである」と説明しており、変換メソッドは「SQL文の組み立て方を指定するだけで、Snowflakeデータベースからデータを取得しない」と明記しています。
 
@@ -57,6 +57,12 @@ result = df4.collect()
 
 変換をまとめてSQLへ変換してからSnowflakeへ送ることで、Snowflakeのクエリオプティマイザが変換全体を見渡して最適化できます。UDFの実行場所をSnowflake側に寄せているのも同じ理由で、データをクライアントへ転送せずに済み、ペタバイト規模のデータでも同じコードで処理できます。
 
+## 前提が変わる場合：ストアドプロシージャとして登録したとき
+
+ここまでの説明は「あなたの手元のマシンから接続して実行する」場合の話です。同じPythonコードを[ストアドプロシージャ（SPROC）](/guide/udf-udtf-sproc/)として登録し、Snowflake側で呼び出す形にすると、前提が変わります。Snowflake公式ドキュメントは、Pythonのストアドプロシージャについて「Snowflakeの中でデータパイプラインを構築・実行でき、Snowflakeのウェアハウスがコンピュート基盤になる」「ウェアハウス上でAnacondaパッケージのインストールが行われる」と説明しています。つまり、**SPROCとして登録したコードは、そのPython関数の中身自体がクライアントではなくSnowflakeのウェアハウス上で実行されます**。
+
+このとき、SPROCの中で\`select\`・\`filter\`のようなDataFrame変換メソッドを呼んでも、それらはもう「あなたの手元のマシン」で動いているのではありません。**「クライアント側」という言葉が指す場所自体が、SPROCの内側では変わる**という点に注意してください。UDF・UDTF・SPROCの使い分け自体は[こちらのページ](/guide/udf-udtf-sproc/)で解説しています。
+
 ## 実務でどう効くか
 
 - **「なぜかコードが速く終わる」の正体**：\`select\`や\`filter\`を何行書いても、Snowflakeへは何も送られていません。「実行が速い」のではなく「まだ何も実行していない」だけ、というケースがよくあります。処理時間を計測するときは、必ずアクションメソッドを呼んだ地点で計測します。
@@ -72,8 +78,12 @@ result = df4.collect()
         label: 'Snowflake Documentation: Creating UDFs for DataFrames in Python（UDFの実行場所について）',
         url: 'https://docs.snowflake.com/en/developer-guide/snowpark/python/creating-udfs',
       },
+      {
+        label: 'Snowflake Documentation: Creating Stored Procedures for DataFrames in Python（SPROCの実行場所について）',
+        url: 'https://docs.snowflake.com/en/developer-guide/snowpark/python/creating-sprocs',
+      },
     ],
-    verifiedDate: '2026-08-26',
+    verifiedDate: '2026-08-27',
   },
   {
     slug: 'vs-spark',
