@@ -197,4 +197,70 @@ export const aggregationEntries: Entry[] = [
       date: '2026-08-22',
     },
   },
+  {
+    slug: 'array-agg',
+    title: 'array_agg',
+    category: 'aggregation',
+    summary: 'グループ内の複数行の値を、1つの配列（リスト）にまとめる。',
+    snowparkCode: 'df.group_by("dept").agg(array_agg("name").alias("members"))',
+    polarsCode: 'df.group_by("dept").agg(pl.col("name").implode().alias("members"))',
+    difference:
+      'Snowparkは`array_agg`という専用の集約関数をSQLの`ARRAY_AGG`として呼び出す。Polarsには同名の集約関数は無く、**列をリストへ「圧縮する」という意味の`implode()`**を使う。実行して確認したところ、`group_by().agg()`の中では**`implode()`を書かなくても、他の集約関数（`sum`等）を適用しない列は自動的にリスト化される**（`pl.col("name")`だけでも同じ結果になる）。',
+    pitfall:
+      'Polars側は明示的な集約関数を書かないとリストになる「暗黙の挙動」に見えるため、**どの列が集約されているのか意図が伝わりにくい**。`array_agg`に相当する処理だと分かるように、`implode()`を明示的に書いておくとSnowpark側のコードと対応が取りやすい。',
+    snowparkDocUrl:
+      'https://docs.snowflake.com/en/developer-guide/snowpark/reference/python/latest/snowpark/api/snowflake.snowpark.functions.array_agg',
+    polarsDocUrl: 'https://docs.pola.rs/api/python/stable/reference/expressions/api/polars.Expr.implode.html',
+    verified: {
+      polarsExecuted: true,
+      snowparkStaticChecked: true,
+      polarsVersion: '1.36.1',
+      snowparkSdkVersion: '1.51.1',
+      date: '2026-08-30',
+    },
+  },
+  {
+    slug: 'listagg',
+    title: 'listagg',
+    category: 'aggregation',
+    summary: 'グループ内の複数行の文字列を、区切り文字でつないだ1つの文字列にまとめる。',
+    snowparkCode: 'df.group_by("dept").agg(listagg("name", ",").alias("names"))',
+    polarsCode: 'df.group_by("dept").agg(pl.col("name").str.join(",").alias("names"))',
+    difference:
+      'Snowparkの`listagg`はSQLの`LISTAGG`に変換され、区切り文字を第2引数に渡す。Polarsは`.str`名前空間の`join()`メソッドで同じことを行う。`["x","y"]`を`,`で連結して実行して確認したところ、どちらも`"x,y"`になる。',
+    pitfall:
+      '`array_agg`（配列としてまとめる）と`listagg`（文字列としてまとめる）は目的が近く紛らわしい。**配列のまま後続処理で使うか、表示用に1本の文字列へ潰すか**で使い分ける。Polars側でリスト列ができてから文字列化したい場合は`.list.join(",")`（`str`名前空間ではなく`list`名前空間）を使う点にも注意。',
+    snowparkDocUrl:
+      'https://docs.snowflake.com/en/developer-guide/snowpark/reference/python/latest/snowpark/api/snowflake.snowpark.functions.listagg',
+    polarsDocUrl: 'https://docs.pola.rs/api/python/stable/reference/expressions/api/polars.Expr.str.join.html',
+    verified: {
+      polarsExecuted: true,
+      snowparkStaticChecked: true,
+      polarsVersion: '1.36.1',
+      snowparkSdkVersion: '1.51.1',
+      date: '2026-08-30',
+    },
+  },
+  {
+    slug: 'median-stddev',
+    title: 'median / stddev',
+    category: 'aggregation',
+    summary: '中央値と標準偏差を求める（外れ値の影響を受けにくい代表値・散らばりの指標）。',
+    snowparkCode: 'df.select(median(col("score")), stddev(col("score")))',
+    polarsCode: 'df.select(pl.col("score").median(), pl.col("score").std())',
+    difference:
+      '`median`はどちらも中央値でそのまま対応する。`stddev`と`.std()`は**どちらも既定で標本標準偏差（n-1で割る）**という点まで一致する＝Snowflake公式ドキュメントの「STDDEVは標本標準偏差を返す（母標準偏差はSTDDEV_POP）」を確認したうえで、Polars側`.std()`の既定引数`ddof=1`（実行して`[1,2,3,4,5]`のstdが約`1.581`になることを確認）と突き合わせた結果、両者は同じ定義。',
+    pitfall:
+      '**母集団の標準偏差が欲しいときの書き方が違う**。Snowflake側は別の関数`STDDEV_POP`に切り替える必要があるのに対し、Polarsは同じ`.std()`に`ddof=0`を渡すだけで済む（実行して確認＝同じ`[1,2,3,4,5]`で`ddof=0`だと約`1.414`）。関数を探して切り替えるSnowpark側と、引数を変えるだけのPolars側で操作の形が異なる。',
+    snowparkDocUrl:
+      'https://docs.snowflake.com/en/developer-guide/snowpark/reference/python/latest/snowpark/api/snowflake.snowpark.functions.stddev',
+    polarsDocUrl: 'https://docs.pola.rs/api/python/stable/reference/expressions/api/polars.Expr.std.html',
+    verified: {
+      polarsExecuted: true,
+      snowparkStaticChecked: true,
+      polarsVersion: '1.36.1',
+      snowparkSdkVersion: '1.51.1',
+      date: '2026-08-30',
+    },
+  },
 ];

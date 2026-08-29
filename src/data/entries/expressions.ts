@@ -556,4 +556,95 @@ export const expressionsEntries: Entry[] = [
       date: '2026-08-29',
     },
   },
+  {
+    slug: 'initcap',
+    title: 'initcap',
+    category: 'expressions',
+    summary: '各単語の先頭だけを大文字にし、残りを小文字にする（タイトルケース化）。',
+    snowparkCode: 'initcap(col("name"))  # "JOHN SMITH" → "John Smith"',
+    polarsCode: 'pl.col("name").str.to_titlecase()  # "JOHN SMITH" → "John Smith"',
+    difference:
+      'Snowflake公式ドキュメントは「各単語の先頭文字を大文字に、それ以降の文字は小文字にする」と明記しており、`"OVER the River"`→`"Over The River"`という例まで示している。実行して確認したところ、Polarsの`str.to_titlecase()`も`"JOHN SMITH"`→`"John Smith"`と**残りの文字を小文字化する点まで一致**する（先頭だけ大文字化して残りをそのまま残す動作ではない）。',
+    pitfall:
+      '**単語の区切り方の細かな仕様（ハイフンやアポストロフィを区切りとして扱うか等）はライブラリごとの実装依存**で、両者が完全に一致する保証はない。姓名やハイフン入りの固有名詞など、区切りの扱いが結果に影響しうるデータでは、想定どおりの区切りになっているかを実データで確認すること。',
+    snowparkDocUrl:
+      'https://docs.snowflake.com/en/developer-guide/snowpark/reference/python/latest/snowpark/api/snowflake.snowpark.functions.initcap',
+    polarsDocUrl:
+      'https://docs.pola.rs/api/python/stable/reference/expressions/api/polars.Expr.str.to_titlecase.html',
+    verified: {
+      polarsExecuted: true,
+      snowparkStaticChecked: true,
+      polarsVersion: '1.36.1',
+      snowparkSdkVersion: '1.51.1',
+      date: '2026-08-30',
+    },
+  },
+  {
+    slug: 'current-date-timestamp',
+    title: 'current_date / current_timestamp',
+    category: 'expressions',
+    summary: '現在の日付・日時を取得する。',
+    snowparkCode: 'df.with_column("today", current_date())',
+    polarsCode: 'import datetime\ndf.with_columns(pl.lit(datetime.date.today()).alias("today"))',
+    difference:
+      '**「いつ評価されるか」という設計思想そのものが違う**。Snowparkの`current_date()`はSQLの`CURRENT_DATE`に変換され、**クエリがSnowflakeサーバー上で実行された瞬間**の日付になる（DataFrameを組み立てた時点ではなく、`collect()`等でアクションが起きた時点）。Polarsには「サーバー側で評価される現在時刻」という概念自体が無く、Python側で`datetime.date.today()`を呼んだ**その瞬間の値をリテラルとして埋め込む**。',
+    pitfall:
+      '**長時間実行されるパイプラインで結果が変わりうる**。Snowpark側は`collect()`のタイミングまで評価が遅延されるため、DataFrameを組み立ててから実際にアクションを呼ぶまでに日付が変わると（深夜バッチ等）、当初想定した日付と異なる値になることがある。Polars側はコードを実行したPython側の時刻でその場で確定するため、後続の重い処理に時間がかかっても日付は変わらない。',
+    snowparkDocUrl:
+      'https://docs.snowflake.com/en/developer-guide/snowpark/reference/python/latest/snowpark/api/snowflake.snowpark.functions.current_date',
+    polarsDocUrl: 'https://docs.pola.rs/api/python/stable/reference/expressions/api/polars.lit.html',
+    verified: {
+      polarsExecuted: true,
+      snowparkStaticChecked: true,
+      polarsVersion: '1.36.1',
+      snowparkSdkVersion: '1.51.1',
+      date: '2026-08-30',
+    },
+  },
+  {
+    slug: 'array-contains',
+    title: 'array_contains',
+    category: 'expressions',
+    summary: '配列の中に指定した値が含まれているかを判定する。',
+    snowparkCode: 'array_contains(lit("a"), col("tags"))  # 値が先、配列が後',
+    polarsCode: 'pl.col("tags").list.contains("a")  # 配列（列）が先、値が後',
+    difference:
+      '目的は同じ（配列に値が含まれるか）だが、**引数の順序がAPI間で逆**。Snowparkの`array_contains(variant, array)`は「探したい値」が第1引数、「対象の配列」が第2引数（`inspect.signature`で実機確認）。Polarsは対象の配列列に対して`.list.contains(値)`と呼ぶメソッド形式なので、配列側が先に来る。',
+    pitfall:
+      '**引数の順序を逆に書くと静かに間違った結果になりやすい**（両方とも列やリテラルを渡せてしまうため、型エラーで気づけないことがある）。Snowparkのコードをそのまま「引数を並べ替えるだけ」でPolarsに移植する際、この1件だけ順序が逆転している点を見落としやすい。',
+    snowparkDocUrl:
+      'https://docs.snowflake.com/en/developer-guide/snowpark/reference/python/latest/snowpark/api/snowflake.snowpark.functions.array_contains',
+    polarsDocUrl:
+      'https://docs.pola.rs/api/python/stable/reference/expressions/api/polars.Expr.list.contains.html',
+    verified: {
+      polarsExecuted: true,
+      snowparkStaticChecked: true,
+      polarsVersion: '1.36.1',
+      snowparkSdkVersion: '1.51.1',
+      date: '2026-08-30',
+    },
+  },
+  {
+    slug: 'parse-json-object-construct',
+    title: 'parse_json / object_construct',
+    category: 'expressions',
+    summary: '文字列をJSON（半構造化データ）として解釈する／複数の値からJSONオブジェクトを組み立てる。',
+    snowparkCode: 'parse_json(col("raw_json"))\nobject_construct(lit("name"), col("name"), lit("age"), col("age"))',
+    polarsCode:
+      'pl.col("raw_json").str.json_decode(pl.Struct({"a": pl.Int64, "b": pl.Utf8}))\npl.struct(["name", "age"]).alias("obj")',
+    difference:
+      '**データモデルの前提が根本的に異なる**。SnowflakeのVARIANT型は**スキーマレス**で、`parse_json`は行ごとに異なる構造のJSONでも受け入れる。一方Polarsの`Struct`型は**列と同じく固定スキーマ**を持つ通常のデータ型で、`object_construct`に近い`pl.struct()`は「決まったフィールドの集まり」を1列にまとめるだけ。',
+    pitfall:
+      '**`str.json_decode()`はPolarsの`Expr`（列に対する遅延式）として使う場合、対象の`dtype`（Structのフィールド定義）を明示的に渡す必要があり、省略するとエラーになる**（実行して確認＝`dtype=None`は「Expr版はスキーマを自動推論できない、必要なら`Series.str.json_decode()`を使え」という趣旨のエラーになる）。Snowflakeの`PARSE_JSON`はスキーマの事前定義が一切不要なので、**行ごとにキーが異なるような真にスキーマレスなJSONは、Polars側では事前にStructのスキーマを揃えるか、行ごとの構造差を許容する別の設計に作り替える必要がある**。',
+    snowparkDocUrl:
+      'https://docs.snowflake.com/en/developer-guide/snowpark/reference/python/latest/snowpark/api/snowflake.snowpark.functions.parse_json',
+    polarsDocUrl: 'https://docs.pola.rs/api/python/stable/reference/expressions/api/polars.Expr.str.json_decode.html',
+    verified: {
+      polarsExecuted: true,
+      snowparkStaticChecked: true,
+      polarsVersion: '1.36.1',
+      snowparkSdkVersion: '1.51.1',
+      date: '2026-08-30',
+    },
+  },
 ];
