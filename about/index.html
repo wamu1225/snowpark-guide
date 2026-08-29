@@ -4,27 +4,27 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="icon" type="image/svg+xml" href="../favicon.svg" />
-    <title>このサイトについて｜Snowpark ⇄ Polars 対応表</title>
+    <title>このサイトについて｜Snowpark 実践ガイド</title>
     <meta
       name="description"
-      content="Snowpark PythonのDataFrame/Column APIを、Polarsの同等コードと並べて確認できる逆引きリファレンスです。挙動の違いと移行時の落とし穴をメソッドごとに解説します。"
+      content="Snowpark Pythonの基礎知識（アーキテクチャ・Spark比較・Polars比較・UDF/UDTF/SPROC・料金・ML）と、DataFrame/Column APIをPolarsの同等コードと並べて確認できる逆引きリファレンスをまとめたサイトです。"
     />
     <link rel="canonical" href="https://study-apps.com/snowpark-guide/about/" />
     <meta property="og:type" content="website" />
-    <meta property="og:site_name" content="Snowpark ⇄ Polars 対応表" />
-    <meta property="og:title" content="このサイトについて｜Snowpark ⇄ Polars 対応表" />
+    <meta property="og:site_name" content="Snowpark 実践ガイド" />
+    <meta property="og:title" content="このサイトについて｜Snowpark 実践ガイド" />
     <meta
       property="og:description"
-      content="Snowpark PythonのDataFrame/Column APIを、Polarsの同等コードと並べて確認できる逆引きリファレンスです。"
+      content="Snowpark Pythonの基礎知識と、DataFrame/Column APIをPolarsの同等コードと並べて確認できる逆引きリファレンスをまとめたサイトです。"
     />
     <meta property="og:url" content="https://study-apps.com/snowpark-guide/about/" />
     <meta property="og:image" content="https://study-apps.com/snowpark-guide/ogp.png" />
     <meta property="og:locale" content="ja_JP" />
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content="このサイトについて｜Snowpark ⇄ Polars 対応表" />
+    <meta name="twitter:title" content="このサイトについて｜Snowpark 実践ガイド" />
     <meta
       name="twitter:description"
-      content="Snowpark PythonのDataFrame/Column APIを、Polarsの同等コードと並べて確認できる逆引きリファレンスです。"
+      content="Snowpark Pythonの基礎知識と、DataFrame/Column APIをPolarsの同等コードと並べて確認できる逆引きリファレンスをまとめたサイトです。"
     />
     <meta name="twitter:image" content="https://study-apps.com/snowpark-guide/ogp.png" />
     <script
@@ -32,18 +32,18 @@
       src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9102538151148380"
       crossorigin="anonymous"
     ></script>
-    <script type="module" crossorigin src="../assets/index-79Nvfxv9.js"></script>
+    <script type="module" crossorigin src="../assets/index-Bti0rrNj.js"></script>
     <link rel="stylesheet" crossorigin href="../assets/index-Cj1a5bcD.css">
-  <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebPage","name":"このサイトについて","description":"Snowpark ⇄ Polars 対応表の目的・検証方針・想定読者について説明します。","url":"https://study-apps.com/snowpark-guide/about/","inLanguage":"ja"}</script>
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebPage","name":"このサイトについて","description":"Snowpark 実践ガイドの目的・検証方針・想定読者について説明します。","url":"https://study-apps.com/snowpark-guide/about/","inLanguage":"ja"}</script>
   </head>
   <body>
     <div id="root"><div style="max-width:760px;margin:0 auto;padding:24px 16px;font-family:sans-serif;line-height:1.8;color:#0f172a">
     <h1 style="font-size:1.5rem;margin-bottom:14px">このサイトについて</h1>
     <h2>このサイトについて</h2>
-<p>「Snowpark ⇄ Polars 対応表」は、Snowflake の Snowpark Python DataFrame/Column API と、Polars の LazyFrame/Expression API を、同じ処理を書くとき並べて見比べられるようにした逆引きリファレンスです。</p>
-<p>Polars で書き慣れた処理を Snowpark でどう書くか、あるいはその逆を、検索して1操作=1ページですぐ確認できることを目指しています。</p>
+<p>「Snowpark 実践ガイド」は、Snowflake の Snowpark Python を実務で使うための情報を2種類にまとめたサイトです。1つは、アーキテクチャ・Apache Sparkとの違い・Polarsとの違い（総論）・UDF/UDTF/ストアドプロシージャの使い分け・料金構造・Snowpark ML といった基礎知識。もう1つは、Snowpark の DataFrame/Column API を Polars の LazyFrame/Expression API と並べて見比べられる逆引きリファレンスです。</p>
+<p>Polars で書き慣れた処理を Snowpark でどう書くか、あるいはその逆を、検索して1操作=1ページですぐ確認できることを目指すと同時に、コードの書き方だけでは分からない「なぜそうなるか」「どこにコストがかかるか」を基礎知識のページで解説しています。</p>
 <h2>想定読者</h2>
-<p>すでに Polars か Snowpark のどちらかに慣れていて、もう一方への移行やAPIの対応関係を調べているデータエンジニア・アナリストを想定しています。両方の入門解説ではなく、対応表として使うことを前提にしています。</p>
+<p>Snowpark を業務で使い始めた、または使うことを検討しているデータエンジニア・アナリストを想定しています。基礎知識のページは Snowpark を初めて触る段階でも読めるようにしていますが、Python や SQL の基本的な知識は前提にしています。DataFrame/Column API の逆引きリファレンスは、すでに Polars か Snowpark のどちらかに慣れていて、もう一方への移行やAPIの対応関係を調べる用途を想定しています。</p>
 <h2>収録範囲</h2>
 <p>現在、<a href="/snowpark-guide/">関数リファレンス</a>は68メソッドを収録しています。Snowpark Python SDK（1.54.0）の公開API面をinspectで実測したところ、<code>DataFrame</code>・<code>Column</code>・<code>Window</code>・<code>functions</code>モジュールなど主要なクラス・モジュールの公開メンバーを単純合計すると約1116件になります。68件はこの全体を網羅したものではなく、DataFrame操作の中核にあたる実務頻出セットです。</p>
 <p>収録しているのは、DataFrameの変換・集約・結合・並べ替え・式評価・ウィンドウ関数・実行という、Snowparkコードを書くときに中心となる操作です。<code>Session</code>の接続・認証設定、<code>Table</code>固有のDDL操作、UDF/UDTF/ストアドプロシージャの登録APIの詳細（登録の仕組み自体は<a href="/snowpark-guide/guide/udf-udtf-sproc/">基礎知識</a>で解説しています）は、現時点では対象外です。</p>
