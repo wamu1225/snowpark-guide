@@ -31,7 +31,8 @@ const DIST_DIR = path.resolve(process.cwd(), 'dist');
 const INDEX_HTML_PATH = path.join(DIST_DIR, 'index.html');
 const BASE = '/snowpark-guide';
 const BASE_URL = 'https://study-apps.com/snowpark-guide';
-const SITE_TITLE = 'Snowpark ⇄ Polars 対応表';
+// 2026-08-29: O-2-24 item C対応＝src/App.tsxと同じ名乗りの変更（詳細はApp.tsxのコメント参照）。
+const SITE_TITLE = 'Snowpark 実践ガイド';
 
 console.log('--- snowpark-guide SSG Pre-rendering ---');
 if (!fs.existsSync(INDEX_HTML_PATH)) {
@@ -54,8 +55,13 @@ function templateForDepth(depth: number): string {
 const esc = (s: string) =>
   s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
 
-function applyMeta(html: string, title: string, description: string, urlPath: string): string {
-  const fullTitle = urlPath === '/' ? `${SITE_TITLE}｜DataFrame API 逆引きリファレンス` : `${title}｜${SITE_TITLE}`;
+function applyMeta(html: string, title: string, description: string, urlPath: string, isEntry = false): string {
+  const fullTitle =
+    urlPath === '/'
+      ? `${SITE_TITLE}｜DataFrame API逆引き＋アーキテクチャ・料金・ML`
+      : isEntry
+        ? `${title}｜Snowpark ⇄ Polars 逆引き｜${SITE_TITLE}`
+        : `${title}｜${SITE_TITLE}`;
   const url = `${BASE_URL}${urlPath}`;
   return html
     .replace(/<title>.*?<\/title>/, `<title>${esc(fullTitle)}</title>`)
@@ -80,7 +86,7 @@ const shellClose = `</div>`;
 
 // ── トップ：検索窓はJS必須なので、静的フォールバックには9カテゴリ×全エントリの一覧を持たせる ──
 const homeDesc =
-  'Snowpark PythonのDataFrame/Column APIを、Polarsの同等コードと並べて確認できる逆引きリファレンスです。挙動の違いと移行時の落とし穴をメソッドごとに解説します。';
+  'Snowpark Pythonの基礎知識（アーキテクチャ・Spark比較・Polars比較・UDF/UDTF/SPROC・料金・ML）と、DataFrame/Column APIをPolarsの同等コードと並べて確認できる逆引きリファレンスをまとめたサイトです。';
 const categoryListHtml = CATEGORIES.filter((cat) => ALL_ENTRIES.some((e) => e.category === cat.id))
   .map((cat) => {
     const entries = ALL_ENTRIES.filter((e) => e.category === cat.id);
@@ -160,7 +166,7 @@ for (const e of ALL_ENTRIES) {
     <p style="color:#94a3b8;font-size:0.85rem">Polars ${esc(e.verified.polarsVersion)} で実行確認 / Snowpark Python SDK ${esc(e.verified.snowparkSdkVersion)} で静的検証（${esc(e.verified.date)}）</p>
     ${footerNav}
   ${shellClose}`;
-  let html = applyMeta(templateForDepth(1), e.title, desc, `/${e.slug}/`);
+  let html = applyMeta(templateForDepth(1), e.title, desc, `/${e.slug}/`, true);
   html = html.replace('<div id="root"></div>', `<div id="root">${fallback}</div>`);
   const jsonLd = JSON.stringify({
     '@context': 'https://schema.org',

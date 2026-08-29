@@ -19,16 +19,16 @@ export const STATIC_PAGES: StaticPage[] = [
     slug: 'about',
     title: 'このサイトについて',
     description:
-      'Snowpark ⇄ Polars 対応表の目的・検証方針・想定読者について説明します。',
+      'Snowpark 実践ガイドの目的・検証方針・想定読者について説明します。',
     body: `## このサイトについて
 
-「Snowpark ⇄ Polars 対応表」は、Snowflake の Snowpark Python DataFrame/Column API と、Polars の LazyFrame/Expression API を、同じ処理を書くとき並べて見比べられるようにした逆引きリファレンスです。
+「Snowpark 実践ガイド」は、Snowflake の Snowpark Python を実務で使うための情報を2種類にまとめたサイトです。1つは、アーキテクチャ・Apache Sparkとの違い・Polarsとの違い（総論）・UDF/UDTF/ストアドプロシージャの使い分け・料金構造・Snowpark ML といった基礎知識。もう1つは、Snowpark の DataFrame/Column API を Polars の LazyFrame/Expression API と並べて見比べられる逆引きリファレンスです。
 
-Polars で書き慣れた処理を Snowpark でどう書くか、あるいはその逆を、検索して1操作=1ページですぐ確認できることを目指しています。
+Polars で書き慣れた処理を Snowpark でどう書くか、あるいはその逆を、検索して1操作=1ページですぐ確認できることを目指すと同時に、コードの書き方だけでは分からない「なぜそうなるか」「どこにコストがかかるか」を基礎知識のページで解説しています。
 
 ## 想定読者
 
-すでに Polars か Snowpark のどちらかに慣れていて、もう一方への移行やAPIの対応関係を調べているデータエンジニア・アナリストを想定しています。両方の入門解説ではなく、対応表として使うことを前提にしています。
+Snowpark を業務で使い始めた、または使うことを検討しているデータエンジニア・アナリストを想定しています。基礎知識のページは Snowpark を初めて触る段階でも読めるようにしていますが、Python や SQL の基本的な知識は前提にしています。DataFrame/Column API の逆引きリファレンスは、すでに Polars か Snowpark のどちらかに慣れていて、もう一方への移行やAPIの対応関係を調べる用途を想定しています。
 
 ## 収録範囲
 

@@ -14,11 +14,11 @@ export function Home() {
   return (
     <div className="home">
       <header className="home__hero">
-        <h1>Snowpark ⇄ Polars 対応表</h1>
+        <h1>Snowpark 実践ガイド</h1>
         <p className="home__lead">
-          Snowpark Python の DataFrame / Column API と、Polars の LazyFrame / Expression API を、
-          同じ処理を書くときに並べて見比べられる逆引きリファレンスです。メソッド名で検索するか、
-          下のカテゴリから探してください。
+          Snowpark Python のアーキテクチャ・Spark比較・料金構造・MLといった基礎知識と、
+          DataFrame / Column API を Polars の LazyFrame / Expression API と並べて見比べられる
+          逆引きリファレンスをまとめたサイトです。メソッド名で検索するか、下のカテゴリから探してください。
         </p>
         <label className="home__search">
           <span className="sr-only">メソッド名で検索</span>

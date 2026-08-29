@@ -10,7 +10,12 @@ import { STATIC_PAGES } from './data/static-pages';
 import { CONCEPTS } from './data/concepts';
 import { BASE, getCurrentPath, href, navigate } from './lib/router';
 
-const SITE_TITLE = 'Snowpark ⇄ Polars 対応表';
+// 2026-08-29: O-2-24 item C対応＝旧「Snowpark ⇄ Polars 対応表」は基礎知識ページ
+// （料金・ML・アーキテクチャ等、Polarsと対応しないページ）にも一律で付いており、
+// タイトルと中身が矛盾していた。サイト全体の名乗りは範囲を広げた「Snowpark 実践ガイド」
+// にし、Polars比較が実際に当てはまる関数リファレンス（Layer B）だけ個別に
+// 「Snowpark ⇄ Polars 逆引き」を名乗る。
+const SITE_TITLE = 'Snowpark 実践ガイド';
 const SITE_URL = 'https://study-apps.com' + BASE + '/';
 
 function applyMeta(title: string, description: string, path: string) {
@@ -54,8 +59,8 @@ export function App() {
 
   if (path === '/') {
     applyMeta(
-      `${SITE_TITLE}｜DataFrame API 逆引きリファレンス`,
-      'Snowpark PythonのDataFrame/Column APIを、Polarsの同等コードと並べて確認できる逆引きリファレンスです。挙動の違いと移行時の落とし穴をメソッドごとに解説します。',
+      `${SITE_TITLE}｜DataFrame API逆引き＋アーキテクチャ・料金・ML`,
+      'Snowpark Pythonの基礎知識（アーキテクチャ・Spark比較・Polars比較・UDF/UDTF/SPROC・料金・ML）と、DataFrame/Column APIをPolarsの同等コードと並べて確認できる逆引きリファレンスをまとめたサイトです。',
       '/',
     );
     return (
@@ -91,7 +96,7 @@ export function App() {
   const entry = ALL_ENTRIES.find((e) => e.slug === entrySlug);
   if (entry) {
     applyMeta(
-      `${entry.title}｜${SITE_TITLE}`,
+      `${entry.title}｜Snowpark ⇄ Polars 逆引き｜${SITE_TITLE}`,
       `${entry.summary} Snowparkでの書き方とPolarsでの書き方を並べて解説します。`,
       path,
     );

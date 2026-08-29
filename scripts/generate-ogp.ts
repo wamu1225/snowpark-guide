@@ -19,8 +19,8 @@ const codeLines = (lines: string[], x: number, color: string) =>
 
 const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630">
   <rect width="1200" height="630" fill="#0f172a"/>
-  <text x="60" y="90" font-family="${FONT}" font-size="46" font-weight="700" fill="#f8fafc">Snowpark ⇄ Polars 対応表</text>
-  <text x="60" y="130" font-family="${FONT}" font-size="24" fill="#94a3b8">DataFrame API 逆引きリファレンス</text>
+  <text x="60" y="90" font-family="${FONT}" font-size="46" font-weight="700" fill="#f8fafc">Snowpark 実践ガイド</text>
+  <text x="60" y="130" font-family="${FONT}" font-size="24" fill="#94a3b8">基礎知識 ＋ DataFrame API逆引き（⇄ Polars）</text>
 
   <rect x="60" y="180" width="520" height="200" rx="14" fill="#111d34" stroke="#0284c7" stroke-width="2"/>
   <text x="88" y="216" font-family="${FONT}" font-size="20" font-weight="700" fill="#38bdf8">SNOWPARK</text>
