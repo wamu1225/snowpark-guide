@@ -378,4 +378,182 @@ export const expressionsEntries: Entry[] = [
       date: '2026-08-27',
     },
   },
+  {
+    slug: 'length',
+    title: 'length',
+    category: 'expressions',
+    summary: '文字列の長さ（文字数）を求める。',
+    snowparkCode: 'length(col("name"))',
+    polarsCode: 'pl.col("name").str.len_chars()',
+    difference:
+      'どちらも既定で**文字数**を返す。Snowflake公式ドキュメントは「UTF-8文字は1文字としてカウントする」と明記しており、実行して確認したところ「こんにちは」（5文字）はSnowpark・Polarsとも`5`になる（バイト数ではない）。',
+    pitfall:
+      'Polarsには**バイト数**を返す別のメソッド`str.len_bytes()`が存在し、名前が紛らわしい。実行して確認したところ「こんにちは」は`len_bytes()`だと`15`（UTF-8で1文字3バイト×5）になる。日本語を含む文字列で誤って`len_bytes()`を使うと、Snowflake側の`LENGTH`（文字数）とは異なる大きな数値になる。',
+    snowparkDocUrl:
+      'https://docs.snowflake.com/en/developer-guide/snowpark/reference/python/latest/snowpark/api/snowflake.snowpark.functions.length',
+    polarsDocUrl: 'https://docs.pola.rs/api/python/stable/reference/expressions/api/polars.Expr.str.len_chars.html',
+    verified: {
+      polarsExecuted: true,
+      snowparkStaticChecked: true,
+      polarsVersion: '1.36.1',
+      snowparkSdkVersion: '1.51.1',
+      date: '2026-08-29',
+    },
+  },
+  {
+    slug: 'contains',
+    title: 'contains',
+    category: 'expressions',
+    summary: '文字列に指定した部分文字列が含まれているかを判定する。',
+    snowparkCode: 'contains(col("url"), lit("3.0"))',
+    polarsCode: 'pl.col("url").str.contains("3.0", literal=True)',
+    difference:
+      'SnowparkはSQLの`CONTAINS(col, substr)`に変換され、常に**リテラル（そのままの文字列）検索**。一方Polarsの`str.contains()`は**既定で正規表現として解釈する**という違いがある。',
+    pitfall:
+      '**検索文字列に`.`や`(`などの正規表現記号が含まれると、Polars側だけ意図しないマッチが起きる**。実行して確認したところ、`"v3.0 release"`で`3.0`を探すと、Snowparkの`contains`相当（リテラル）は`"v3X0 release"`にはマッチしないが、Polarsの`str.contains("3.0")`は`.`を「任意の1文字」として解釈するため`"v3X0"`にもマッチしてしまう。Snowparkの`contains`をそのまま移植するなら、Polars側は`literal=True`を明示する必要がある。',
+    snowparkDocUrl:
+      'https://docs.snowflake.com/en/developer-guide/snowpark/reference/python/latest/snowpark/api/snowflake.snowpark.functions.contains',
+    polarsDocUrl: 'https://docs.pola.rs/api/python/stable/reference/expressions/api/polars.Expr.str.contains.html',
+    verified: {
+      polarsExecuted: true,
+      snowparkStaticChecked: true,
+      polarsVersion: '1.36.1',
+      snowparkSdkVersion: '1.51.1',
+      date: '2026-08-29',
+    },
+  },
+  {
+    slug: 'startswith-endswith',
+    title: 'startswith / endswith',
+    category: 'expressions',
+    summary: '文字列が指定した文字列で始まる／終わるかを判定する。',
+    snowparkCode: 'startswith(col("code"), lit("JP-"))\nendswith(col("code"), lit("-01"))',
+    polarsCode: 'pl.col("code").str.starts_with("JP-")\npl.col("code").str.ends_with("-01")',
+    difference:
+      'Snowparkは`startswith(col, str)`/`endswith(col, str)`という2引数の関数。Polarsは`.str`名前空間のメソッドとして列に対して呼ぶ形。`contains`と異なり、**どちらのAPIも常にリテラル一致**で正規表現としては解釈されない（実行して確認）。',
+    pitfall:
+      '`contains`のような`literal`引数はPolars側に存在しない（そもそも正規表現モードを持たないため）。`contains`と同じ感覚で`literal=True`を付けようとするとエラーになる点に注意。',
+    snowparkDocUrl:
+      'https://docs.snowflake.com/en/developer-guide/snowpark/reference/python/latest/snowpark/api/snowflake.snowpark.functions.startswith',
+    polarsDocUrl:
+      'https://docs.pola.rs/api/python/stable/reference/expressions/api/polars.Expr.str.starts_with.html',
+    verified: {
+      polarsExecuted: true,
+      snowparkStaticChecked: true,
+      polarsVersion: '1.36.1',
+      snowparkSdkVersion: '1.51.1',
+      date: '2026-08-29',
+    },
+  },
+  {
+    slug: 'replace',
+    title: 'replace（文字列の置き換え）',
+    category: 'expressions',
+    summary: '文字列中の一致した部分を、別の文字列に置き換える（正規表現ではない単純一致）。',
+    snowparkCode: 'replace(col("phone"), lit("-"), lit(""))',
+    polarsCode: 'pl.col("phone").str.replace_all("-", "", literal=True)',
+    difference:
+      'Snowparkの`replace`はSQLの`REPLACE`に変換され、**リテラル一致**で全ての出現を置き換える。Polars側は`replace`（最初の1件のみ）と`replace_all`（全件）でメソッドが分かれており、`regexp_replace`のページと同様に**既定は正規表現モード**なので、`literal=True`を付けて動作を揃える必要がある。',
+    pitfall:
+      '**置換後の文字列（第3引数）を省略したときの挙動が違う**。Snowflake公式ドキュメントは「省略時、または空文字列のときは一致箇所を単純に削除する」と明記しており、`replace(col, pattern)`だけでも動く。一方Polarsの`str.replace_all(pattern, value, ...)`は**`value`が必須の位置引数**で省略できない＝削除したいだけでも`""`を明示的に渡す必要がある。',
+    snowparkDocUrl:
+      'https://docs.snowflake.com/en/developer-guide/snowpark/reference/python/latest/snowpark/api/snowflake.snowpark.functions.replace',
+    polarsDocUrl:
+      'https://docs.pola.rs/api/python/stable/reference/expressions/api/polars.Expr.str.replace_all.html',
+    verified: {
+      polarsExecuted: true,
+      snowparkStaticChecked: true,
+      polarsVersion: '1.36.1',
+      snowparkSdkVersion: '1.51.1',
+      date: '2026-08-29',
+    },
+  },
+  {
+    slug: 'abs-ceil-floor',
+    title: 'abs / ceil / floor',
+    category: 'expressions',
+    summary: '絶対値、切り上げ、切り下げを求める基本的な数値関数。',
+    snowparkCode: 'abs(col("amount"))\nceil(col("amount"))\nfloor(col("amount"))',
+    polarsCode: 'pl.col("amount").abs()\npl.col("amount").ceil()\npl.col("amount").floor()',
+    difference:
+      'いずれも標準的な数学の定義どおりで、両API間の差がほぼ無い関数群。実行して確認したところ`-3.7`は`abs`で`3.7`、`ceil`で`-3.0`（0に近い方向）、`floor`で`-4.0`（負の無限大方向）と、符号付きの値でも両者一致する。',
+    pitfall:
+      '`ceil`/`floor`は「0に近づける」のではなく「値が大きくなる／小さくなる」方向に丸める点に注意（`-3.7`の`ceil`は`-3`であって`-4`ではない）。これは両APIで共通の仕様だが、四捨五入の`round`（[roundのページ](/round/)）と混同しやすい。',
+    snowparkDocUrl:
+      'https://docs.snowflake.com/en/developer-guide/snowpark/reference/python/latest/snowpark/api/snowflake.snowpark.functions.abs',
+    polarsDocUrl: 'https://docs.pola.rs/api/python/stable/reference/expressions/api/polars.Expr.abs.html',
+    verified: {
+      polarsExecuted: true,
+      snowparkStaticChecked: true,
+      polarsVersion: '1.36.1',
+      snowparkSdkVersion: '1.51.1',
+      date: '2026-08-29',
+    },
+  },
+  {
+    slug: 'greatest-least',
+    title: 'greatest / least',
+    category: 'expressions',
+    summary: '複数の列を横に比較し、行ごとの最大値・最小値を求める。',
+    snowparkCode: 'greatest(col("q1"), col("q2"), col("q3"))\nleast(col("q1"), col("q2"), col("q3"))',
+    polarsCode: 'pl.max_horizontal("q1", "q2", "q3")\npl.min_horizontal("q1", "q2", "q3")',
+    difference:
+      'Snowparkの`greatest`/`least`はSQLの同名関数に変換される複数列の可変長引数関数。Polarsには同名の関数が無く、`pl.max_horizontal`/`pl.min_horizontal`という「横方向（行ごと）の集約」専用の関数を使う（`max`/`min`は列方向の集約に使われるため名前が分かれている）。',
+    pitfall:
+      '**NULLの扱いが正反対**。Snowflake公式ドキュメントは「GREATESTは引数のいずれかがNULLならNULLを返す」と明記している（NULLを無視したい場合は別関数`GREATEST_IGNORE_NULLS`を使う）。一方、実行して確認したところPolarsの`max_horizontal`/`min_horizontal`は**既定でNULLを無視し、NULLでない値の中から最大・最小を返す**（`[1, None, 3]`と`[5, 2, None]`の行ごと`max_horizontal`は`[5, 2, 3]`になり、2行目・3行目もNULLにならない）。移植すると欠損データの扱いが逆転するので要注意。',
+    snowparkDocUrl:
+      'https://docs.snowflake.com/en/developer-guide/snowpark/reference/python/latest/snowpark/api/snowflake.snowpark.functions.greatest',
+    polarsDocUrl: 'https://docs.pola.rs/api/python/stable/reference/expressions/api/polars.max_horizontal.html',
+    verified: {
+      polarsExecuted: true,
+      snowparkStaticChecked: true,
+      polarsVersion: '1.36.1',
+      snowparkSdkVersion: '1.51.1',
+      date: '2026-08-29',
+    },
+  },
+  {
+    slug: 'date-parts',
+    title: 'year / month / dayofmonth',
+    category: 'expressions',
+    summary: '日付・時刻から年・月・日の値だけを取り出す。',
+    snowparkCode: 'year(col("order_date"))\nmonth(col("order_date"))\ndayofmonth(col("order_date"))',
+    polarsCode: 'pl.col("order_date").dt.year()\npl.col("order_date").dt.month()\npl.col("order_date").dt.day()',
+    difference:
+      '構造は同じ（対象の日付列から整数を取り出す）だが、**「日」を表す関数名が違う**。Snowparkは`dayofmonth`、Polarsは`.dt.day()`。`2026-03-15`を実行して確認したところ、どちらも`year=2026, month=3, day=15`で一致する。',
+    pitfall:
+      'Snowparkには`dayofmonth`の他に`dayofweek`（曜日）・`dayofyear`（年内通算日）という紛らわしい類似関数が並んでいる。Polars側も`.dt.weekday()`・`.dt.ordinal_day()`と対応する関数名が違うので、**「day」を含む名前だけを頼りに機械的に対応させると取り違える**。どの「日」を取りたいかを毎回確認してから名前を選ぶ。',
+    snowparkDocUrl:
+      'https://docs.snowflake.com/en/developer-guide/snowpark/reference/python/latest/snowpark/api/snowflake.snowpark.functions.dayofmonth',
+    polarsDocUrl: 'https://docs.pola.rs/api/python/stable/reference/expressions/api/polars.Expr.dt.day.html',
+    verified: {
+      polarsExecuted: true,
+      snowparkStaticChecked: true,
+      polarsVersion: '1.36.1',
+      snowparkSdkVersion: '1.51.1',
+      date: '2026-08-29',
+    },
+  },
+  {
+    slug: 'lpad-rpad',
+    title: 'lpad / rpad',
+    category: 'expressions',
+    summary: '文字列の左側・右側を指定した文字で埋め、一定の長さに揃える。',
+    snowparkCode: 'lpad(col("code"), 10, lit("0"))\nrpad(col("code"), 10, lit("*"))',
+    polarsCode: 'pl.col("code").str.pad_start(10, "0")\npl.col("code").str.pad_end(10, "*")',
+    difference:
+      'どちらも「対象の長さになるまで指定した文字で埋める」という同じ目的の関数で、名前の対応も分かりやすい（`lpad`↔`pad_start`、`rpad`↔`pad_end`）。指定長より短い文字列を実行して確認したところ、結果は一致する。',
+    pitfall:
+      '**対象の文字列が既に指定長より長い場合の挙動が違う**。Snowflake公式ドキュメントは「baseがlength_exprより長い場合、length_exprの長さまで切り詰められる」と明記しており、実際`"Twelve Dollars"`を10文字で`lpad`すると`"Twelve Dol"`に切り詰められる。一方、実行して確認したところPolarsの`str.pad_start`/`str.pad_end`は**指定長より長い文字列を切り詰めず、元の文字列のまま返す**（`"Twelve Dollars"`は10指定でもそのまま14文字で返る）。固定長カラムの生成など長さの上限を保証したい処理をそのまま移植すると、Polars側だけ長さが揃わない。',
+    snowparkDocUrl:
+      'https://docs.snowflake.com/en/developer-guide/snowpark/reference/python/latest/snowpark/api/snowflake.snowpark.functions.lpad',
+    polarsDocUrl: 'https://docs.pola.rs/api/python/stable/reference/expressions/api/polars.Expr.str.pad_start.html',
+    verified: {
+      polarsExecuted: true,
+      snowparkStaticChecked: true,
+      polarsVersion: '1.36.1',
+      snowparkSdkVersion: '1.51.1',
+      date: '2026-08-29',
+    },
+  },
 ];
