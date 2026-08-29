@@ -32,9 +32,9 @@
       src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9102538151148380"
       crossorigin="anonymous"
     ></script>
-    <script type="module" crossorigin src="../../assets/index-CxUKC1pB.js"></script>
+    <script type="module" crossorigin src="../../assets/index-D9V2hdhv.js"></script>
     <link rel="stylesheet" crossorigin href="../../assets/index-BMXZ-q2V.css">
-  <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","headline":"Snowpark と Apache Spark の違い","description":"DataFrame APIの書き味はよく似ていますが、クラスタを自分で持つか持たないかで運用とコストの構造がまったく変わります。","url":"https://study-apps.com/snowpark-guide/guide/vs-spark/","dateModified":"2026-08-27","inLanguage":"ja"}</script>
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","headline":"Snowpark と Apache Spark の違い","description":"DataFrame APIの書き味はよく似ていますが、クラスタを自分で持つか持たないかで運用とコストの構造がまったく変わります。","url":"https://study-apps.com/snowpark-guide/guide/vs-spark/","dateModified":"2026-08-29","inLanguage":"ja"}</script>
   </head>
   <body>
     <div id="root"><div style="max-width:760px;margin:0 auto;padding:24px 16px;font-family:sans-serif;line-height:1.8;color:#0f172a">
@@ -67,14 +67,16 @@ result = (
       .limit(10)
 )</code></pre>
 <p>違いが出るのは複合語のメソッド名です。PySparkは<code>groupBy</code>・<code>withColumn</code>のようにcamelCaseが標準ですが、Snowparkは<code>group_by</code>・<code>with_column</code>のようにsnake_caseが標準です。<strong>Snowparkは実は<code>groupBy</code>・<code>withColumn</code>・<code>orderBy</code>というcamelCaseのエイリアスも内部に持っており、PySparkと同じ綴りでも動きます</strong>（SDKのクラス定義を実機で確認済み）。ただしSnowflake公式のサンプルコードはsnake_caseで統一されているため、新規に書くならsnake_caseに合わせておくのが無難です。</p>
+<h2>UDFを書いている場合は移行の影響が一番大きい</h2>
+<p>DataFrameの変換メソッドだけを使っているコードは前述のとおりほぼそのまま移植できますが、<strong>UDF（ユーザー定義関数）を使っている場合は実行モデルそのものが変わります</strong>。PySparkの公式ドキュメントは「Apache Arrowは、SparkがJVMとPythonプロセスの間でデータを効率的に転送するために使うインメモリの列指向データ形式である」と説明しており、これはPySparkのPython UDFが<strong>JVM（Sparkエンジン本体）とは別のPythonプロセスで動き、その間のデータ受け渡しにシリアライズのコストがかかる</strong>ことを裏付けています。一方Snowparkでは、Python UDFの中身は<a href="/snowpark-guide/guide/architecture/">Snowflake側のサンドボックス</a>で実行されます。どちらも「メインの実行エンジンとは別の場所でPythonが動く」という構造は共通していますが、<strong>その「別の場所」を自分でチューニングできるか（Sparkのワーカー設定）、Snowflakeに任せるか</strong>という運用面の違いは大きく影響します。UDF・UDTF・ストアドプロシージャの使い分け自体は<a href="/snowpark-guide/guide/udf-udtf-sproc/">こちらのページ</a>で解説しています。</p>
 <h2>コストの発生の仕方</h2>
-<p>Snowflakeの仮想ウェアハウスは秒単位（起動時のみ60秒の最低課金あり）で課金され、一定時間操作がなければ自動的に一時停止（オートサスペンド）し、次のクエリが来ると自動的に再開（オートレジューム）します。Sparkクラスタは、常時起動させておくか、都度起動・停止させるオーバーヘッドを引き受けるかのどちらかになります。</p>
+<p>Snowflakeの仮想ウェアハウスは秒単位（起動時のみ60秒の最低課金あり）で課金され、一定時間操作がなければ自動的に一時停止（オートサスペンド）し、次のクエリが来ると自動的に再開（オートレジューム）します。Sparkクラスタは、常時起動させておくか、都度起動・停止させるオーバーヘッドを引き受けるかのどちらかになります。<strong>この差が特に効くのは、日次バッチのように断続的にしか処理が走らない使い方です</strong>。1日数回、数分だけ処理するような使い方なら、Snowparkのオートサスペンドはその合間の課金をゼロにしますが、Sparkクラスタは（オートスケーリングの設定次第では）待機コストが残ります。逆に、24時間ほぼ絶え間なく処理が流れ続けるような使い方では、稼働時間で見た差は縮みます。</p>
 <h2>Snowparkに移行すべきケース／すべきでないケース</h2>
 <ul><li><strong>移行に向く</strong>：処理対象のデータがもともとSnowflake上にあり、Sparkクラスタへの転送だけのために別インフラを維持している場合。クラスタの空き容量やジョブスケジューリングの運用自体が負担になっている場合。</li><li><strong>移行に向かない</strong>：Snowflake以外の複数のデータソース（S3・Kafkaのストリーム・オンプレのDBなど）を1つのジョブでまたいで処理する必要がある場合。SparkはSnowflake専用ではなく汎用の分散処理基盤であるため、こうした異種データソースの統合処理はSparkの守備範囲であり、Snowparkの範囲外です。</li><li><strong>判断の軸</strong>：「処理の対象データがSnowflakeで完結しているか」がそのまま判断基準になります。完結しているならSnowparkでクラスタ運用そのものを無くせますが、完結していないならSparkの汎用性が必要です。</li></ul>
     <h2 style="font-size:1.05rem">関連する関数リファレンス</h2><ul style="padding-left:20px"><li><a href="/snowpark-guide/group-by/" style="color:#38bdf8">group_by / groupBy</a></li><li><a href="/snowpark-guide/filter/" style="color:#38bdf8">filter / where</a></li></ul>
     <h2 style="font-size:1.05rem">出典</h2>
-    <ul style="padding-left:20px"><li><a href="https://docs.snowflake.com/en/user-guide/warehouses-overview" style="color:#38bdf8">Snowflake Documentation: Overview of Warehouses（課金・オートサスペンド/レジューム）</a></li><li><a href="https://docs.snowflake.com/en/developer-guide/snowpark/python/working-with-dataframes" style="color:#38bdf8">Snowflake Documentation: Working with DataFrames in Snowpark Python</a></li></ul>
-    <p style="color:#94a3b8;font-size:0.85rem">公式ドキュメントの記載にもとづく解説です（実行検証はしていません）。確認日：2026-08-27</p>
+    <ul style="padding-left:20px"><li><a href="https://docs.snowflake.com/en/user-guide/warehouses-overview" style="color:#38bdf8">Snowflake Documentation: Overview of Warehouses（課金・オートサスペンド/レジューム）</a></li><li><a href="https://docs.snowflake.com/en/developer-guide/snowpark/python/working-with-dataframes" style="color:#38bdf8">Snowflake Documentation: Working with DataFrames in Snowpark Python</a></li><li><a href="https://spark.apache.org/docs/latest/api/python/tutorial/sql/arrow_pandas.html" style="color:#38bdf8">Apache Spark Documentation: Apache Arrow in PySpark（JVM/Python間のデータ転送について）</a></li></ul>
+    <p style="color:#94a3b8;font-size:0.85rem">公式ドキュメントの記載にもとづく解説です（実行検証はしていません）。確認日：2026-08-29</p>
     <nav style="margin-top:24px;display:flex;gap:16px;flex-wrap:wrap;font-size:0.85rem"><a href="/snowpark-guide/about/" style="color:#94a3b8">このサイトについて</a><a href="/snowpark-guide/privacy/" style="color:#94a3b8">プライバシーポリシー</a></nav>
   </div></div>
   </body>
