@@ -125,9 +125,13 @@ result = (
 
 違いが出るのは複合語のメソッド名です。PySparkは\`groupBy\`・\`withColumn\`のようにcamelCaseが標準ですが、Snowparkは\`group_by\`・\`with_column\`のようにsnake_caseが標準です。**Snowparkは実は\`groupBy\`・\`withColumn\`・\`orderBy\`というcamelCaseのエイリアスも内部に持っており、PySparkと同じ綴りでも動きます**（SDKのクラス定義を実機で確認済み）。ただしSnowflake公式のサンプルコードはsnake_caseで統一されているため、新規に書くならsnake_caseに合わせておくのが無難です。
 
+## UDFを書いている場合は移行の影響が一番大きい
+
+DataFrameの変換メソッドだけを使っているコードは前述のとおりほぼそのまま移植できますが、**UDF（ユーザー定義関数）を使っている場合は実行モデルそのものが変わります**。PySparkの公式ドキュメントは「Apache Arrowは、SparkがJVMとPythonプロセスの間でデータを効率的に転送するために使うインメモリの列指向データ形式である」と説明しており、これはPySparkのPython UDFが**JVM（Sparkエンジン本体）とは別のPythonプロセスで動き、その間のデータ受け渡しにシリアライズのコストがかかる**ことを裏付けています。一方Snowparkでは、Python UDFの中身は[Snowflake側のサンドボックス](/guide/architecture/)で実行されます。どちらも「メインの実行エンジンとは別の場所でPythonが動く」という構造は共通していますが、**その「別の場所」を自分でチューニングできるか（Sparkのワーカー設定）、Snowflakeに任せるか**という運用面の違いは大きく影響します。UDF・UDTF・ストアドプロシージャの使い分け自体は[こちらのページ](/guide/udf-udtf-sproc/)で解説しています。
+
 ## コストの発生の仕方
 
-Snowflakeの仮想ウェアハウスは秒単位（起動時のみ60秒の最低課金あり）で課金され、一定時間操作がなければ自動的に一時停止（オートサスペンド）し、次のクエリが来ると自動的に再開（オートレジューム）します。Sparkクラスタは、常時起動させておくか、都度起動・停止させるオーバーヘッドを引き受けるかのどちらかになります。
+Snowflakeの仮想ウェアハウスは秒単位（起動時のみ60秒の最低課金あり）で課金され、一定時間操作がなければ自動的に一時停止（オートサスペンド）し、次のクエリが来ると自動的に再開（オートレジューム）します。Sparkクラスタは、常時起動させておくか、都度起動・停止させるオーバーヘッドを引き受けるかのどちらかになります。**この差が特に効くのは、日次バッチのように断続的にしか処理が走らない使い方です**。1日数回、数分だけ処理するような使い方なら、Snowparkのオートサスペンドはその合間の課金をゼロにしますが、Sparkクラスタは（オートスケーリングの設定次第では）待機コストが残ります。逆に、24時間ほぼ絶え間なく処理が流れ続けるような使い方では、稼働時間で見た差は縮みます。
 
 ## Snowparkに移行すべきケース／すべきでないケース
 
@@ -144,8 +148,12 @@ Snowflakeの仮想ウェアハウスは秒単位（起動時のみ60秒の最低
         label: 'Snowflake Documentation: Working with DataFrames in Snowpark Python',
         url: 'https://docs.snowflake.com/en/developer-guide/snowpark/python/working-with-dataframes',
       },
+      {
+        label: 'Apache Spark Documentation: Apache Arrow in PySpark（JVM/Python間のデータ転送について）',
+        url: 'https://spark.apache.org/docs/latest/api/python/tutorial/sql/arrow_pandas.html',
+      },
     ],
-    verifiedDate: '2026-08-27',
+    verifiedDate: '2026-08-29',
   },
   {
     slug: 'vs-polars',
