@@ -50,6 +50,14 @@
   <url><loc>https://study-apps.com/snowpark-guide/regexp-replace/</loc><lastmod>2026-08-29</lastmod><priority>0.8</priority></url>
   <url><loc>https://study-apps.com/snowpark-guide/split/</loc><lastmod>2026-08-29</lastmod><priority>0.8</priority></url>
   <url><loc>https://study-apps.com/snowpark-guide/md5/</loc><lastmod>2026-08-29</lastmod><priority>0.8</priority></url>
+  <url><loc>https://study-apps.com/snowpark-guide/length/</loc><lastmod>2026-08-29</lastmod><priority>0.8</priority></url>
+  <url><loc>https://study-apps.com/snowpark-guide/contains/</loc><lastmod>2026-08-29</lastmod><priority>0.8</priority></url>
+  <url><loc>https://study-apps.com/snowpark-guide/startswith-endswith/</loc><lastmod>2026-08-29</lastmod><priority>0.8</priority></url>
+  <url><loc>https://study-apps.com/snowpark-guide/replace/</loc><lastmod>2026-08-29</lastmod><priority>0.8</priority></url>
+  <url><loc>https://study-apps.com/snowpark-guide/abs-ceil-floor/</loc><lastmod>2026-08-29</lastmod><priority>0.8</priority></url>
+  <url><loc>https://study-apps.com/snowpark-guide/greatest-least/</loc><lastmod>2026-08-29</lastmod><priority>0.8</priority></url>
+  <url><loc>https://study-apps.com/snowpark-guide/date-parts/</loc><lastmod>2026-08-29</lastmod><priority>0.8</priority></url>
+  <url><loc>https://study-apps.com/snowpark-guide/lpad-rpad/</loc><lastmod>2026-08-29</lastmod><priority>0.8</priority></url>
   <url><loc>https://study-apps.com/snowpark-guide/window-spec/</loc><lastmod>2026-08-29</lastmod><priority>0.8</priority></url>
   <url><loc>https://study-apps.com/snowpark-guide/rank/</loc><lastmod>2026-08-29</lastmod><priority>0.8</priority></url>
   <url><loc>https://study-apps.com/snowpark-guide/dense-rank/</loc><lastmod>2026-08-29</lastmod><priority>0.8</priority></url>
