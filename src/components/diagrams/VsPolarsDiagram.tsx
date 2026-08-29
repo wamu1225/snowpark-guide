@@ -1,11 +1,13 @@
 // PolarsとSnowparkの実行場所の違いを図解する。
-// 左＝Polarsは手元の1台のマシンで完結。右＝Snowparkはクラウドの分散環境で実行される。
+// 上＝Polarsは手元の1台のマシンで完結。下＝Snowparkはクラウドの分散環境で実行される。
+// 2026-08-29: O-2-25対応＝390px実効フォントが縮んでいたため、左右2列→上下2段に
+// 再設計しviewBox幅を320へ狭めてfont-sizeを12〜16へ拡大。
 export function VsPolarsDiagram() {
   return (
     <svg
-      viewBox="0 0 720 300"
-      width="720"
-      height="300"
+      viewBox="0 0 320 400"
+      width="320"
+      height="400"
       role="img"
       aria-label="PolarsとSnowparkの実行場所の違いを示す図。Polarsは手元の1台のマシンのCPU上でApache Arrow形式のメモリを使い処理が完結する。Snowparkはネットワークの向こう側にあるSnowflakeの分散クラウド環境（複数ノードのVirtual Warehouse）で処理が実行され、データは外部に出ない。"
     >
@@ -16,58 +18,53 @@ export function VsPolarsDiagram() {
       </defs>
 
       {/* Polars側 */}
-      <rect x="16" y="24" width="310" height="252" rx="14" fill="#fae8ff" stroke="#c026d3" strokeWidth="2" />
-      <text x="171" y="52" textAnchor="middle" fontSize="15" fontWeight="700" fill="#a21caf">
+      <rect x="8" y="8" width="304" height="150" rx="14" fill="#fae8ff" stroke="#c026d3" strokeWidth="2" />
+      <text x="160" y="32" textAnchor="middle" fontSize="16" fontWeight="700" fill="#a21caf">
         Polars
       </text>
-      <text x="171" y="70" textAnchor="middle" fontSize="11" fill="#64748b">
+      <text x="160" y="50" textAnchor="middle" fontSize="12" fill="#64748b">
         手元の1台のマシンで完結
       </text>
 
-      <rect x="46" y="90" width="250" height="150" rx="10" fill="#ffffff" stroke="#c026d3" strokeWidth="1.5" />
-      <text x="171" y="116" textAnchor="middle" fontSize="12" fontWeight="600" fill="#0f172a">
-        あなたのPC / 1台のマシン
-      </text>
-      <rect x="66" y="130" width="210" height="34" rx="6" fill="#fdf2f8" stroke="#c026d3" strokeWidth="1" />
-      <text x="171" y="151" textAnchor="middle" fontSize="11" fill="#334155">
+      <rect x="24" y="62" width="272" height="34" rx="6" fill="#ffffff" stroke="#c026d3" strokeWidth="1" />
+      <text x="160" y="84" textAnchor="middle" fontSize="13" fill="#334155">
         CPU（マルチコアで並列処理）
       </text>
-      <rect x="66" y="174" width="210" height="34" rx="6" fill="#fdf2f8" stroke="#c026d3" strokeWidth="1" />
-      <text x="171" y="195" textAnchor="middle" fontSize="11" fill="#334155">
-        Arrow形式のメモリ上でデータ保持
+      <rect x="24" y="102" width="272" height="34" rx="6" fill="#ffffff" stroke="#c026d3" strokeWidth="1" />
+      <text x="160" y="124" textAnchor="middle" fontSize="13" fill="#334155">
+        Arrow形式のメモリでデータ保持
       </text>
-      <text x="171" y="222" textAnchor="middle" fontSize="10" fill="#a21caf">
-        外部にデータを送信しない
+
+      <path d="M160 158 V 190" stroke="#94a3b8" strokeWidth="2" fill="none" strokeDasharray="4 3" markerEnd="url(#vspolars-arrow)" markerStart="url(#vspolars-arrow)" />
+      <text x="160" y="178" textAnchor="middle" fontSize="12" fill="#64748b">
+        ネットワーク越し
       </text>
 
       {/* Snowflake側 */}
-      <rect x="394" y="24" width="310" height="252" rx="14" fill="#e0f2fe" stroke="#0284c7" strokeWidth="2" />
-      <text x="549" y="52" textAnchor="middle" fontSize="15" fontWeight="700" fill="#0284c7">
+      <rect x="8" y="200" width="304" height="192" rx="14" fill="#e0f2fe" stroke="#0284c7" strokeWidth="2" />
+      <text x="160" y="224" textAnchor="middle" fontSize="16" fontWeight="700" fill="#0284c7">
         Snowpark
       </text>
-      <text x="549" y="70" textAnchor="middle" fontSize="11" fill="#64748b">
+      <text x="160" y="242" textAnchor="middle" fontSize="12" fill="#64748b">
         クラウドの分散環境で実行
       </text>
 
-      <rect x="424" y="90" width="250" height="150" rx="10" fill="#ffffff" stroke="#0284c7" strokeWidth="1.5" />
-      <text x="549" y="116" textAnchor="middle" fontSize="12" fontWeight="600" fill="#0f172a">
+      <text x="160" y="264" textAnchor="middle" fontSize="13" fontWeight="600" fill="#0f172a">
         Snowflake Virtual Warehouse
       </text>
-      <rect x="444" y="130" width="90" height="60" rx="6" fill="#e0f2fe" stroke="#0284c7" strokeWidth="1" />
-      <text x="489" y="164" textAnchor="middle" fontSize="10" fill="#334155">
+      <rect x="24" y="274" width="130" height="46" rx="6" fill="#ffffff" stroke="#0284c7" strokeWidth="1" />
+      <text x="89" y="302" textAnchor="middle" fontSize="12" fill="#334155">
         ノード1
       </text>
-      <rect x="544" y="130" width="90" height="60" rx="6" fill="#e0f2fe" stroke="#0284c7" strokeWidth="1" />
-      <text x="589" y="164" textAnchor="middle" fontSize="10" fill="#334155">
+      <rect x="166" y="274" width="130" height="46" rx="6" fill="#ffffff" stroke="#0284c7" strokeWidth="1" />
+      <text x="231" y="302" textAnchor="middle" fontSize="12" fill="#334155">
         ノード2…
       </text>
-      <text x="549" y="222" textAnchor="middle" fontSize="10" fill="#0284c7">
+      <text x="160" y="342" textAnchor="middle" fontSize="12" fontWeight="600" fill="#0284c7">
         マルチノードでペタバイト級も処理可能
       </text>
-
-      <path d="M326 150 H 394" stroke="#94a3b8" strokeWidth="2" fill="none" strokeDasharray="4 3" markerEnd="url(#vspolars-arrow)" markerStart="url(#vspolars-arrow)" />
-      <text x="360" y="140" textAnchor="middle" fontSize="10" fill="#64748b">
-        ネットワーク越し
+      <text x="160" y="362" textAnchor="middle" fontSize="12" fontWeight="600" fill="#a21caf">
+        データは外部に出ない
       </text>
     </svg>
   );

@@ -1,14 +1,16 @@
 // SparkとSnowparkのインフラ構造の違いを図解する。
-// 左＝Sparkはユーザーがクラスタを持つ・データを引っ張ってくる必要がある。
-// 右＝Snowparkはフルマネージドなウェアハウス・データを動かさずコードが評価される。
+// 上＝Sparkはユーザーがクラスタを持つ・データを引っ張ってくる必要がある。
+// 下＝Snowparkはフルマネージドなウェアハウス・データを動かさずコードが評価される。
+// 2026-08-29: O-2-25対応＝390px実効フォントが縮んでいたため、左右2列→上下2段に
+// 再設計しviewBox幅を320へ狭めてfont-sizeを12〜16へ拡大。
 export function VsSparkDiagram() {
   return (
     <svg
-      viewBox="0 0 720 340"
-      width="720"
-      height="340"
+      viewBox="0 0 320 400"
+      width="320"
+      height="400"
       role="img"
-      aria-label="ApacheSparkとSnowparkのインフラ構造の違いを示す図。Sparkはユーザーが自分でドライバーノードとワーカーノードのクラスタを管理し、Snowflake上のデータを一度クラスタ側へ転送してから処理する。Snowparkはユーザーがクラスタを持たず、Snowflakeのフルマネージドな仮想ウェアハウス上でデータを動かさずにコードが評価される。"
+      aria-label="ApacheSparkとSnowparkのインフラ構造の違いを示す図。Sparkはユーザーが自分でドライバーノードとワーカーノードのクラスタを管理し、常時稼働か都度起動停止のコストを負う。Snowparkはユーザーがクラスタを持たず、Snowflakeのフルマネージドな仮想ウェアハウスが秒単位課金・オートサスペンドで動く。"
     >
       <defs>
         <marker id="vsspark-arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
@@ -17,80 +19,54 @@ export function VsSparkDiagram() {
       </defs>
 
       {/* Spark側 */}
-      <rect x="16" y="24" width="330" height="292" rx="14" fill="#f1f5f9" stroke="#475569" strokeWidth="2" />
-      <text x="181" y="52" textAnchor="middle" fontSize="15" fontWeight="700" fill="#334155">
+      <rect x="8" y="8" width="304" height="164" rx="14" fill="#f1f5f9" stroke="#475569" strokeWidth="2" />
+      <text x="160" y="32" textAnchor="middle" fontSize="16" fontWeight="700" fill="#334155">
         Apache Spark
       </text>
-      <text x="181" y="70" textAnchor="middle" fontSize="11" fill="#64748b">
+      <text x="160" y="50" textAnchor="middle" fontSize="12" fill="#64748b">
         クラスタはあなたが用意・管理する
       </text>
 
-      <rect x="36" y="88" width="120" height="70" rx="8" fill="#ffffff" stroke="#475569" strokeWidth="1.5" />
-      <text x="96" y="112" textAnchor="middle" fontSize="12" fontWeight="600" fill="#0f172a">
+      <rect x="24" y="62" width="130" height="50" rx="8" fill="#ffffff" stroke="#475569" strokeWidth="1.5" />
+      <text x="89" y="92" textAnchor="middle" fontSize="13" fontWeight="600" fill="#0f172a">
         ドライバー
       </text>
-      <text x="96" y="130" textAnchor="middle" fontSize="10" fill="#64748b">
-        ノード
+
+      <rect x="166" y="62" width="130" height="50" rx="8" fill="#ffffff" stroke="#475569" strokeWidth="1.5" />
+      <text x="231" y="92" textAnchor="middle" fontSize="13" fontWeight="600" fill="#0f172a">
+        ワーカー群
       </text>
 
-      <rect x="186" y="88" width="140" height="70" rx="8" fill="#ffffff" stroke="#475569" strokeWidth="1.5" />
-      <text x="256" y="108" textAnchor="middle" fontSize="12" fontWeight="600" fill="#0f172a">
-        ワーカーノード群
-      </text>
-      <text x="256" y="126" textAnchor="middle" fontSize="10" fill="#64748b">
-        メモリ・台数を
-      </text>
-      <text x="256" y="140" textAnchor="middle" fontSize="10" fill="#64748b">
-        自分でチューニング
+      <rect x="24" y="124" width="272" height="36" rx="8" fill="#fef3c7" stroke="#b45309" strokeWidth="1.5" />
+      <text x="160" y="147" textAnchor="middle" fontSize="12" fontWeight="700" fill="#92400e">
+        常時稼働 or 起動・停止のコスト
       </text>
 
-      <rect x="36" y="176" width="290" height="60" rx="8" fill="#fef3c7" stroke="#b45309" strokeWidth="1.5" />
-      <text x="181" y="198" textAnchor="middle" fontSize="11" fontWeight="700" fill="#92400e">
-        常時起動 or 都度起動・停止の運用コスト
-      </text>
-      <text x="181" y="216" textAnchor="middle" fontSize="10" fill="#92400e">
-        オートサスペンドの概念がない
-      </text>
-
-      <path d="M181 236 L181 260" stroke="#475569" strokeWidth="2" fill="none" markerEnd="url(#vsspark-arrow)" />
-      <text x="181" y="278" textAnchor="middle" fontSize="10" fill="#475569">
-        データをクラスタ側へ転送（Egress）
-      </text>
-      <text x="181" y="296" textAnchor="middle" fontSize="10" fill="#475569">
-        してから処理することがある
+      <path d="M160 172 V 200" stroke="#475569" strokeWidth="2" fill="none" markerEnd="url(#vsspark-arrow)" />
+      <text x="160" y="192" textAnchor="middle" fontSize="12" fill="#475569">
+        データを転送（Egress）することも
       </text>
 
       {/* Snowflake側 */}
-      <rect x="374" y="24" width="330" height="292" rx="14" fill="#e0f2fe" stroke="#0284c7" strokeWidth="2" />
-      <text x="539" y="52" textAnchor="middle" fontSize="15" fontWeight="700" fill="#0284c7">
+      <rect x="8" y="212" width="304" height="180" rx="14" fill="#e0f2fe" stroke="#0284c7" strokeWidth="2" />
+      <text x="160" y="236" textAnchor="middle" fontSize="16" fontWeight="700" fill="#0284c7">
         Snowpark
       </text>
-      <text x="539" y="70" textAnchor="middle" fontSize="11" fill="#64748b">
+      <text x="160" y="254" textAnchor="middle" fontSize="12" fill="#64748b">
         ウェアハウスはSnowflakeが管理する
       </text>
 
-      <rect x="394" y="88" width="290" height="70" rx="8" fill="#ffffff" stroke="#0284c7" strokeWidth="1.5" />
-      <text x="539" y="112" textAnchor="middle" fontSize="12" fontWeight="600" fill="#0f172a">
+      <rect x="24" y="266" width="272" height="50" rx="8" fill="#ffffff" stroke="#0284c7" strokeWidth="1.5" />
+      <text x="160" y="296" textAnchor="middle" fontSize="13" fontWeight="600" fill="#0f172a">
         Virtual Warehouse（フルマネージド）
       </text>
-      <text x="539" y="132" textAnchor="middle" fontSize="10" fill="#64748b">
-        クラスタ運用の作業自体が発生しない
-      </text>
 
-      <rect x="394" y="176" width="290" height="60" rx="8" fill="#dcfce7" stroke="#15803d" strokeWidth="1.5" />
-      <text x="539" y="198" textAnchor="middle" fontSize="11" fontWeight="700" fill="#166534">
-        秒単位課金・オートサスペンド/レジューム
+      <rect x="24" y="328" width="272" height="46" rx="8" fill="#dcfce7" stroke="#15803d" strokeWidth="1.5" />
+      <text x="160" y="349" textAnchor="middle" fontSize="12" fontWeight="700" fill="#166534">
+        秒単位課金・オートサスペンド
       </text>
-      <text x="539" y="216" textAnchor="middle" fontSize="10" fill="#166534">
-        使わない時間は自動で課金停止
-      </text>
-
-      <path d="M539 236 L539 260" stroke="#475569" strokeWidth="2" fill="none" markerEnd="url(#vsspark-arrow)" />
-      <text x="539" y="278" textAnchor="middle" fontSize="10" fill="#475569">
-        データがある場所と同じ基盤の上で
-      </text>
-      <text x="539" y="296" textAnchor="middle" fontSize="10" fill="#475569">
-        コードが評価される（転送不要）
+      <text x="160" y="365" textAnchor="middle" fontSize="12" fill="#166534">
+        データを動かさずコードが評価される
       </text>
     </svg>
   );

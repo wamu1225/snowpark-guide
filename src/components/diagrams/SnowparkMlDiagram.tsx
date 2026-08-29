@@ -1,10 +1,16 @@
 // Snowpark MLのワークフロー（前処理→学習→登録→推論）をSnowflake内で完結させる流れを図解する。
+// 2026-08-29: O-2-25対応＝390px実効フォントが4px（viewBox 720幅×font-size 9）まで
+// 縮んでいたため、横4列→縦4段のフローに再設計しviewBox幅を320へ狭めてfont-sizeを
+// 12〜16へ拡大。前処理/学習クラス名の例示キャプションは本文のコード例と重複するため削除。
 export function SnowparkMlDiagram() {
+  const boxH = 74;
+  const gap = 32;
+  const rowY = (i: number) => 40 + i * (boxH + gap);
   return (
     <svg
-      viewBox="0 0 720 260"
-      width="720"
-      height="260"
+      viewBox="0 0 320 460"
+      width="320"
+      height="460"
       role="img"
       aria-label="Snowpark MLのワークフロー図。Snowflake上のテーブルのデータが、snowflake.ml.modelingによる前処理・学習を経て、snowflake.ml.registryにモデルとして登録され、そこからSQL/Python/REST APIで推論に使われるまで、すべてSnowflakeの外にデータやモデルを出さずに完結する。"
     >
@@ -14,45 +20,48 @@ export function SnowparkMlDiagram() {
         </marker>
       </defs>
 
-      <rect x="8" y="16" width="704" height="228" rx="16" fill="#e0f2fe" stroke="#0284c7" strokeWidth="2" />
-      <text x="360" y="42" textAnchor="middle" fontSize="13" fontWeight="700" fill="#0284c7">
-        すべてSnowflakeの中で完結（データもモデルも外に出ない）
+      <rect x="4" y="4" width="312" height="452" rx="14" fill="#e0f2fe" stroke="#0284c7" strokeWidth="2" />
+      <text x="160" y="26" textAnchor="middle" fontSize="13" fontWeight="700" fill="#0284c7">
+        すべてSnowflakeの中で完結
       </text>
 
-      <rect x="30" y="66" width="140" height="90" rx="10" fill="#ffffff" stroke="#0284c7" strokeWidth="1.5" />
-      <text x="100" y="92" textAnchor="middle" fontSize="12" fontWeight="600" fill="#0f172a">Snowflake</text>
-      <text x="100" y="108" textAnchor="middle" fontSize="12" fontWeight="600" fill="#0f172a">のテーブル</text>
-      <text x="100" y="130" textAnchor="middle" fontSize="10" fill="#64748b">生データ</text>
-
-      <path d="M170 111 H 210" stroke="#475569" strokeWidth="2" markerEnd="url(#ml-arrow)" />
-
-      <rect x="212" y="66" width="150" height="90" rx="10" fill="#ffffff" stroke="#0284c7" strokeWidth="1.5" />
-      <text x="287" y="88" textAnchor="middle" fontSize="11" fontWeight="600" fill="#0f172a">snowflake.ml</text>
-      <text x="287" y="104" textAnchor="middle" fontSize="11" fontWeight="600" fill="#0f172a">.modeling</text>
-      <text x="287" y="124" textAnchor="middle" fontSize="10" fill="#64748b">前処理・学習</text>
-      <text x="287" y="140" textAnchor="middle" fontSize="9" fill="#64748b">（scikit-learn風API）</text>
-
-      <path d="M362 111 H 402" stroke="#475569" strokeWidth="2" markerEnd="url(#ml-arrow)" />
-
-      <rect x="404" y="66" width="150" height="90" rx="10" fill="#ffffff" stroke="#0284c7" strokeWidth="1.5" />
-      <text x="479" y="88" textAnchor="middle" fontSize="11" fontWeight="600" fill="#0f172a">snowflake.ml</text>
-      <text x="479" y="104" textAnchor="middle" fontSize="11" fontWeight="600" fill="#0f172a">.registry</text>
-      <text x="479" y="124" textAnchor="middle" fontSize="10" fill="#64748b">バージョン・指標</text>
-      <text x="479" y="140" textAnchor="middle" fontSize="10" fill="#64748b">メタデータを保存</text>
-
-      <path d="M554 111 H 594" stroke="#475569" strokeWidth="2" markerEnd="url(#ml-arrow)" />
-
-      <rect x="596" y="66" width="106" height="90" rx="10" fill="#dcfce7" stroke="#15803d" strokeWidth="1.5" />
-      <text x="649" y="90" textAnchor="middle" fontSize="10" fontWeight="600" fill="#166534">推論</text>
-      <text x="649" y="106" textAnchor="middle" fontSize="9" fill="#166534">SQL</text>
-      <text x="649" y="120" textAnchor="middle" fontSize="9" fill="#166534">Python</text>
-      <text x="649" y="134" textAnchor="middle" fontSize="9" fill="#166534">REST API</text>
-
-      <text x="360" y="190" textAnchor="middle" fontSize="11" fill="#0f172a" fontWeight="600">
-        前処理クラス例：StandardScaler / OneHotEncoder / OrdinalEncoder
+      {/* 1. データ */}
+      <rect x="24" y={rowY(0)} width="272" height={boxH} rx="10" fill="#ffffff" stroke="#0284c7" strokeWidth="1.5" />
+      <text x="160" y={rowY(0) + 30} textAnchor="middle" fontSize="15" fontWeight="600" fill="#0f172a">
+        Snowflakeのテーブル
       </text>
-      <text x="360" y="210" textAnchor="middle" fontSize="11" fill="#0f172a" fontWeight="600">
-        学習クラス例：XGBClassifier など scikit-learn互換のfit/predict API
+      <text x="160" y={rowY(0) + 54} textAnchor="middle" fontSize="13" fill="#64748b">
+        生データ
+      </text>
+      <path d={`M160 ${rowY(0) + boxH} V ${rowY(1) - 2}`} stroke="#475569" strokeWidth="2" markerEnd="url(#ml-arrow)" />
+
+      {/* 2. modeling */}
+      <rect x="24" y={rowY(1)} width="272" height={boxH} rx="10" fill="#ffffff" stroke="#0284c7" strokeWidth="1.5" />
+      <text x="160" y={rowY(1) + 30} textAnchor="middle" fontSize="15" fontWeight="600" fill="#0f172a">
+        snowflake.ml.modeling
+      </text>
+      <text x="160" y={rowY(1) + 54} textAnchor="middle" fontSize="13" fill="#64748b">
+        前処理・学習
+      </text>
+      <path d={`M160 ${rowY(1) + boxH} V ${rowY(2) - 2}`} stroke="#475569" strokeWidth="2" markerEnd="url(#ml-arrow)" />
+
+      {/* 3. registry */}
+      <rect x="24" y={rowY(2)} width="272" height={boxH} rx="10" fill="#ffffff" stroke="#0284c7" strokeWidth="1.5" />
+      <text x="160" y={rowY(2) + 30} textAnchor="middle" fontSize="15" fontWeight="600" fill="#0f172a">
+        snowflake.ml.registry
+      </text>
+      <text x="160" y={rowY(2) + 54} textAnchor="middle" fontSize="13" fill="#64748b">
+        バージョン・指標を保存
+      </text>
+      <path d={`M160 ${rowY(2) + boxH} V ${rowY(3) - 2}`} stroke="#475569" strokeWidth="2" markerEnd="url(#ml-arrow)" />
+
+      {/* 4. 推論 */}
+      <rect x="24" y={rowY(3)} width="272" height={boxH} rx="10" fill="#dcfce7" stroke="#15803d" strokeWidth="1.5" />
+      <text x="160" y={rowY(3) + 30} textAnchor="middle" fontSize="15" fontWeight="600" fill="#166534">
+        推論
+      </text>
+      <text x="160" y={rowY(3) + 54} textAnchor="middle" fontSize="13" fill="#166534">
+        SQL / Python / REST API
       </text>
     </svg>
   );
