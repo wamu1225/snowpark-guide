@@ -32,7 +32,7 @@
       src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9102538151148380"
       crossorigin="anonymous"
     ></script>
-    <script type="module" crossorigin src="../assets/index-CjjA-nah.js"></script>
+    <script type="module" crossorigin src="../assets/index-_B6bxjf8.js"></script>
     <link rel="stylesheet" crossorigin href="../assets/index-Cj1a5bcD.css">
   <script type="application/ld+json">{"@context":"https://schema.org","@type":"TechArticle","headline":"pivot","description":"行の値を列に展開する（縦持ちから横持ちへ）。 Snowparkでの書き方とPolarsでの書き方を並べて解説します。","url":"https://study-apps.com/snowpark-guide/pivot/","dateModified":"2026-08-22","inLanguage":"ja"}</script>
   </head>
@@ -55,7 +55,7 @@
     <p>SnowparkはSQLのPIVOT構文に直結し、展開する列名の一覧を静的に指定することでクエリレベルで安全に列を生成する。Polarsはメモリ上でハッシュテーブルを組み替えて新しい列を作る。</p>
     <h2 style="font-size:1.05rem;color:#b45309">移行時の落とし穴</h2>
     <p><strong>Polars 1.43.2では<code>LazyFrame.pivot()</code>を直接呼び出せる</strong>（実機で確認済み）。ただし<code>DataFrame</code>（Eager）版の<code>pivot()</code>と違い、<strong><code>on_columns</code>（展開後の列名の一覧）を明示的に渡すことが必須</strong>で、省略すると<code>TypeError</code>になる。「LazyFrameからpivotは呼べず必ずcollect()を挟む必要がある」という情報を見かけることがあるが、少なくとも1.43.2ではこれは誤りで、正しくは「呼べるが<code>on_columns</code>の指定が必須」という違いになる。</p>
-    <h2 style="font-size:1.05rem">集約・構造変換の他のメソッド</h2><ul style="padding-left:20px"><li><a href="/snowpark-guide/group-by/" style="color:#38bdf8">group_by / groupBy</a> ── 指定した列の値でグループ化する。集約する前段階として使う。</li><li><a href="/snowpark-guide/agg/" style="color:#38bdf8">agg</a> ── group_byで作ったグループごとに、集約の計算をまとめて指定する。</li><li><a href="/snowpark-guide/count/" style="color:#38bdf8">count</a> ── 行数を数える。</li><li><a href="/snowpark-guide/sum/" style="color:#38bdf8">sum</a> ── 列の値を合計する。</li><li><a href="/snowpark-guide/mean/" style="color:#38bdf8">avg / mean</a> ── 列の値の平均を求める。</li><li><a href="/snowpark-guide/min/" style="color:#38bdf8">min</a> ── 列の最小値を求める。</li><li><a href="/snowpark-guide/max/" style="color:#38bdf8">max</a> ── 列の最大値を求める。</li><li><a href="/snowpark-guide/unpivot/" style="color:#38bdf8">unpivot</a> ── pivotの逆。複数列を1つの列にまとめる（横持ちから縦持ちへ）。</li></ul>
+    <h2 style="font-size:1.05rem">集約・構造変換の他のメソッド</h2><ul style="padding-left:20px"><li><a href="/snowpark-guide/group-by/" style="color:#38bdf8">group_by / groupBy</a> ── 指定した列の値でグループ化する。集約する前段階として使う。</li><li><a href="/snowpark-guide/agg/" style="color:#38bdf8">agg</a> ── group_byで作ったグループごとに、集約の計算をまとめて指定する。</li><li><a href="/snowpark-guide/count/" style="color:#38bdf8">count</a> ── 行数を数える。</li><li><a href="/snowpark-guide/sum/" style="color:#38bdf8">sum</a> ── 列の値を合計する。</li><li><a href="/snowpark-guide/mean/" style="color:#38bdf8">avg / mean</a> ── 列の値の平均を求める。</li><li><a href="/snowpark-guide/min/" style="color:#38bdf8">min</a> ── 列の最小値を求める。</li><li><a href="/snowpark-guide/max/" style="color:#38bdf8">max</a> ── 列の最大値を求める。</li><li><a href="/snowpark-guide/unpivot/" style="color:#38bdf8">unpivot</a> ── pivotの逆。複数列を1つの列にまとめる（横持ちから縦持ちへ）。</li><li><a href="/snowpark-guide/array-agg/" style="color:#38bdf8">array_agg</a> ── グループ内の複数行の値を、1つの配列（リスト）にまとめる。</li><li><a href="/snowpark-guide/listagg/" style="color:#38bdf8">listagg</a> ── グループ内の複数行の文字列を、区切り文字でつないだ1つの文字列にまとめる。</li><li><a href="/snowpark-guide/median-stddev/" style="color:#38bdf8">median / stddev</a> ── 中央値と標準偏差を求める（外れ値の影響を受けにくい代表値・散らばりの指標）。</li></ul>
     
     <h2 style="font-size:1.05rem">出典・検証情報</h2>
     <ul style="padding-left:20px">

@@ -32,7 +32,7 @@
       src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9102538151148380"
       crossorigin="anonymous"
     ></script>
-    <script type="module" crossorigin src="./assets/index-CjjA-nah.js"></script>
+    <script type="module" crossorigin src="./assets/index-_B6bxjf8.js"></script>
     <link rel="stylesheet" crossorigin href="./assets/index-Cj1a5bcD.css">
   <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebSite","name":"Snowpark 実践ガイド","url":"https://study-apps.com/snowpark-guide/","description":"Snowpark Pythonの基礎知識（アーキテクチャ・Spark比較・Polars比較・UDF/UDTF/SPROC・料金・ML）と、DataFrame/Column APIをPolarsの同等コードと並べて確認できる逆引きリファレンスをまとめたサイトです。","inLanguage":"ja"}</script>
   </head>
@@ -68,7 +68,10 @@
 <li><a href="/snowpark-guide/min/" style="color:#38bdf8">min</a> ── 列の最小値を求める。</li>
 <li><a href="/snowpark-guide/max/" style="color:#38bdf8">max</a> ── 列の最大値を求める。</li>
 <li><a href="/snowpark-guide/pivot/" style="color:#38bdf8">pivot</a> ── 行の値を列に展開する（縦持ちから横持ちへ）。</li>
-<li><a href="/snowpark-guide/unpivot/" style="color:#38bdf8">unpivot</a> ── pivotの逆。複数列を1つの列にまとめる（横持ちから縦持ちへ）。</li></ul></section>
+<li><a href="/snowpark-guide/unpivot/" style="color:#38bdf8">unpivot</a> ── pivotの逆。複数列を1つの列にまとめる（横持ちから縦持ちへ）。</li>
+<li><a href="/snowpark-guide/array-agg/" style="color:#38bdf8">array_agg</a> ── グループ内の複数行の値を、1つの配列（リスト）にまとめる。</li>
+<li><a href="/snowpark-guide/listagg/" style="color:#38bdf8">listagg</a> ── グループ内の複数行の文字列を、区切り文字でつないだ1つの文字列にまとめる。</li>
+<li><a href="/snowpark-guide/median-stddev/" style="color:#38bdf8">median / stddev</a> ── 中央値と標準偏差を求める（外れ値の影響を受けにくい代表値・散らばりの指標）。</li></ul></section>
 <section style="margin-top:24px"><h2 style="font-size:1.1rem">結合・集合演算</h2><p style="color:#94a3b8;font-size:0.9rem">複数のテーブルを1つにする</p><ul style="padding-left:20px"><li><a href="/snowpark-guide/join/" style="color:#38bdf8">join</a> ── 2つのDataFrameを結合する。</li>
 <li><a href="/snowpark-guide/union/" style="color:#38bdf8">union</a> ── 2つのDataFrameを縦に連結し、重複行を取り除く。</li>
 <li><a href="/snowpark-guide/union-all/" style="color:#38bdf8">union_all / unionAll</a> ── 2つのDataFrameを縦に連結する。重複行はそのまま残す。</li>
@@ -102,7 +105,11 @@
 <li><a href="/snowpark-guide/abs-ceil-floor/" style="color:#38bdf8">abs / ceil / floor</a> ── 絶対値、切り上げ、切り下げを求める基本的な数値関数。</li>
 <li><a href="/snowpark-guide/greatest-least/" style="color:#38bdf8">greatest / least</a> ── 複数の列を横に比較し、行ごとの最大値・最小値を求める。</li>
 <li><a href="/snowpark-guide/date-parts/" style="color:#38bdf8">year / month / dayofmonth</a> ── 日付・時刻から年・月・日の値だけを取り出す。</li>
-<li><a href="/snowpark-guide/lpad-rpad/" style="color:#38bdf8">lpad / rpad</a> ── 文字列の左側・右側を指定した文字で埋め、一定の長さに揃える。</li></ul></section>
+<li><a href="/snowpark-guide/lpad-rpad/" style="color:#38bdf8">lpad / rpad</a> ── 文字列の左側・右側を指定した文字で埋め、一定の長さに揃える。</li>
+<li><a href="/snowpark-guide/initcap/" style="color:#38bdf8">initcap</a> ── 各単語の先頭だけを大文字にし、残りを小文字にする（タイトルケース化）。</li>
+<li><a href="/snowpark-guide/current-date-timestamp/" style="color:#38bdf8">current_date / current_timestamp</a> ── 現在の日付・日時を取得する。</li>
+<li><a href="/snowpark-guide/array-contains/" style="color:#38bdf8">array_contains</a> ── 配列の中に指定した値が含まれているかを判定する。</li>
+<li><a href="/snowpark-guide/parse-json-object-construct/" style="color:#38bdf8">parse_json / object_construct</a> ── 文字列をJSON（半構造化データ）として解釈する／複数の値からJSONオブジェクトを組み立てる。</li></ul></section>
 <section style="margin-top:24px"><h2 style="font-size:1.1rem">ウィンドウ関数</h2><p style="color:#94a3b8;font-size:0.9rem">行をまたいだ計算（順位・累積・移動平均）</p><ul style="padding-left:20px"><li><a href="/snowpark-guide/window-spec/" style="color:#38bdf8">Window.partition_by / Window.order_by</a> ── グループ（パーティション）ごとに、行をまたいだ計算をするための土台を定義する。</li>
 <li><a href="/snowpark-guide/rank/" style="color:#38bdf8">rank</a> ── パーティション内で順位をつける。同じ値には同じ順位がつき、その分だけ次の順位を飛ばす。</li>
 <li><a href="/snowpark-guide/dense-rank/" style="color:#38bdf8">dense_rank</a> ── パーティション内で順位をつける。同じ値には同じ順位がつくが、次の順位は飛ばさない。</li>

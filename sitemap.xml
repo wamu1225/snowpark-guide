@@ -24,6 +24,9 @@
   <url><loc>https://study-apps.com/snowpark-guide/max/</loc><lastmod>2026-08-29</lastmod><priority>0.8</priority></url>
   <url><loc>https://study-apps.com/snowpark-guide/pivot/</loc><lastmod>2026-08-29</lastmod><priority>0.8</priority></url>
   <url><loc>https://study-apps.com/snowpark-guide/unpivot/</loc><lastmod>2026-08-29</lastmod><priority>0.8</priority></url>
+  <url><loc>https://study-apps.com/snowpark-guide/array-agg/</loc><lastmod>2026-08-29</lastmod><priority>0.8</priority></url>
+  <url><loc>https://study-apps.com/snowpark-guide/listagg/</loc><lastmod>2026-08-29</lastmod><priority>0.8</priority></url>
+  <url><loc>https://study-apps.com/snowpark-guide/median-stddev/</loc><lastmod>2026-08-29</lastmod><priority>0.8</priority></url>
   <url><loc>https://study-apps.com/snowpark-guide/join/</loc><lastmod>2026-08-29</lastmod><priority>0.8</priority></url>
   <url><loc>https://study-apps.com/snowpark-guide/union/</loc><lastmod>2026-08-29</lastmod><priority>0.8</priority></url>
   <url><loc>https://study-apps.com/snowpark-guide/union-all/</loc><lastmod>2026-08-29</lastmod><priority>0.8</priority></url>
@@ -58,6 +61,10 @@
   <url><loc>https://study-apps.com/snowpark-guide/greatest-least/</loc><lastmod>2026-08-29</lastmod><priority>0.8</priority></url>
   <url><loc>https://study-apps.com/snowpark-guide/date-parts/</loc><lastmod>2026-08-29</lastmod><priority>0.8</priority></url>
   <url><loc>https://study-apps.com/snowpark-guide/lpad-rpad/</loc><lastmod>2026-08-29</lastmod><priority>0.8</priority></url>
+  <url><loc>https://study-apps.com/snowpark-guide/initcap/</loc><lastmod>2026-08-29</lastmod><priority>0.8</priority></url>
+  <url><loc>https://study-apps.com/snowpark-guide/current-date-timestamp/</loc><lastmod>2026-08-29</lastmod><priority>0.8</priority></url>
+  <url><loc>https://study-apps.com/snowpark-guide/array-contains/</loc><lastmod>2026-08-29</lastmod><priority>0.8</priority></url>
+  <url><loc>https://study-apps.com/snowpark-guide/parse-json-object-construct/</loc><lastmod>2026-08-29</lastmod><priority>0.8</priority></url>
   <url><loc>https://study-apps.com/snowpark-guide/window-spec/</loc><lastmod>2026-08-29</lastmod><priority>0.8</priority></url>
   <url><loc>https://study-apps.com/snowpark-guide/rank/</loc><lastmod>2026-08-29</lastmod><priority>0.8</priority></url>
   <url><loc>https://study-apps.com/snowpark-guide/dense-rank/</loc><lastmod>2026-08-29</lastmod><priority>0.8</priority></url>
