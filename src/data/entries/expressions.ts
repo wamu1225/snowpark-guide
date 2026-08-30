@@ -647,4 +647,113 @@ export const expressionsEntries: Entry[] = [
       date: '2026-08-30',
     },
   },
+  {
+    slug: 'sqrt-exp-ln',
+    title: 'sqrt / exp / ln',
+    category: 'expressions',
+    summary: '平方根、指数関数（eのべき乗）、自然対数を求める。',
+    snowparkCode: 'sqrt(col("x"))\nexp(col("x"))\nln(col("x"))',
+    polarsCode: 'pl.col("x").sqrt()\npl.col("x").exp()\npl.col("x").log()',
+    difference:
+      '`sqrt`/`exp`は名前も対応も直接的。**`ln`（自然対数）だけ名前が違う**＝Polars側は引数無しの`.log()`が自然対数（底e）に対応する。実行して確認したところ`sqrt(4)=2.0`・`sqrt(9)=3.0`、`ln(4)`と`.log()`の結果は両方とも`1.386...`（自然対数の定義どおり）で一致する。',
+    pitfall:
+      'Polarsの`.log()`は**引数で底を指定できる**（`.log(10)`で常用対数など）。名前だけ見ると「対数全般」を指す関数に見えるため、**引数を省略すると自然対数になる**という既定値を知らないと、常用対数（底10）のつもりで書いたコードが自然対数になってしまう。Snowpark側は`ln`（自然対数専用）と`log`（底を指定する2引数版）が別関数として分かれているので、Polarsに移植する際は「底を省略したら自然対数」というルールを意識する。',
+    snowparkDocUrl:
+      'https://docs.snowflake.com/en/developer-guide/snowpark/reference/python/latest/snowpark/api/snowflake.snowpark.functions.ln',
+    polarsDocUrl: 'https://docs.pola.rs/api/python/stable/reference/expressions/api/polars.Expr.log.html',
+    verified: {
+      polarsExecuted: true,
+      snowparkStaticChecked: true,
+      polarsVersion: '1.36.1',
+      snowparkSdkVersion: '1.51.1',
+      date: '2026-08-30',
+    },
+  },
+  {
+    slug: 'left-right',
+    title: 'left / right',
+    category: 'expressions',
+    summary: '文字列の先頭・末尾から指定した文字数を取り出す。',
+    snowparkCode: 'left(col("code"), 3)\nright(col("code"), 3)',
+    polarsCode: 'pl.col("code").str.slice(0, 3)\npl.col("code").str.slice(-3)',
+    difference:
+      'Snowparkには`left`/`right`という専用の関数があるが、Polarsには同名の専用メソッドが無く、`substring`のページで扱った**`str.slice`を使い分ける**（開始位置`0`から3文字＝先頭3文字、開始位置`-3`＝末尾から3文字目以降を最後まで）。`"ABCDEF"`を実行して確認したところ、`left(_, 3)`は`"ABC"`、`str.slice(0,3)`も`"ABC"`、`right(_, 3)`は`"DEF"`、`str.slice(-3)`も`"DEF"`で一致する。',
+    pitfall:
+      '`right`に対応する`str.slice(-3)`は**「末尾から3文字」を負のインデックスの開始位置だけで表現**しており、`substring`のページで説明した1ベース/0ベースの違いに加えて、**負の数を使う書き方に慣れていないと直感的に読みにくい**。`str.slice(-3)`は「末尾から3文字目の位置から、指定が無ければ最後まで」という意味で、`length`引数を省略できる点も`left`側（`str.slice(0,3)`は`length`必須）との非対称性として押さえておく。',
+    snowparkDocUrl:
+      'https://docs.snowflake.com/en/developer-guide/snowpark/reference/python/latest/snowpark/api/snowflake.snowpark.functions.left',
+    polarsDocUrl: 'https://docs.pola.rs/api/python/stable/reference/expressions/api/polars.Expr.str.slice.html',
+    verified: {
+      polarsExecuted: true,
+      snowparkStaticChecked: true,
+      polarsVersion: '1.36.1',
+      snowparkSdkVersion: '1.51.1',
+      date: '2026-08-30',
+    },
+  },
+  {
+    slug: 'reverse',
+    title: 'reverse',
+    category: 'expressions',
+    summary: '文字列の文字の並び順を反転させる。',
+    snowparkCode: 'reverse(col("code"))  # "Hello" → "olleH"',
+    polarsCode: 'pl.col("code").str.reverse()  # "Hello" → "olleH"',
+    difference:
+      'Snowflake公式ドキュメントは「文字列内の文字の並び順（またはバイナリ値のバイト順）を反転させる」と明記している。Polarsの`.str.reverse()`も実行して確認したところ`"Hello"`→`"olleH"`と**文字単位の反転**で完全に一致する。',
+    pitfall:
+      '**Polarsには`.str.`を付けない`Expr.reverse()`という別のメソッドが存在し、これは全く別の意味＝「列（Series）の行の並び順を反転させる」処理**になる。実行して確認したところ、`["abc","de"]`という2行の列に対して`.reverse()`（`str`無し）を呼ぶと`["de","abc"]`（行の順序が逆転）になり、`.str.reverse()`を呼ぶと`["cba","ed"]`（各文字列の中身が反転）になる。**`.str.`を書き忘れてもエラーにならず、行の順序を入れ替えるという意図と全く違う処理が静かに実行される**ため、このサイトで最も見落としやすい落とし穴の1つ。',
+    snowparkDocUrl: 'https://docs.snowflake.com/en/sql-reference/functions/reverse',
+    polarsDocUrl: 'https://docs.pola.rs/api/python/stable/reference/expressions/api/polars.Expr.str.reverse.html',
+    verified: {
+      polarsExecuted: true,
+      snowparkStaticChecked: true,
+      polarsVersion: '1.36.1',
+      snowparkSdkVersion: '1.51.1',
+      date: '2026-08-30',
+    },
+  },
+  {
+    slug: 'charindex',
+    title: 'charindex',
+    category: 'expressions',
+    summary: '文字列の中で、指定した部分文字列が最初に現れる位置を求める。',
+    snowparkCode: 'charindex(lit("world"), col("text"))  # "hello world" → 7',
+    polarsCode: 'pl.col("text").str.find("world")  # "hello world" → 6',
+    difference:
+      'Snowparkの`charindex`はSQLの`CHARINDEX`（`POSITION`の別名）に変換され、公式ドキュメントに「1ベースの位置を返す」と明記されている。Polarsの`str.find`は文字列メソッドの慣習に沿って**0ベース**。実行して確認したところ、`"hello world"`の中の`"world"`は、Snowpark側の考え方で数えると7文字目（`h`が1文字目）、Polars側は6（`h`が0文字目）と、**`substring`のページと同じ「1ベース vs 0ベース」のずれ**がここにも現れる。',
+    pitfall:
+      '`charindex`の**引数の順序**にも注意が必要（`inspect.signature`で確認）＝Snowparkは「探したい文字列」が第1引数、「探される側の文字列」が第2引数という、直感（対象が先）と逆の順序。`array_contains`のページと同じ「値が先、対象が後」という並びなので、混同しやすい関数どうしとして併せて覚えておくとよい。',
+    snowparkDocUrl:
+      'https://docs.snowflake.com/en/developer-guide/snowpark/reference/python/latest/snowpark/api/snowflake.snowpark.functions.charindex',
+    polarsDocUrl: 'https://docs.pola.rs/api/python/stable/reference/expressions/api/polars.Expr.str.find.html',
+    verified: {
+      polarsExecuted: true,
+      snowparkStaticChecked: true,
+      polarsVersion: '1.36.1',
+      snowparkSdkVersion: '1.51.1',
+      date: '2026-08-30',
+    },
+  },
+  {
+    slug: 'to-decimal-to-varchar',
+    title: 'to_decimal / to_varchar',
+    category: 'expressions',
+    summary: '文字列を指定した精度の数値に変換する／数値を文字列に変換する（書式指定つき）。',
+    snowparkCode: 'to_decimal(col("price_str"), 10, 2)\nto_varchar(col("price"), \'$999,999.00\')',
+    polarsCode: 'pl.col("price_str").cast(pl.Decimal(10, 2))\npl.col("price").cast(pl.Utf8)  # 書式指定は無い',
+    difference:
+      '`to_decimal`と`.cast(pl.Decimal(precision, scale))`は近い。実行して確認したところ、**精度を超える値を渡すとどちらもエラーになる**点まで一致する（Snowflake公式ドキュメントの「精度を超えるとエラー」と、Polarsの`InvalidOperationError`を個別に確認）。',
+    pitfall:
+      '**`to_varchar`の書式文字列機能に対応するAPIがPolarsに無い**。Snowflakeの`to_varchar(col, \'$999,999.00\')`はカンマ区切りや通貨記号つきの文字列を1回の呼び出しで生成できるが、Polarsの`.cast(pl.Utf8)`は単純に数値を文字列化するだけで書式の概念が無い。同じ見た目の文字列が必要な場合、Python標準の`f"{x:,.2f}"`のような書式指定を行ごとに適用する（`map_elements`等）処理を別途組む必要があり、Snowpark側の1関数呼び出しでは済まない。',
+    snowparkDocUrl:
+      'https://docs.snowflake.com/en/developer-guide/snowpark/reference/python/latest/snowpark/api/snowflake.snowpark.functions.to_decimal',
+    polarsDocUrl: 'https://docs.pola.rs/api/python/stable/reference/expressions/api/polars.Expr.cast.html',
+    verified: {
+      polarsExecuted: true,
+      snowparkStaticChecked: true,
+      polarsVersion: '1.36.1',
+      snowparkSdkVersion: '1.51.1',
+      date: '2026-08-30',
+    },
+  },
 ];

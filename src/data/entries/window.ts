@@ -135,4 +135,73 @@ export const windowEntries: Entry[] = [
       date: '2026-08-24',
     },
   },
+  {
+    slug: 'ntile',
+    title: 'ntile',
+    category: 'window',
+    summary: 'パーティション内の行を、指定した個数のグループに行数ができるだけ均等になるよう分割する。',
+    snowparkCode: 'ntile(3).over(window_spec)',
+    polarsCode:
+      '((pl.col("v").rank(method="ordinal") - 1) * 3 // pl.col("v").count()).over("grp")',
+    difference:
+      'Snowflake公式ドキュメントは「順序付けされたデータセットを、指定したバケット数で**行数が均等になるよう**分割する」と明記している＝**値そのものではなく行の順位（rank）**が基準。Polarsには同名の専用関数が無いため、`rank(method="ordinal")`（1位・2位…と重複無しの順位）を使って同じ計算式を組み立てる必要がある。7行を3グループに分けて実行して確認したところ、両者とも`[3,2,2]`行ずつに割れる。',
+    pitfall:
+      '**似て非なる`qcut`（値の分位点で区切る関数）を使うと失敗することがある**。実行して確認したところ、値に重複が多いデータ（例：`[1,1,1,1,1,1,100]`を3分位に分けようとする）では、`qcut`は分位点の境界値が重複してしまい`quantiles are not unique`というエラーで**そもそも実行できない**。一方、上記の`rank`ベースの式は値の重複に関係なく常に行数で均等に割れる。「NTILEの代わり」として`qcut`を選ぶと、データによっては動かないコードになる。',
+    snowparkDocUrl:
+      'https://docs.snowflake.com/en/developer-guide/snowpark/reference/python/latest/snowpark/api/snowflake.snowpark.functions.ntile',
+    polarsDocUrl: 'https://docs.pola.rs/api/python/stable/reference/expressions/api/polars.Expr.rank.html',
+    verified: {
+      polarsExecuted: true,
+      snowparkStaticChecked: true,
+      polarsVersion: '1.36.1',
+      snowparkSdkVersion: '1.51.1',
+      date: '2026-08-30',
+    },
+  },
+  {
+    slug: 'percent-rank-cume-dist',
+    title: 'percent_rank / cume_dist',
+    category: 'window',
+    summary: 'パーティション内での相対的な順位を、0〜1の割合で表す。',
+    snowparkCode: 'percent_rank().over(window_spec)\ncume_dist().over(window_spec)',
+    polarsCode:
+      '((pl.col("v").rank(method="min") - 1) / (pl.col("v").count() - 1)).over("grp")  # percent_rank相当\n(pl.col("v").rank(method="max") / pl.col("v").count()).over("grp")  # cume_dist相当',
+    difference:
+      'どちらもSnowparkでは専用のウィンドウ関数として1回の呼び出しで済むが、Polarsには同名の関数が無く、**`rank()`から計算式で組み立てる**必要がある。`percent_rank`は「(順位-1)÷(件数-1)」で先頭行が`0`・末尾行が`1`になる式、`cume_dist`は「その値以下の行の割合」を表す式で、`rank(method="max")`（同順位の中で最大の順位）を使う点が異なる。4件のグループで実行して確認したところ、`percent_rank`は`[0, 0.33, 0.67, 1.0]`、`cume_dist`は`[0.25, 0.5, 0.75, 1.0]`になり、定義どおりの値が出る。',
+    pitfall:
+      '`percent_rank`と`cume_dist`は名前も値も似ているため取り違えやすい。**`rank(method=...)`の引数（`min`か`max`か）を間違えると、どちらの計算式も静かに違う値を返す**（エラーにはならない）。移植するときは、どちらの指標を再現したいのかを先に決めてから式を組み立てること。',
+    snowparkDocUrl:
+      'https://docs.snowflake.com/en/developer-guide/snowpark/reference/python/latest/snowpark/api/snowflake.snowpark.functions.percent_rank',
+    polarsDocUrl: 'https://docs.pola.rs/api/python/stable/reference/expressions/api/polars.Expr.rank.html',
+    verified: {
+      polarsExecuted: true,
+      snowparkStaticChecked: true,
+      polarsVersion: '1.36.1',
+      snowparkSdkVersion: '1.51.1',
+      date: '2026-08-30',
+    },
+  },
+  {
+    slug: 'first-value-last-value',
+    title: 'first_value / last_value',
+    category: 'window',
+    summary: 'パーティション内で並べ替えた順序の、先頭の値・末尾の値を各行に持たせる。',
+    snowparkCode: 'first_value(col("salary")).over(window_spec)\nlast_value(col("salary")).over(window_spec)',
+    polarsCode:
+      'pl.col("salary").first().over("department")\npl.col("salary").last().over("department")',
+    difference:
+      'SnowparkはSQLの`FIRST_VALUE`/`LAST_VALUE`ウィンドウ関数に変換される。Polarsは通常の集約メソッド`first()`/`last()`を`.over()`と組み合わせることで、同じ「グループ内の先頭・末尾の値を全行に展開する」処理になる。実行して確認したところ、`department`でグループ化した`salary`列で、両APIとも各グループの先頭行・末尾行の値が全行に複製される。',
+    pitfall:
+      '**「先頭・末尾」が何を基準にした順序かは、事前の並べ替えに完全に依存する**。SnowparkはWindow仕様の`order_by`が順序を決めるが、Polars側は`.over()`を呼ぶ前に`ldf.sort(...)`で明示的に並べ替えておく必要がある（`lag`/`lead`のページと同じ注意点）。並べ替えを忘れると、Snowflake側では意図した順序で`FIRST_VALUE`が決まるのに、Polars側は元のデータの物理的な並び順のままの「先頭」を返してしまう。',
+    snowparkDocUrl:
+      'https://docs.snowflake.com/en/developer-guide/snowpark/reference/python/latest/snowpark/api/snowflake.snowpark.functions.first_value',
+    polarsDocUrl: 'https://docs.pola.rs/api/python/stable/reference/expressions/api/polars.Expr.first.html',
+    verified: {
+      polarsExecuted: true,
+      snowparkStaticChecked: true,
+      polarsVersion: '1.36.1',
+      snowparkSdkVersion: '1.51.1',
+      date: '2026-08-30',
+    },
+  },
 ];

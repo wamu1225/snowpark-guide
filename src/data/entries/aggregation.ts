@@ -263,4 +263,26 @@ export const aggregationEntries: Entry[] = [
       date: '2026-08-30',
     },
   },
+  {
+    slug: 'count-distinct-approx-count-distinct',
+    title: 'count_distinct / approx_count_distinct',
+    category: 'aggregation',
+    summary: '重複を除いた値の種類数（ユニーク数）を求める。近似版は誤差を許容する代わりに高速。',
+    snowparkCode: 'df.select(count_distinct(col("user_id")))\ndf.select(approx_count_distinct(col("user_id")))',
+    polarsCode: 'df.select(pl.col("user_id").n_unique())\ndf.select(pl.col("user_id").approx_n_unique())',
+    difference:
+      '正確版（`count_distinct`↔`n_unique`）・近似版（`approx_count_distinct`↔`approx_n_unique`）とも対になる関数がPolars側に存在する。`[1,2,2,3,3,3]`で実行して確認したところ、`n_unique()`は正確に`3`を返す。',
+    pitfall:
+      '**近似版を使う場面の判断はSnowpark側とPolars側で事情が異なる**。Snowflakeの`approx_count_distinct`はHyperLogLogアルゴリズムでビッグデータに対する分散集計のコストを下げるために用意されている。一方Polarsはメモリ上の処理なので、**よほど巨大なデータでない限り正確版の`n_unique()`で十分なことが多く**、近似版を使う必然性はSnowflake側ほど高くない。Snowpark側のコードにならって機械的に近似版へ置き換えると、Polars側では不要な誤差を持ち込むだけになる場合がある。',
+    snowparkDocUrl:
+      'https://docs.snowflake.com/en/developer-guide/snowpark/reference/python/latest/snowpark/api/snowflake.snowpark.functions.approx_count_distinct',
+    polarsDocUrl: 'https://docs.pola.rs/api/python/stable/reference/expressions/api/polars.Expr.n_unique.html',
+    verified: {
+      polarsExecuted: true,
+      snowparkStaticChecked: true,
+      polarsVersion: '1.36.1',
+      snowparkSdkVersion: '1.51.1',
+      date: '2026-08-30',
+    },
+  },
 ];
