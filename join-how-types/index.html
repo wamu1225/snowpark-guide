@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" type="image/svg+xml" href="../favicon.svg" />
+    <title>join の how（結合の種類）｜Snowpark ⇄ Polars 逆引き｜Snowpark 実践ガイド</title>
+    <meta
+      name="description"
+      content="Snowpark Pythonの基礎知識（アーキテクチャ・Spark比較・Polars比較・UDF/UDTF/SPROC・料金・ML）と、DataFrame/Column APIをPolarsの同等コードと並べて確認できる逆引きリファレンスをまとめたサイトです。"
+    />
+    <link rel="canonical" href="https://study-apps.com/snowpark-guide/join-how-types/" />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="Snowpark 実践ガイド" />
+    <meta property="og:title" content="join の how（結合の種類）｜Snowpark ⇄ Polars 逆引き｜Snowpark 実践ガイド" />
+    <meta
+      property="og:description"
+      content="Snowpark Pythonの基礎知識と、DataFrame/Column APIをPolarsの同等コードと並べて確認できる逆引きリファレンスをまとめたサイトです。"
+    />
+    <meta property="og:url" content="https://study-apps.com/snowpark-guide/join-how-types/" />
+    <meta property="og:image" content="https://study-apps.com/snowpark-guide/ogp.png" />
+    <meta property="og:locale" content="ja_JP" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="join の how（結合の種類）｜Snowpark ⇄ Polars 逆引き｜Snowpark 実践ガイド" />
+    <meta
+      name="twitter:description"
+      content="Snowpark Pythonの基礎知識と、DataFrame/Column APIをPolarsの同等コードと並べて確認できる逆引きリファレンスをまとめたサイトです。"
+    />
+    <meta name="twitter:image" content="https://study-apps.com/snowpark-guide/ogp.png" />
+    <script
+      async
+      src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9102538151148380"
+      crossorigin="anonymous"
+    ></script>
+    <script type="module" crossorigin src="../assets/index-CDqs5wyM.js"></script>
+    <link rel="stylesheet" crossorigin href="../assets/index-Cj1a5bcD.css">
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"TechArticle","headline":"join の how（結合の種類）","description":"inner/left/full/semi/anti など、結合の種類を切り替える。 Snowparkでの書き方とPolarsでの書き方を並べて解説します。","url":"https://study-apps.com/snowpark-guide/join-how-types/","dateModified":"2026-08-31","inLanguage":"ja"}</script>
+  </head>
+  <body>
+    <div id="root"><div style="max-width:760px;margin:0 auto;padding:24px 16px;font-family:sans-serif;line-height:1.8;color:#0f172a">
+    <p style="color:#94a3b8;font-size:0.9rem"><a href="/snowpark-guide/" style="color:#94a3b8">トップ</a> / 結合・集合演算</p>
+    <h1 style="font-family:monospace;font-size:1.6rem;margin-bottom:8px">join の how（結合の種類）</h1>
+    <p style="color:#475569">inner/left/full/semi/anti など、結合の種類を切り替える。</p>
+    <div style="display:flex;flex-wrap:wrap;gap:16px;margin:20px 0">
+      <div style="flex:1;min-width:260px">
+        <h2 style="color:#0284c7;font-size:0.9rem">SNOWPARK <span style="opacity:0.75;font-weight:500">静的検証のみ</span></h2>
+        <pre style="background:#0f172a;color:#e2e8f0;border-radius:10px;padding:14px;overflow-x:auto"><code>df1.join(df2, on=&quot;id&quot;, how=&quot;semi&quot;)   # df1側でdf2に一致する行だけを残す（df2の列は付かない）
+df1.join(df2, on=&quot;id&quot;, how=&quot;anti&quot;)  # df1側でdf2に一致しない行だけを残す</code></pre>
+      </div>
+      <div style="flex:1;min-width:260px">
+        <h2 style="color:#c026d3;font-size:0.9rem">POLARS <span style="opacity:0.75;font-weight:500">実行確認済み</span></h2>
+        <pre style="background:#0f172a;color:#e2e8f0;border-radius:10px;padding:14px;overflow-x:auto"><code>ldf1.join(ldf2, on=&quot;id&quot;, how=&quot;semi&quot;)
+ldf1.join(ldf2, on=&quot;id&quot;, how=&quot;anti&quot;)</code></pre>
+      </div>
+    </div>
+    <h2 style="font-size:1.05rem">挙動・設計の違い</h2>
+    <p>Snowpark公式ドキュメントに列挙されている<code>how</code>の値（<code>inner</code>/<code>left</code>・<code>leftouter</code>/<code>right</code>・<code>rightouter</code>/<code>full</code>・<code>outer</code>・<code>fullouter</code>/<code>semi</code>・<code>leftsemi</code>/<code>anti</code>・<code>leftanti</code>/<code>cross</code>/<code>asof</code>）は、<strong><code>semi</code>・<code>anti</code>を含めてPolarsの<code>how</code>とほぼ同じ語彙</strong>。<code>semi</code>結合は「相手に一致する行だけを残すが、相手側の列は付けない」、<code>anti</code>結合は「相手に一致しない行だけを残す」というSQLではやや馴染みの薄い結合で、両APIとも同じ意味・同じ名前で使える。</p>
+    <h2 style="font-size:1.05rem;color:#b45309">移行時の落とし穴</h2>
+    <p><strong><code>on</code>に同じ列名を渡した場合の結果列の扱いがAPI間で違う</strong>（<code>how="full"</code>など外部結合で顕在化）。Snowpark公式ドキュメントは「列名の文字列を渡すと、結合キー列は1つにマージされる」と明記している。一方Polarsを実行して確認したところ、<code>how="full"</code>で<code>on="id"</code>を指定しても、<strong>結果には<code>id</code>と<code>id_right</code>という2つの列が別々に残る</strong>（一致しなかった行では片方が<code>null</code>になる）。Snowpark側のコードを移植して「同じ列名を渡したから1列にまとまるはず」と思っていると、Polars側では列が重複したまま残っていて後続処理でつまずく。</p>
+    <h2 style="font-size:1.05rem">結合・集合演算の他のメソッド</h2><ul style="padding-left:20px"><li><a href="/snowpark-guide/join/" style="color:#38bdf8">join</a> ── 2つのDataFrameを結合する。</li><li><a href="/snowpark-guide/union/" style="color:#38bdf8">union</a> ── 2つのDataFrameを縦に連結し、重複行を取り除く。</li><li><a href="/snowpark-guide/union-all/" style="color:#38bdf8">union_all / unionAll</a> ── 2つのDataFrameを縦に連結する。重複行はそのまま残す。</li><li><a href="/snowpark-guide/union-by-name/" style="color:#38bdf8">union_by_name / unionByName</a> ── 列の並び順ではなく列名を基準に2つのDataFrameを連結する。</li><li><a href="/snowpark-guide/intersect/" style="color:#38bdf8">intersect</a> ── 2つのDataFrameの両方に存在する行だけを残す（積集合）。</li><li><a href="/snowpark-guide/subtract/" style="color:#38bdf8">subtract / except_</a> ── 片方のDataFrameから、もう片方にも存在する行を取り除く（差集合）。</li></ul>
+    
+    <h2 style="font-size:1.05rem">出典・検証情報</h2>
+    <ul style="padding-left:20px">
+      <li><a href="https://docs.snowflake.com/en/developer-guide/snowpark/reference/python/latest/snowpark/api/snowflake.snowpark.DataFrame.join" style="color:#38bdf8">Snowpark 公式リファレンス（join の how（結合の種類））</a></li>
+      <li><a href="https://docs.pola.rs/api/python/stable/reference/lazyframe/api/polars.LazyFrame.join.html" style="color:#38bdf8">Polars 公式リファレンス（join の how（結合の種類））</a></li>
+    </ul>
+    <p style="color:#94a3b8;font-size:0.85rem">Polars 1.36.1 で実行確認 / Snowpark Python SDK 1.51.1 で静的検証（2026-08-31）</p>
+    <nav style="margin-top:24px;display:flex;gap:16px;flex-wrap:wrap;font-size:0.85rem"><a href="/snowpark-guide/about/" style="color:#94a3b8">このサイトについて</a><a href="/snowpark-guide/privacy/" style="color:#94a3b8">プライバシーポリシー</a></nav>
+  </div></div>
+  </body>
+</html>

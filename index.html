@@ -32,7 +32,7 @@
       src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9102538151148380"
       crossorigin="anonymous"
     ></script>
-    <script type="module" crossorigin src="./assets/index-Bg5oCDUL.js"></script>
+    <script type="module" crossorigin src="./assets/index-CDqs5wyM.js"></script>
     <link rel="stylesheet" crossorigin href="./assets/index-Cj1a5bcD.css">
   <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebSite","name":"Snowpark 実践ガイド","url":"https://study-apps.com/snowpark-guide/","description":"Snowpark Pythonの基礎知識（アーキテクチャ・Spark比較・Polars比較・UDF/UDTF/SPROC・料金・ML）と、DataFrame/Column APIをPolarsの同等コードと並べて確認できる逆引きリファレンスをまとめたサイトです。","inLanguage":"ja"}</script>
   </head>
@@ -59,7 +59,9 @@
 <li><a href="/snowpark-guide/limit/" style="color:#38bdf8">limit</a> ── 先頭から指定した行数だけを取得する。</li>
 <li><a href="/snowpark-guide/sample/" style="color:#38bdf8">sample</a> ── データの一部をランダムに抽出する。</li>
 <li><a href="/snowpark-guide/distinct/" style="color:#38bdf8">distinct / unique</a> ── 重複行を取り除く。メソッド名がSnowparkとPolarsで異なる点に注意。</li>
-<li><a href="/snowpark-guide/drop-duplicates/" style="color:#38bdf8">drop_duplicates</a> ── 指定した列の値が一致する行を重複とみなして間引く。</li></ul></section>
+<li><a href="/snowpark-guide/drop-duplicates/" style="color:#38bdf8">drop_duplicates</a> ── 指定した列の値が一致する行を重複とみなして間引く。</li>
+<li><a href="/snowpark-guide/between/" style="color:#38bdf8">between</a> ── 値が指定した範囲内（両端を含む）にあるかを判定する。</li>
+<li><a href="/snowpark-guide/is-in/" style="color:#38bdf8">in_ / isin</a> ── 値が指定したリストの中に含まれるかを判定する。</li></ul></section>
 <section style="margin-top:24px"><h2 style="font-size:1.1rem">集約・構造変換</h2><p style="color:#94a3b8;font-size:0.9rem">グループ化・集計・縦横の入れ替え</p><ul style="padding-left:20px"><li><a href="/snowpark-guide/group-by/" style="color:#38bdf8">group_by / groupBy</a> ── 指定した列の値でグループ化する。集約する前段階として使う。</li>
 <li><a href="/snowpark-guide/agg/" style="color:#38bdf8">agg</a> ── group_byで作ったグループごとに、集約の計算をまとめて指定する。</li>
 <li><a href="/snowpark-guide/count/" style="color:#38bdf8">count</a> ── 行数を数える。</li>
@@ -78,7 +80,8 @@
 <li><a href="/snowpark-guide/union-all/" style="color:#38bdf8">union_all / unionAll</a> ── 2つのDataFrameを縦に連結する。重複行はそのまま残す。</li>
 <li><a href="/snowpark-guide/union-by-name/" style="color:#38bdf8">union_by_name / unionByName</a> ── 列の並び順ではなく列名を基準に2つのDataFrameを連結する。</li>
 <li><a href="/snowpark-guide/intersect/" style="color:#38bdf8">intersect</a> ── 2つのDataFrameの両方に存在する行だけを残す（積集合）。</li>
-<li><a href="/snowpark-guide/subtract/" style="color:#38bdf8">subtract / except_</a> ── 片方のDataFrameから、もう片方にも存在する行を取り除く（差集合）。</li></ul></section>
+<li><a href="/snowpark-guide/subtract/" style="color:#38bdf8">subtract / except_</a> ── 片方のDataFrameから、もう片方にも存在する行を取り除く（差集合）。</li>
+<li><a href="/snowpark-guide/join-how-types/" style="color:#38bdf8">join の how（結合の種類）</a> ── inner/left/full/semi/anti など、結合の種類を切り替える。</li></ul></section>
 <section style="margin-top:24px"><h2 style="font-size:1.1rem">ソート</h2><p style="color:#94a3b8;font-size:0.9rem">並び順を決める</p><ul style="padding-left:20px"><li><a href="/snowpark-guide/order-by/" style="color:#38bdf8">order_by / sort</a> ── 行を指定した列の値で並べ替える。</li>
 <li><a href="/snowpark-guide/asc-desc/" style="color:#38bdf8">asc / desc</a> ── 列に昇順・降順の方向を持たせる。</li>
 <li><a href="/snowpark-guide/nulls-first-last/" style="color:#38bdf8">nulls_first / nulls_last</a> ── NULL値をソート結果の先頭・末尾どちらに置くかを指定する。</li></ul></section>
@@ -126,7 +129,8 @@
 <li><a href="/snowpark-guide/percent-rank-cume-dist/" style="color:#38bdf8">percent_rank / cume_dist</a> ── パーティション内での相対的な順位を、0〜1の割合で表す。</li>
 <li><a href="/snowpark-guide/first-value-last-value/" style="color:#38bdf8">first_value / last_value</a> ── パーティション内で並べ替えた順序の、先頭の値・末尾の値を各行に持たせる。</li></ul></section>
 <section style="margin-top:24px"><h2 style="font-size:1.1rem">Null処理</h2><p style="color:#94a3b8;font-size:0.9rem">欠損値の扱い方</p><ul style="padding-left:20px"><li><a href="/snowpark-guide/na-fill/" style="color:#38bdf8">na.fill（fillna）</a> ── NULL（欠損）を指定した値で埋める。</li>
-<li><a href="/snowpark-guide/na-drop/" style="color:#38bdf8">na.drop（dropna）</a> ── 指定した列がNULLの行を取り除く。</li></ul></section>
+<li><a href="/snowpark-guide/na-drop/" style="color:#38bdf8">na.drop（dropna）</a> ── 指定した列がNULLの行を取り除く。</li>
+<li><a href="/snowpark-guide/na-replace/" style="color:#38bdf8">na.replace</a> ── 特定の値（NULLとは限らない）を、別の値に一括で置き換える。</li></ul></section>
 <section style="margin-top:24px"><h2 style="font-size:1.1rem">実行・アクション・IO</h2><p style="color:#94a3b8;font-size:0.9rem">評価を起動する・結果を取り出す・保存する</p><ul style="padding-left:20px"><li><a href="/snowpark-guide/collect/" style="color:#38bdf8">collect</a> ── それまで積み上げた変換を実際に評価し、結果を手元に取得する。最も基本的なアクション。</li>
 <li><a href="/snowpark-guide/show/" style="color:#38bdf8">show</a> ── 結果の先頭数行を、確認用に画面へ表示する。</li>
 <li><a href="/snowpark-guide/first/" style="color:#38bdf8">first</a> ── 先頭の1行だけを取得する。</li>

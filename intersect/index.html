@@ -32,7 +32,7 @@
       src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9102538151148380"
       crossorigin="anonymous"
     ></script>
-    <script type="module" crossorigin src="../assets/index-Bg5oCDUL.js"></script>
+    <script type="module" crossorigin src="../assets/index-CDqs5wyM.js"></script>
     <link rel="stylesheet" crossorigin href="../assets/index-Cj1a5bcD.css">
   <script type="application/ld+json">{"@context":"https://schema.org","@type":"TechArticle","headline":"intersect","description":"2つのDataFrameの両方に存在する行だけを残す（積集合）。 Snowparkでの書き方とPolarsでの書き方を並べて解説します。","url":"https://study-apps.com/snowpark-guide/intersect/","dateModified":"2026-08-23","inLanguage":"ja"}</script>
   </head>
@@ -55,7 +55,7 @@
     <p>SnowparkはSQLのINTERSECTに変換される。Polarsの<code>LazyFrame</code>には直接のintersectメソッドが無いため、全列をキーにした<code>semi</code>結合で代用する。実行して確認したところ、この書き方で正しく積集合が得られる。</p>
     <h2 style="font-size:1.05rem;color:#b45309">移行時の落とし穴</h2>
     <p><code>how="semi"</code>結合は「もう片方に一致する行があるかどうか」だけを見る結合で、通常のjoinと違って結合相手側の列は出力に含まれない（左側の列だけが残る）。SQLのINTERSECTとは呼び方も返す列も違う概念なので、単純な言い換えとして覚えるより「semi結合」という独立した仕組みとして理解する方が誤解が少ない。</p>
-    <h2 style="font-size:1.05rem">結合・集合演算の他のメソッド</h2><ul style="padding-left:20px"><li><a href="/snowpark-guide/join/" style="color:#38bdf8">join</a> ── 2つのDataFrameを結合する。</li><li><a href="/snowpark-guide/union/" style="color:#38bdf8">union</a> ── 2つのDataFrameを縦に連結し、重複行を取り除く。</li><li><a href="/snowpark-guide/union-all/" style="color:#38bdf8">union_all / unionAll</a> ── 2つのDataFrameを縦に連結する。重複行はそのまま残す。</li><li><a href="/snowpark-guide/union-by-name/" style="color:#38bdf8">union_by_name / unionByName</a> ── 列の並び順ではなく列名を基準に2つのDataFrameを連結する。</li><li><a href="/snowpark-guide/subtract/" style="color:#38bdf8">subtract / except_</a> ── 片方のDataFrameから、もう片方にも存在する行を取り除く（差集合）。</li></ul>
+    <h2 style="font-size:1.05rem">結合・集合演算の他のメソッド</h2><ul style="padding-left:20px"><li><a href="/snowpark-guide/join/" style="color:#38bdf8">join</a> ── 2つのDataFrameを結合する。</li><li><a href="/snowpark-guide/union/" style="color:#38bdf8">union</a> ── 2つのDataFrameを縦に連結し、重複行を取り除く。</li><li><a href="/snowpark-guide/union-all/" style="color:#38bdf8">union_all / unionAll</a> ── 2つのDataFrameを縦に連結する。重複行はそのまま残す。</li><li><a href="/snowpark-guide/union-by-name/" style="color:#38bdf8">union_by_name / unionByName</a> ── 列の並び順ではなく列名を基準に2つのDataFrameを連結する。</li><li><a href="/snowpark-guide/subtract/" style="color:#38bdf8">subtract / except_</a> ── 片方のDataFrameから、もう片方にも存在する行を取り除く（差集合）。</li><li><a href="/snowpark-guide/join-how-types/" style="color:#38bdf8">join の how（結合の種類）</a> ── inner/left/full/semi/anti など、結合の種類を切り替える。</li></ul>
     
     <h2 style="font-size:1.05rem">出典・検証情報</h2>
     <ul style="padding-left:20px">

@@ -32,7 +32,7 @@
       src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9102538151148380"
       crossorigin="anonymous"
     ></script>
-    <script type="module" crossorigin src="../assets/index-Bg5oCDUL.js"></script>
+    <script type="module" crossorigin src="../assets/index-CDqs5wyM.js"></script>
     <link rel="stylesheet" crossorigin href="../assets/index-Cj1a5bcD.css">
   <script type="application/ld+json">{"@context":"https://schema.org","@type":"TechArticle","headline":"union","description":"2つのDataFrameを縦に連結し、重複行を取り除く。 Snowparkでの書き方とPolarsでの書き方を並べて解説します。","url":"https://study-apps.com/snowpark-guide/union/","dateModified":"2026-08-23","inLanguage":"ja"}</script>
   </head>
@@ -55,7 +55,7 @@
     <p>SnowparkのunionはSQLのUNION（重複排除あり）を発行する。Polarsの<code>pl.concat</code>は既定では単純な垂直連結だけを行い、重複排除はしないため<code>.unique()</code>を明示的に呼ぶ必要がある。</p>
     <h2 style="font-size:1.05rem;color:#b45309">移行時の落とし穴</h2>
     <p>Snowparkの<code>union</code>は重複を取り除く点が、他の多くのフレームワークの「union」という言葉から連想する挙動（単純な連結）と異なる。「重複を残したい」ときは次に説明する<code>union_all</code>を使う。</p>
-    <h2 style="font-size:1.05rem">結合・集合演算の他のメソッド</h2><ul style="padding-left:20px"><li><a href="/snowpark-guide/join/" style="color:#38bdf8">join</a> ── 2つのDataFrameを結合する。</li><li><a href="/snowpark-guide/union-all/" style="color:#38bdf8">union_all / unionAll</a> ── 2つのDataFrameを縦に連結する。重複行はそのまま残す。</li><li><a href="/snowpark-guide/union-by-name/" style="color:#38bdf8">union_by_name / unionByName</a> ── 列の並び順ではなく列名を基準に2つのDataFrameを連結する。</li><li><a href="/snowpark-guide/intersect/" style="color:#38bdf8">intersect</a> ── 2つのDataFrameの両方に存在する行だけを残す（積集合）。</li><li><a href="/snowpark-guide/subtract/" style="color:#38bdf8">subtract / except_</a> ── 片方のDataFrameから、もう片方にも存在する行を取り除く（差集合）。</li></ul>
+    <h2 style="font-size:1.05rem">結合・集合演算の他のメソッド</h2><ul style="padding-left:20px"><li><a href="/snowpark-guide/join/" style="color:#38bdf8">join</a> ── 2つのDataFrameを結合する。</li><li><a href="/snowpark-guide/union-all/" style="color:#38bdf8">union_all / unionAll</a> ── 2つのDataFrameを縦に連結する。重複行はそのまま残す。</li><li><a href="/snowpark-guide/union-by-name/" style="color:#38bdf8">union_by_name / unionByName</a> ── 列の並び順ではなく列名を基準に2つのDataFrameを連結する。</li><li><a href="/snowpark-guide/intersect/" style="color:#38bdf8">intersect</a> ── 2つのDataFrameの両方に存在する行だけを残す（積集合）。</li><li><a href="/snowpark-guide/subtract/" style="color:#38bdf8">subtract / except_</a> ── 片方のDataFrameから、もう片方にも存在する行を取り除く（差集合）。</li><li><a href="/snowpark-guide/join-how-types/" style="color:#38bdf8">join の how（結合の種類）</a> ── inner/left/full/semi/anti など、結合の種類を切り替える。</li></ul>
     
     <h2 style="font-size:1.05rem">出典・検証情報</h2>
     <ul style="padding-left:20px">

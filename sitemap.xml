@@ -15,6 +15,8 @@
   <url><loc>https://study-apps.com/snowpark-guide/sample/</loc><lastmod>2026-08-30</lastmod><priority>0.8</priority></url>
   <url><loc>https://study-apps.com/snowpark-guide/distinct/</loc><lastmod>2026-08-30</lastmod><priority>0.8</priority></url>
   <url><loc>https://study-apps.com/snowpark-guide/drop-duplicates/</loc><lastmod>2026-08-30</lastmod><priority>0.8</priority></url>
+  <url><loc>https://study-apps.com/snowpark-guide/between/</loc><lastmod>2026-08-30</lastmod><priority>0.8</priority></url>
+  <url><loc>https://study-apps.com/snowpark-guide/is-in/</loc><lastmod>2026-08-30</lastmod><priority>0.8</priority></url>
   <url><loc>https://study-apps.com/snowpark-guide/group-by/</loc><lastmod>2026-08-30</lastmod><priority>0.8</priority></url>
   <url><loc>https://study-apps.com/snowpark-guide/agg/</loc><lastmod>2026-08-30</lastmod><priority>0.8</priority></url>
   <url><loc>https://study-apps.com/snowpark-guide/count/</loc><lastmod>2026-08-30</lastmod><priority>0.8</priority></url>
@@ -34,6 +36,7 @@
   <url><loc>https://study-apps.com/snowpark-guide/union-by-name/</loc><lastmod>2026-08-30</lastmod><priority>0.8</priority></url>
   <url><loc>https://study-apps.com/snowpark-guide/intersect/</loc><lastmod>2026-08-30</lastmod><priority>0.8</priority></url>
   <url><loc>https://study-apps.com/snowpark-guide/subtract/</loc><lastmod>2026-08-30</lastmod><priority>0.8</priority></url>
+  <url><loc>https://study-apps.com/snowpark-guide/join-how-types/</loc><lastmod>2026-08-30</lastmod><priority>0.8</priority></url>
   <url><loc>https://study-apps.com/snowpark-guide/order-by/</loc><lastmod>2026-08-30</lastmod><priority>0.8</priority></url>
   <url><loc>https://study-apps.com/snowpark-guide/asc-desc/</loc><lastmod>2026-08-30</lastmod><priority>0.8</priority></url>
   <url><loc>https://study-apps.com/snowpark-guide/nulls-first-last/</loc><lastmod>2026-08-30</lastmod><priority>0.8</priority></url>
@@ -82,6 +85,7 @@
   <url><loc>https://study-apps.com/snowpark-guide/first-value-last-value/</loc><lastmod>2026-08-30</lastmod><priority>0.8</priority></url>
   <url><loc>https://study-apps.com/snowpark-guide/na-fill/</loc><lastmod>2026-08-30</lastmod><priority>0.8</priority></url>
   <url><loc>https://study-apps.com/snowpark-guide/na-drop/</loc><lastmod>2026-08-30</lastmod><priority>0.8</priority></url>
+  <url><loc>https://study-apps.com/snowpark-guide/na-replace/</loc><lastmod>2026-08-30</lastmod><priority>0.8</priority></url>
   <url><loc>https://study-apps.com/snowpark-guide/collect/</loc><lastmod>2026-08-30</lastmod><priority>0.8</priority></url>
   <url><loc>https://study-apps.com/snowpark-guide/show/</loc><lastmod>2026-08-30</lastmod><priority>0.8</priority></url>
   <url><loc>https://study-apps.com/snowpark-guide/first/</loc><lastmod>2026-08-30</lastmod><priority>0.8</priority></url>

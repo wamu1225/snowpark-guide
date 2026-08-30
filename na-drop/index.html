@@ -32,7 +32,7 @@
       src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9102538151148380"
       crossorigin="anonymous"
     ></script>
-    <script type="module" crossorigin src="../assets/index-Bg5oCDUL.js"></script>
+    <script type="module" crossorigin src="../assets/index-CDqs5wyM.js"></script>
     <link rel="stylesheet" crossorigin href="../assets/index-Cj1a5bcD.css">
   <script type="application/ld+json">{"@context":"https://schema.org","@type":"TechArticle","headline":"na.drop（dropna）","description":"指定した列がNULLの行を取り除く。 Snowparkでの書き方とPolarsでの書き方を並べて解説します。","url":"https://study-apps.com/snowpark-guide/na-drop/","dateModified":"2026-08-25","inLanguage":"ja"}</script>
   </head>
@@ -55,7 +55,7 @@
     <p>Snowparkは対象列に対する<code>IS NOT NULL</code>条件を自動生成する。Polarsも指定した列のいずれかがNULLの行を除外する。実行して確認したところ、両者とも同じ行が残る。</p>
     <h2 style="font-size:1.05rem;color:#b45309">移行時の落とし穴</h2>
     <p>Snowparkの<code>na.drop</code>には<code>how</code>引数（既定は<code>"any"</code>＝対象列のいずれか1つでもNULLなら削除、<code>"thresh"</code>と組み合わせて非NULL列数のしきい値も指定可能）があるが、Polarsの<code>drop_nulls</code>にはこの<code>how</code>に相当する引数が無く、常に「指定した列のいずれかがNULLなら削除」という単一の挙動になる。Snowpark側で<code>how="all"</code>（全列がNULLのときだけ削除）のような細かい制御をしていた場合、Polarsへ移すとそのままでは同じ挙動を再現できない。</p>
-    <h2 style="font-size:1.05rem">Null処理の他のメソッド</h2><ul style="padding-left:20px"><li><a href="/snowpark-guide/na-fill/" style="color:#38bdf8">na.fill（fillna）</a> ── NULL（欠損）を指定した値で埋める。</li></ul>
+    <h2 style="font-size:1.05rem">Null処理の他のメソッド</h2><ul style="padding-left:20px"><li><a href="/snowpark-guide/na-fill/" style="color:#38bdf8">na.fill（fillna）</a> ── NULL（欠損）を指定した値で埋める。</li><li><a href="/snowpark-guide/na-replace/" style="color:#38bdf8">na.replace</a> ── 特定の値（NULLとは限らない）を、別の値に一括で置き換える。</li></ul>
     
     <h2 style="font-size:1.05rem">出典・検証情報</h2>
     <ul style="padding-left:20px">
