@@ -113,4 +113,47 @@ export const filteringEntries: Entry[] = [
       date: '2026-08-21',
     },
   },
+  {
+    slug: 'between',
+    title: 'between',
+    category: 'filtering',
+    summary: '値が指定した範囲内（両端を含む）にあるかを判定する。',
+    snowparkCode: 'col("age").between(20, 29)',
+    polarsCode: 'pl.col("age").is_between(20, 29)',
+    difference:
+      '名前は違うが（`between`↔`is_between`）、**両端を含む**という定義まで一致する。実行して確認したところ、`[5,10,15,20]`に対する`is_between(10,15)`は`[False,True,True,False]`＝境界値の`10`と`15`もどちらも`True`になる。',
+    pitfall:
+      'Polarsの`is_between`には`closed`引数があり、`"both"`（既定・両端含む）以外に`"left"`（下限のみ含む）・`"right"`（上限のみ含む）・`"none"`（どちらも含まない）を指定できる。Snowparkの`between`にはこの調整機能が無く常に両端を含む固定の挙動なので、**片端だけ除きたい場合はSnowpark側では`(col >= lower) & (col < upper)`のように自分で組み立てる必要がある**。',
+    snowparkDocUrl:
+      'https://docs.snowflake.com/en/developer-guide/snowpark/reference/python/latest/snowpark/api/snowflake.snowpark.Column.between',
+    polarsDocUrl: 'https://docs.pola.rs/api/python/stable/reference/expressions/api/polars.Expr.is_between.html',
+    verified: {
+      polarsExecuted: true,
+      snowparkStaticChecked: true,
+      polarsVersion: '1.36.1',
+      snowparkSdkVersion: '1.51.1',
+      date: '2026-08-31',
+    },
+  },
+  {
+    slug: 'is-in',
+    title: 'in_ / isin',
+    category: 'filtering',
+    summary: '値が指定したリストの中に含まれるかを判定する。',
+    snowparkCode: 'col("status").in_("active", "pending")  # isin() は in_() の別名',
+    polarsCode: 'pl.col("status").is_in(["active", "pending"])',
+    difference:
+      'SnowparkはSQLの`IN`句に変換され、候補値を**可変長引数**として並べる（`in_("active","pending")`）か、リストを1つ渡すこともできる。Polarsの`is_in`は**リストを1つの引数として渡す**形に統一されている。実行して確認したところ、判定結果自体は同じ。',
+    pitfall:
+      'Snowparkの`in_`は`isin`という**別名（エイリアス）**も持つ（`inspect`で両方の実在を確認）。どちらを使っても同じだが、コードによって呼び方が揺れやすい。移植時は片方だけを探して「無い」と誤解しないよう、両方の名前で存在しうることを踏まえておく。',
+    snowparkDocUrl: 'https://docs.snowflake.com/en/developer-guide/snowpark/reference/python/latest/snowpark/api/snowflake.snowpark.Column.in_',
+    polarsDocUrl: 'https://docs.pola.rs/api/python/stable/reference/expressions/api/polars.Expr.is_in.html',
+    verified: {
+      polarsExecuted: true,
+      snowparkStaticChecked: true,
+      polarsVersion: '1.36.1',
+      snowparkSdkVersion: '1.51.1',
+      date: '2026-08-31',
+    },
+  },
 ];

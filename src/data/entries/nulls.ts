@@ -47,4 +47,26 @@ export const nullsEntries: Entry[] = [
       date: '2026-08-25',
     },
   },
+  {
+    slug: 'na-replace',
+    title: 'na.replace',
+    category: 'nulls',
+    summary: '特定の値（NULLとは限らない）を、別の値に一括で置き換える。',
+    snowparkCode: 'df.na.replace("N/A", None, subset=["status"])  # "N/A" という文字列をNULLに変換',
+    polarsCode: 'df.with_columns(pl.col("status").replace("N/A", None))',
+    difference:
+      '`na.fill`（NULLを値で埋める）・`na.drop`（NULLの行を消す）とは違い、`na.replace`は**NULLかどうかに関係なく、指定した特定の値を別の値に置き換える**（今回の例では逆に「文字列の"N/A"をNULLにする」）。Polarsの`.replace()`（`str.replace`ではなく`Expr`直下のもの）も**値の対応表（マッピング）で置き換える**という同じ考え方で、実行して確認したところ`"N/A"`だけが`null`に置き換わり他の値はそのまま残る。',
+    pitfall:
+      '**似た名前の`str.replace`（文字列の部分一致を置換）と混同しやすい**。`na.replace`／`Expr.replace`は**値そのものが完全一致したときだけ**置き換える辞書的な操作で、`contains`のページで説明した正規表現や部分一致とは無関係。`replace`という同じ単語が「部分文字列の置換」と「値の対応表による置換」という**性質の異なる2つの操作**を指しており、Polars側は`.str.replace()`（文字列部分一致）と`.replace()`（値マッピング、`.str`を付けない）という**名前空間の有無だけで区別される**点に注意。',
+    snowparkDocUrl:
+      'https://docs.snowflake.com/en/developer-guide/snowpark/reference/python/latest/snowpark/api/snowflake.snowpark.DataFrameNaFunctions.replace',
+    polarsDocUrl: 'https://docs.pola.rs/api/python/stable/reference/expressions/api/polars.Expr.replace.html',
+    verified: {
+      polarsExecuted: true,
+      snowparkStaticChecked: true,
+      polarsVersion: '1.36.1',
+      snowparkSdkVersion: '1.51.1',
+      date: '2026-08-31',
+    },
+  },
 ];

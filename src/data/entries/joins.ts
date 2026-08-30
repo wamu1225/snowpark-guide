@@ -135,4 +135,25 @@ export const joinsEntries: Entry[] = [
       date: '2026-08-23',
     },
   },
+  {
+    slug: 'join-how-types',
+    title: 'join の how（結合の種類）',
+    category: 'joins',
+    summary: 'inner/left/full/semi/anti など、結合の種類を切り替える。',
+    snowparkCode: 'df1.join(df2, on="id", how="semi")   # df1側でdf2に一致する行だけを残す（df2の列は付かない）\ndf1.join(df2, on="id", how="anti")  # df1側でdf2に一致しない行だけを残す',
+    polarsCode: 'ldf1.join(ldf2, on="id", how="semi")\nldf1.join(ldf2, on="id", how="anti")',
+    difference:
+      'Snowpark公式ドキュメントに列挙されている`how`の値（`inner`/`left`・`leftouter`/`right`・`rightouter`/`full`・`outer`・`fullouter`/`semi`・`leftsemi`/`anti`・`leftanti`/`cross`/`asof`）は、**`semi`・`anti`を含めてPolarsの`how`とほぼ同じ語彙**。`semi`結合は「相手に一致する行だけを残すが、相手側の列は付けない」、`anti`結合は「相手に一致しない行だけを残す」というSQLではやや馴染みの薄い結合で、両APIとも同じ意味・同じ名前で使える。',
+    pitfall:
+      '**`on`に同じ列名を渡した場合の結果列の扱いがAPI間で違う**（`how="full"`など外部結合で顕在化）。Snowpark公式ドキュメントは「列名の文字列を渡すと、結合キー列は1つにマージされる」と明記している。一方Polarsを実行して確認したところ、`how="full"`で`on="id"`を指定しても、**結果には`id`と`id_right`という2つの列が別々に残る**（一致しなかった行では片方が`null`になる）。Snowpark側のコードを移植して「同じ列名を渡したから1列にまとまるはず」と思っていると、Polars側では列が重複したまま残っていて後続処理でつまずく。',
+    snowparkDocUrl: 'https://docs.snowflake.com/en/developer-guide/snowpark/reference/python/latest/snowpark/api/snowflake.snowpark.DataFrame.join',
+    polarsDocUrl: 'https://docs.pola.rs/api/python/stable/reference/lazyframe/api/polars.LazyFrame.join.html',
+    verified: {
+      polarsExecuted: true,
+      snowparkStaticChecked: true,
+      polarsVersion: '1.36.1',
+      snowparkSdkVersion: '1.51.1',
+      date: '2026-08-31',
+    },
+  },
 ];
