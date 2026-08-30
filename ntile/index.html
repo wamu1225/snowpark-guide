@@ -1,0 +1,69 @@
+<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" type="image/svg+xml" href="../favicon.svg" />
+    <title>ntile｜Snowpark ⇄ Polars 逆引き｜Snowpark 実践ガイド</title>
+    <meta
+      name="description"
+      content="Snowpark Pythonの基礎知識（アーキテクチャ・Spark比較・Polars比較・UDF/UDTF/SPROC・料金・ML）と、DataFrame/Column APIをPolarsの同等コードと並べて確認できる逆引きリファレンスをまとめたサイトです。"
+    />
+    <link rel="canonical" href="https://study-apps.com/snowpark-guide/ntile/" />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="Snowpark 実践ガイド" />
+    <meta property="og:title" content="ntile｜Snowpark ⇄ Polars 逆引き｜Snowpark 実践ガイド" />
+    <meta
+      property="og:description"
+      content="Snowpark Pythonの基礎知識と、DataFrame/Column APIをPolarsの同等コードと並べて確認できる逆引きリファレンスをまとめたサイトです。"
+    />
+    <meta property="og:url" content="https://study-apps.com/snowpark-guide/ntile/" />
+    <meta property="og:image" content="https://study-apps.com/snowpark-guide/ogp.png" />
+    <meta property="og:locale" content="ja_JP" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="ntile｜Snowpark ⇄ Polars 逆引き｜Snowpark 実践ガイド" />
+    <meta
+      name="twitter:description"
+      content="Snowpark Pythonの基礎知識と、DataFrame/Column APIをPolarsの同等コードと並べて確認できる逆引きリファレンスをまとめたサイトです。"
+    />
+    <meta name="twitter:image" content="https://study-apps.com/snowpark-guide/ogp.png" />
+    <script
+      async
+      src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9102538151148380"
+      crossorigin="anonymous"
+    ></script>
+    <script type="module" crossorigin src="../assets/index-Bg5oCDUL.js"></script>
+    <link rel="stylesheet" crossorigin href="../assets/index-Cj1a5bcD.css">
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"TechArticle","headline":"ntile","description":"パーティション内の行を、指定した個数のグループに行数ができるだけ均等になるよう分割する。 Snowparkでの書き方とPolarsでの書き方を並べて解説します。","url":"https://study-apps.com/snowpark-guide/ntile/","dateModified":"2026-08-30","inLanguage":"ja"}</script>
+  </head>
+  <body>
+    <div id="root"><div style="max-width:760px;margin:0 auto;padding:24px 16px;font-family:sans-serif;line-height:1.8;color:#0f172a">
+    <p style="color:#94a3b8;font-size:0.9rem"><a href="/snowpark-guide/" style="color:#94a3b8">トップ</a> / ウィンドウ関数</p>
+    <h1 style="font-family:monospace;font-size:1.6rem;margin-bottom:8px">ntile</h1>
+    <p style="color:#475569">パーティション内の行を、指定した個数のグループに行数ができるだけ均等になるよう分割する。</p>
+    <div style="display:flex;flex-wrap:wrap;gap:16px;margin:20px 0">
+      <div style="flex:1;min-width:260px">
+        <h2 style="color:#0284c7;font-size:0.9rem">SNOWPARK <span style="opacity:0.75;font-weight:500">静的検証のみ</span></h2>
+        <pre style="background:#0f172a;color:#e2e8f0;border-radius:10px;padding:14px;overflow-x:auto"><code>ntile(3).over(window_spec)</code></pre>
+      </div>
+      <div style="flex:1;min-width:260px">
+        <h2 style="color:#c026d3;font-size:0.9rem">POLARS <span style="opacity:0.75;font-weight:500">実行確認済み</span></h2>
+        <pre style="background:#0f172a;color:#e2e8f0;border-radius:10px;padding:14px;overflow-x:auto"><code>((pl.col(&quot;v&quot;).rank(method=&quot;ordinal&quot;) - 1) * 3 // pl.col(&quot;v&quot;).count()).over(&quot;grp&quot;)</code></pre>
+      </div>
+    </div>
+    <h2 style="font-size:1.05rem">挙動・設計の違い</h2>
+    <p>Snowflake公式ドキュメントは「順序付けされたデータセットを、指定したバケット数で<strong>行数が均等になるよう</strong>分割する」と明記している＝<strong>値そのものではなく行の順位（rank）</strong>が基準。Polarsには同名の専用関数が無いため、<code>rank(method="ordinal")</code>（1位・2位…と重複無しの順位）を使って同じ計算式を組み立てる必要がある。7行を3グループに分けて実行して確認したところ、両者とも<code>[3,2,2]</code>行ずつに割れる。</p>
+    <h2 style="font-size:1.05rem;color:#b45309">移行時の落とし穴</h2>
+    <p><strong>似て非なる<code>qcut</code>（値の分位点で区切る関数）を使うと失敗することがある</strong>。実行して確認したところ、値に重複が多いデータ（例：<code>[1,1,1,1,1,1,100]</code>を3分位に分けようとする）では、<code>qcut</code>は分位点の境界値が重複してしまい<code>quantiles are not unique</code>というエラーで<strong>そもそも実行できない</strong>。一方、上記の<code>rank</code>ベースの式は値の重複に関係なく常に行数で均等に割れる。「NTILEの代わり」として<code>qcut</code>を選ぶと、データによっては動かないコードになる。</p>
+    <h2 style="font-size:1.05rem">ウィンドウ関数の他のメソッド</h2><ul style="padding-left:20px"><li><a href="/snowpark-guide/window-spec/" style="color:#38bdf8">Window.partition_by / Window.order_by</a> ── グループ（パーティション）ごとに、行をまたいだ計算をするための土台を定義する。</li><li><a href="/snowpark-guide/rank/" style="color:#38bdf8">rank</a> ── パーティション内で順位をつける。同じ値には同じ順位がつき、その分だけ次の順位を飛ばす。</li><li><a href="/snowpark-guide/dense-rank/" style="color:#38bdf8">dense_rank</a> ── パーティション内で順位をつける。同じ値には同じ順位がつくが、次の順位は飛ばさない。</li><li><a href="/snowpark-guide/row-number/" style="color:#38bdf8">row_number</a> ── パーティション内で1から始まる連番をふる。同率でも必ず別の番号になる。</li><li><a href="/snowpark-guide/lag/" style="color:#38bdf8">lag</a> ── パーティション内で、1つ前（過去）の行の値を取得する。</li><li><a href="/snowpark-guide/lead/" style="color:#38bdf8">lead</a> ── パーティション内で、1つ後（未来）の行の値を取得する。</li><li><a href="/snowpark-guide/percent-rank-cume-dist/" style="color:#38bdf8">percent_rank / cume_dist</a> ── パーティション内での相対的な順位を、0〜1の割合で表す。</li><li><a href="/snowpark-guide/first-value-last-value/" style="color:#38bdf8">first_value / last_value</a> ── パーティション内で並べ替えた順序の、先頭の値・末尾の値を各行に持たせる。</li></ul>
+    
+    <h2 style="font-size:1.05rem">出典・検証情報</h2>
+    <ul style="padding-left:20px">
+      <li><a href="https://docs.snowflake.com/en/developer-guide/snowpark/reference/python/latest/snowpark/api/snowflake.snowpark.functions.ntile" style="color:#38bdf8">Snowpark 公式リファレンス（ntile）</a></li>
+      <li><a href="https://docs.pola.rs/api/python/stable/reference/expressions/api/polars.Expr.rank.html" style="color:#38bdf8">Polars 公式リファレンス（ntile）</a></li>
+    </ul>
+    <p style="color:#94a3b8;font-size:0.85rem">Polars 1.36.1 で実行確認 / Snowpark Python SDK 1.51.1 で静的検証（2026-08-30）</p>
+    <nav style="margin-top:24px;display:flex;gap:16px;flex-wrap:wrap;font-size:0.85rem"><a href="/snowpark-guide/about/" style="color:#94a3b8">このサイトについて</a><a href="/snowpark-guide/privacy/" style="color:#94a3b8">プライバシーポリシー</a></nav>
+  </div></div>
+  </body>
+</html>

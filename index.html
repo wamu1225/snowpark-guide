@@ -32,7 +32,7 @@
       src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9102538151148380"
       crossorigin="anonymous"
     ></script>
-    <script type="module" crossorigin src="./assets/index-_B6bxjf8.js"></script>
+    <script type="module" crossorigin src="./assets/index-Bg5oCDUL.js"></script>
     <link rel="stylesheet" crossorigin href="./assets/index-Cj1a5bcD.css">
   <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebSite","name":"Snowpark 実践ガイド","url":"https://study-apps.com/snowpark-guide/","description":"Snowpark Pythonの基礎知識（アーキテクチャ・Spark比較・Polars比較・UDF/UDTF/SPROC・料金・ML）と、DataFrame/Column APIをPolarsの同等コードと並べて確認できる逆引きリファレンスをまとめたサイトです。","inLanguage":"ja"}</script>
   </head>
@@ -71,7 +71,8 @@
 <li><a href="/snowpark-guide/unpivot/" style="color:#38bdf8">unpivot</a> ── pivotの逆。複数列を1つの列にまとめる（横持ちから縦持ちへ）。</li>
 <li><a href="/snowpark-guide/array-agg/" style="color:#38bdf8">array_agg</a> ── グループ内の複数行の値を、1つの配列（リスト）にまとめる。</li>
 <li><a href="/snowpark-guide/listagg/" style="color:#38bdf8">listagg</a> ── グループ内の複数行の文字列を、区切り文字でつないだ1つの文字列にまとめる。</li>
-<li><a href="/snowpark-guide/median-stddev/" style="color:#38bdf8">median / stddev</a> ── 中央値と標準偏差を求める（外れ値の影響を受けにくい代表値・散らばりの指標）。</li></ul></section>
+<li><a href="/snowpark-guide/median-stddev/" style="color:#38bdf8">median / stddev</a> ── 中央値と標準偏差を求める（外れ値の影響を受けにくい代表値・散らばりの指標）。</li>
+<li><a href="/snowpark-guide/count-distinct-approx-count-distinct/" style="color:#38bdf8">count_distinct / approx_count_distinct</a> ── 重複を除いた値の種類数（ユニーク数）を求める。近似版は誤差を許容する代わりに高速。</li></ul></section>
 <section style="margin-top:24px"><h2 style="font-size:1.1rem">結合・集合演算</h2><p style="color:#94a3b8;font-size:0.9rem">複数のテーブルを1つにする</p><ul style="padding-left:20px"><li><a href="/snowpark-guide/join/" style="color:#38bdf8">join</a> ── 2つのDataFrameを結合する。</li>
 <li><a href="/snowpark-guide/union/" style="color:#38bdf8">union</a> ── 2つのDataFrameを縦に連結し、重複行を取り除く。</li>
 <li><a href="/snowpark-guide/union-all/" style="color:#38bdf8">union_all / unionAll</a> ── 2つのDataFrameを縦に連結する。重複行はそのまま残す。</li>
@@ -109,13 +110,21 @@
 <li><a href="/snowpark-guide/initcap/" style="color:#38bdf8">initcap</a> ── 各単語の先頭だけを大文字にし、残りを小文字にする（タイトルケース化）。</li>
 <li><a href="/snowpark-guide/current-date-timestamp/" style="color:#38bdf8">current_date / current_timestamp</a> ── 現在の日付・日時を取得する。</li>
 <li><a href="/snowpark-guide/array-contains/" style="color:#38bdf8">array_contains</a> ── 配列の中に指定した値が含まれているかを判定する。</li>
-<li><a href="/snowpark-guide/parse-json-object-construct/" style="color:#38bdf8">parse_json / object_construct</a> ── 文字列をJSON（半構造化データ）として解釈する／複数の値からJSONオブジェクトを組み立てる。</li></ul></section>
+<li><a href="/snowpark-guide/parse-json-object-construct/" style="color:#38bdf8">parse_json / object_construct</a> ── 文字列をJSON（半構造化データ）として解釈する／複数の値からJSONオブジェクトを組み立てる。</li>
+<li><a href="/snowpark-guide/sqrt-exp-ln/" style="color:#38bdf8">sqrt / exp / ln</a> ── 平方根、指数関数（eのべき乗）、自然対数を求める。</li>
+<li><a href="/snowpark-guide/left-right/" style="color:#38bdf8">left / right</a> ── 文字列の先頭・末尾から指定した文字数を取り出す。</li>
+<li><a href="/snowpark-guide/reverse/" style="color:#38bdf8">reverse</a> ── 文字列の文字の並び順を反転させる。</li>
+<li><a href="/snowpark-guide/charindex/" style="color:#38bdf8">charindex</a> ── 文字列の中で、指定した部分文字列が最初に現れる位置を求める。</li>
+<li><a href="/snowpark-guide/to-decimal-to-varchar/" style="color:#38bdf8">to_decimal / to_varchar</a> ── 文字列を指定した精度の数値に変換する／数値を文字列に変換する（書式指定つき）。</li></ul></section>
 <section style="margin-top:24px"><h2 style="font-size:1.1rem">ウィンドウ関数</h2><p style="color:#94a3b8;font-size:0.9rem">行をまたいだ計算（順位・累積・移動平均）</p><ul style="padding-left:20px"><li><a href="/snowpark-guide/window-spec/" style="color:#38bdf8">Window.partition_by / Window.order_by</a> ── グループ（パーティション）ごとに、行をまたいだ計算をするための土台を定義する。</li>
 <li><a href="/snowpark-guide/rank/" style="color:#38bdf8">rank</a> ── パーティション内で順位をつける。同じ値には同じ順位がつき、その分だけ次の順位を飛ばす。</li>
 <li><a href="/snowpark-guide/dense-rank/" style="color:#38bdf8">dense_rank</a> ── パーティション内で順位をつける。同じ値には同じ順位がつくが、次の順位は飛ばさない。</li>
 <li><a href="/snowpark-guide/row-number/" style="color:#38bdf8">row_number</a> ── パーティション内で1から始まる連番をふる。同率でも必ず別の番号になる。</li>
 <li><a href="/snowpark-guide/lag/" style="color:#38bdf8">lag</a> ── パーティション内で、1つ前（過去）の行の値を取得する。</li>
-<li><a href="/snowpark-guide/lead/" style="color:#38bdf8">lead</a> ── パーティション内で、1つ後（未来）の行の値を取得する。</li></ul></section>
+<li><a href="/snowpark-guide/lead/" style="color:#38bdf8">lead</a> ── パーティション内で、1つ後（未来）の行の値を取得する。</li>
+<li><a href="/snowpark-guide/ntile/" style="color:#38bdf8">ntile</a> ── パーティション内の行を、指定した個数のグループに行数ができるだけ均等になるよう分割する。</li>
+<li><a href="/snowpark-guide/percent-rank-cume-dist/" style="color:#38bdf8">percent_rank / cume_dist</a> ── パーティション内での相対的な順位を、0〜1の割合で表す。</li>
+<li><a href="/snowpark-guide/first-value-last-value/" style="color:#38bdf8">first_value / last_value</a> ── パーティション内で並べ替えた順序の、先頭の値・末尾の値を各行に持たせる。</li></ul></section>
 <section style="margin-top:24px"><h2 style="font-size:1.1rem">Null処理</h2><p style="color:#94a3b8;font-size:0.9rem">欠損値の扱い方</p><ul style="padding-left:20px"><li><a href="/snowpark-guide/na-fill/" style="color:#38bdf8">na.fill（fillna）</a> ── NULL（欠損）を指定した値で埋める。</li>
 <li><a href="/snowpark-guide/na-drop/" style="color:#38bdf8">na.drop（dropna）</a> ── 指定した列がNULLの行を取り除く。</li></ul></section>
 <section style="margin-top:24px"><h2 style="font-size:1.1rem">実行・アクション・IO</h2><p style="color:#94a3b8;font-size:0.9rem">評価を起動する・結果を取り出す・保存する</p><ul style="padding-left:20px"><li><a href="/snowpark-guide/collect/" style="color:#38bdf8">collect</a> ── それまで積み上げた変換を実際に評価し、結果を手元に取得する。最も基本的なアクション。</li>

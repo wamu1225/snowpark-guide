@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" type="image/svg+xml" href="../favicon.svg" />
+    <title>left / right｜Snowpark ⇄ Polars 逆引き｜Snowpark 実践ガイド</title>
+    <meta
+      name="description"
+      content="Snowpark Pythonの基礎知識（アーキテクチャ・Spark比較・Polars比較・UDF/UDTF/SPROC・料金・ML）と、DataFrame/Column APIをPolarsの同等コードと並べて確認できる逆引きリファレンスをまとめたサイトです。"
+    />
+    <link rel="canonical" href="https://study-apps.com/snowpark-guide/left-right/" />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="Snowpark 実践ガイド" />
+    <meta property="og:title" content="left / right｜Snowpark ⇄ Polars 逆引き｜Snowpark 実践ガイド" />
+    <meta
+      property="og:description"
+      content="Snowpark Pythonの基礎知識と、DataFrame/Column APIをPolarsの同等コードと並べて確認できる逆引きリファレンスをまとめたサイトです。"
+    />
+    <meta property="og:url" content="https://study-apps.com/snowpark-guide/left-right/" />
+    <meta property="og:image" content="https://study-apps.com/snowpark-guide/ogp.png" />
+    <meta property="og:locale" content="ja_JP" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="left / right｜Snowpark ⇄ Polars 逆引き｜Snowpark 実践ガイド" />
+    <meta
+      name="twitter:description"
+      content="Snowpark Pythonの基礎知識と、DataFrame/Column APIをPolarsの同等コードと並べて確認できる逆引きリファレンスをまとめたサイトです。"
+    />
+    <meta name="twitter:image" content="https://study-apps.com/snowpark-guide/ogp.png" />
+    <script
+      async
+      src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9102538151148380"
+      crossorigin="anonymous"
+    ></script>
+    <script type="module" crossorigin src="../assets/index-Bg5oCDUL.js"></script>
+    <link rel="stylesheet" crossorigin href="../assets/index-Cj1a5bcD.css">
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"TechArticle","headline":"left / right","description":"文字列の先頭・末尾から指定した文字数を取り出す。 Snowparkでの書き方とPolarsでの書き方を並べて解説します。","url":"https://study-apps.com/snowpark-guide/left-right/","dateModified":"2026-08-30","inLanguage":"ja"}</script>
+  </head>
+  <body>
+    <div id="root"><div style="max-width:760px;margin:0 auto;padding:24px 16px;font-family:sans-serif;line-height:1.8;color:#0f172a">
+    <p style="color:#94a3b8;font-size:0.9rem"><a href="/snowpark-guide/" style="color:#94a3b8">トップ</a> / 式評価・文字列・型変換</p>
+    <h1 style="font-family:monospace;font-size:1.6rem;margin-bottom:8px">left / right</h1>
+    <p style="color:#475569">文字列の先頭・末尾から指定した文字数を取り出す。</p>
+    <div style="display:flex;flex-wrap:wrap;gap:16px;margin:20px 0">
+      <div style="flex:1;min-width:260px">
+        <h2 style="color:#0284c7;font-size:0.9rem">SNOWPARK <span style="opacity:0.75;font-weight:500">静的検証のみ</span></h2>
+        <pre style="background:#0f172a;color:#e2e8f0;border-radius:10px;padding:14px;overflow-x:auto"><code>left(col(&quot;code&quot;), 3)
+right(col(&quot;code&quot;), 3)</code></pre>
+      </div>
+      <div style="flex:1;min-width:260px">
+        <h2 style="color:#c026d3;font-size:0.9rem">POLARS <span style="opacity:0.75;font-weight:500">実行確認済み</span></h2>
+        <pre style="background:#0f172a;color:#e2e8f0;border-radius:10px;padding:14px;overflow-x:auto"><code>pl.col(&quot;code&quot;).str.slice(0, 3)
+pl.col(&quot;code&quot;).str.slice(-3)</code></pre>
+      </div>
+    </div>
+    <h2 style="font-size:1.05rem">挙動・設計の違い</h2>
+    <p>Snowparkには<code>left</code>/<code>right</code>という専用の関数があるが、Polarsには同名の専用メソッドが無く、<code>substring</code>のページで扱った<strong><code>str.slice</code>を使い分ける</strong>（開始位置<code>0</code>から3文字＝先頭3文字、開始位置<code>-3</code>＝末尾から3文字目以降を最後まで）。<code>"ABCDEF"</code>を実行して確認したところ、<code>left(_, 3)</code>は<code>"ABC"</code>、<code>str.slice(0,3)</code>も<code>"ABC"</code>、<code>right(_, 3)</code>は<code>"DEF"</code>、<code>str.slice(-3)</code>も<code>"DEF"</code>で一致する。</p>
+    <h2 style="font-size:1.05rem;color:#b45309">移行時の落とし穴</h2>
+    <p><code>right</code>に対応する<code>str.slice(-3)</code>は<strong>「末尾から3文字」を負のインデックスの開始位置だけで表現</strong>しており、<code>substring</code>のページで説明した1ベース/0ベースの違いに加えて、<strong>負の数を使う書き方に慣れていないと直感的に読みにくい</strong>。<code>str.slice(-3)</code>は「末尾から3文字目の位置から、指定が無ければ最後まで」という意味で、<code>length</code>引数を省略できる点も<code>left</code>側（<code>str.slice(0,3)</code>は<code>length</code>必須）との非対称性として押さえておく。</p>
+    <h2 style="font-size:1.05rem">式評価・文字列・型変換の他のメソッド</h2><ul style="padding-left:20px"><li><a href="/snowpark-guide/when-otherwise/" style="color:#38bdf8">when / otherwise</a> ── 条件に応じて異なる値を返す（複数分岐の条件式）。</li><li><a href="/snowpark-guide/iff/" style="color:#38bdf8">iff</a> ── 条件が真か偽かで2つの値のどちらかを返す（2分岐専用のショートカット）。</li><li><a href="/snowpark-guide/is-null/" style="color:#38bdf8">is_null / is_not_null</a> ── 値がNULL（欠損）かどうかを判定する。</li><li><a href="/snowpark-guide/coalesce/" style="color:#38bdf8">coalesce</a> ── 複数の列を左から順に見て、最初に見つかったNULLでない値を返す。</li><li><a href="/snowpark-guide/cast/" style="color:#38bdf8">cast</a> ── 列の型を別の型に変換する。</li><li><a href="/snowpark-guide/substring/" style="color:#38bdf8">substring</a> ── 文字列の一部を指定した位置から切り出す。</li><li><a href="/snowpark-guide/concat/" style="color:#38bdf8">concat（文字列連結）</a> ── 複数の列・文字列を1つにつなげる。</li><li><a href="/snowpark-guide/upper-lower/" style="color:#38bdf8">upper / lower</a> ── 文字列を大文字・小文字に統一する。</li><li><a href="/snowpark-guide/trim/" style="color:#38bdf8">trim / ltrim / rtrim</a> ── 文字列の前後にある空白（または指定した文字）を取り除く。</li><li><a href="/snowpark-guide/to-date/" style="color:#38bdf8">to_date</a> ── 文字列を日付型に変換する。</li><li><a href="/snowpark-guide/date-trunc/" style="color:#38bdf8">date_trunc</a> ── 日付・時刻を指定した単位（月・年など）で切り捨てる。</li><li><a href="/snowpark-guide/datediff/" style="color:#38bdf8">datediff</a> ── 2つの日付・時刻の差を、指定した単位（日数など）で求める。</li><li><a href="/snowpark-guide/dateadd/" style="color:#38bdf8">dateadd</a> ── 日付・時刻に一定期間を加算（または減算）する。</li><li><a href="/snowpark-guide/round/" style="color:#38bdf8">round</a> ── 数値を指定した桁数で四捨五入する。</li><li><a href="/snowpark-guide/regexp-replace/" style="color:#38bdf8">regexp_replace</a> ── 正規表現にマッチした部分を別の文字列に置き換える。</li><li><a href="/snowpark-guide/split/" style="color:#38bdf8">split</a> ── 文字列を区切り文字で分割し、配列（リスト）にする。</li><li><a href="/snowpark-guide/md5/" style="color:#38bdf8">md5 / sha2</a> ── 文字列からハッシュ値を計算する（重複検知・疑似的な主キー生成などに使う）。</li><li><a href="/snowpark-guide/length/" style="color:#38bdf8">length</a> ── 文字列の長さ（文字数）を求める。</li><li><a href="/snowpark-guide/contains/" style="color:#38bdf8">contains</a> ── 文字列に指定した部分文字列が含まれているかを判定する。</li><li><a href="/snowpark-guide/startswith-endswith/" style="color:#38bdf8">startswith / endswith</a> ── 文字列が指定した文字列で始まる／終わるかを判定する。</li><li><a href="/snowpark-guide/replace/" style="color:#38bdf8">replace（文字列の置き換え）</a> ── 文字列中の一致した部分を、別の文字列に置き換える（正規表現ではない単純一致）。</li><li><a href="/snowpark-guide/abs-ceil-floor/" style="color:#38bdf8">abs / ceil / floor</a> ── 絶対値、切り上げ、切り下げを求める基本的な数値関数。</li><li><a href="/snowpark-guide/greatest-least/" style="color:#38bdf8">greatest / least</a> ── 複数の列を横に比較し、行ごとの最大値・最小値を求める。</li><li><a href="/snowpark-guide/date-parts/" style="color:#38bdf8">year / month / dayofmonth</a> ── 日付・時刻から年・月・日の値だけを取り出す。</li><li><a href="/snowpark-guide/lpad-rpad/" style="color:#38bdf8">lpad / rpad</a> ── 文字列の左側・右側を指定した文字で埋め、一定の長さに揃える。</li><li><a href="/snowpark-guide/initcap/" style="color:#38bdf8">initcap</a> ── 各単語の先頭だけを大文字にし、残りを小文字にする（タイトルケース化）。</li><li><a href="/snowpark-guide/current-date-timestamp/" style="color:#38bdf8">current_date / current_timestamp</a> ── 現在の日付・日時を取得する。</li><li><a href="/snowpark-guide/array-contains/" style="color:#38bdf8">array_contains</a> ── 配列の中に指定した値が含まれているかを判定する。</li><li><a href="/snowpark-guide/parse-json-object-construct/" style="color:#38bdf8">parse_json / object_construct</a> ── 文字列をJSON（半構造化データ）として解釈する／複数の値からJSONオブジェクトを組み立てる。</li><li><a href="/snowpark-guide/sqrt-exp-ln/" style="color:#38bdf8">sqrt / exp / ln</a> ── 平方根、指数関数（eのべき乗）、自然対数を求める。</li><li><a href="/snowpark-guide/reverse/" style="color:#38bdf8">reverse</a> ── 文字列の文字の並び順を反転させる。</li><li><a href="/snowpark-guide/charindex/" style="color:#38bdf8">charindex</a> ── 文字列の中で、指定した部分文字列が最初に現れる位置を求める。</li><li><a href="/snowpark-guide/to-decimal-to-varchar/" style="color:#38bdf8">to_decimal / to_varchar</a> ── 文字列を指定した精度の数値に変換する／数値を文字列に変換する（書式指定つき）。</li></ul>
+    
+    <h2 style="font-size:1.05rem">出典・検証情報</h2>
+    <ul style="padding-left:20px">
+      <li><a href="https://docs.snowflake.com/en/developer-guide/snowpark/reference/python/latest/snowpark/api/snowflake.snowpark.functions.left" style="color:#38bdf8">Snowpark 公式リファレンス（left / right）</a></li>
+      <li><a href="https://docs.pola.rs/api/python/stable/reference/expressions/api/polars.Expr.str.slice.html" style="color:#38bdf8">Polars 公式リファレンス（left / right）</a></li>
+    </ul>
+    <p style="color:#94a3b8;font-size:0.85rem">Polars 1.36.1 で実行確認 / Snowpark Python SDK 1.51.1 で静的検証（2026-08-30）</p>
+    <nav style="margin-top:24px;display:flex;gap:16px;flex-wrap:wrap;font-size:0.85rem"><a href="/snowpark-guide/about/" style="color:#94a3b8">このサイトについて</a><a href="/snowpark-guide/privacy/" style="color:#94a3b8">プライバシーポリシー</a></nav>
+  </div></div>
+  </body>
+</html>

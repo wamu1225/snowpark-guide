@@ -32,7 +32,7 @@
       src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9102538151148380"
       crossorigin="anonymous"
     ></script>
-    <script type="module" crossorigin src="../assets/index-_B6bxjf8.js"></script>
+    <script type="module" crossorigin src="../assets/index-Bg5oCDUL.js"></script>
     <link rel="stylesheet" crossorigin href="../assets/index-Cj1a5bcD.css">
   <script type="application/ld+json">{"@context":"https://schema.org","@type":"TechArticle","headline":"dense_rank","description":"パーティション内で順位をつける。同じ値には同じ順位がつくが、次の順位は飛ばさない。 Snowparkでの書き方とPolarsでの書き方を並べて解説します。","url":"https://study-apps.com/snowpark-guide/dense-rank/","dateModified":"2026-08-24","inLanguage":"ja"}</script>
   </head>
@@ -55,7 +55,7 @@
     <p>SnowparkはSQLの<code>DENSE_RANK()</code>に変換される。Polarsは<code>.rank(method="dense")</code>で対応する。実行して確認したところ、同率が2件あっても次の順位は2から始まる（<code>rank</code>のときの「3から始まる」との違いが確認できた）。</p>
     <h2 style="font-size:1.05rem;color:#b45309">移行時の落とし穴</h2>
     <p><code>rank</code>との違いは<code>method</code>引数の値（<code>"min"</code>か<code>"dense"</code>か）だけで、呼び出しの形はほぼ同じ。どちらを使うつもりだったか、書くときに<code>method</code>の値を見て確認する習慣をつけると取り違えを防げる。</p>
-    <h2 style="font-size:1.05rem">ウィンドウ関数の他のメソッド</h2><ul style="padding-left:20px"><li><a href="/snowpark-guide/window-spec/" style="color:#38bdf8">Window.partition_by / Window.order_by</a> ── グループ（パーティション）ごとに、行をまたいだ計算をするための土台を定義する。</li><li><a href="/snowpark-guide/rank/" style="color:#38bdf8">rank</a> ── パーティション内で順位をつける。同じ値には同じ順位がつき、その分だけ次の順位を飛ばす。</li><li><a href="/snowpark-guide/row-number/" style="color:#38bdf8">row_number</a> ── パーティション内で1から始まる連番をふる。同率でも必ず別の番号になる。</li><li><a href="/snowpark-guide/lag/" style="color:#38bdf8">lag</a> ── パーティション内で、1つ前（過去）の行の値を取得する。</li><li><a href="/snowpark-guide/lead/" style="color:#38bdf8">lead</a> ── パーティション内で、1つ後（未来）の行の値を取得する。</li></ul>
+    <h2 style="font-size:1.05rem">ウィンドウ関数の他のメソッド</h2><ul style="padding-left:20px"><li><a href="/snowpark-guide/window-spec/" style="color:#38bdf8">Window.partition_by / Window.order_by</a> ── グループ（パーティション）ごとに、行をまたいだ計算をするための土台を定義する。</li><li><a href="/snowpark-guide/rank/" style="color:#38bdf8">rank</a> ── パーティション内で順位をつける。同じ値には同じ順位がつき、その分だけ次の順位を飛ばす。</li><li><a href="/snowpark-guide/row-number/" style="color:#38bdf8">row_number</a> ── パーティション内で1から始まる連番をふる。同率でも必ず別の番号になる。</li><li><a href="/snowpark-guide/lag/" style="color:#38bdf8">lag</a> ── パーティション内で、1つ前（過去）の行の値を取得する。</li><li><a href="/snowpark-guide/lead/" style="color:#38bdf8">lead</a> ── パーティション内で、1つ後（未来）の行の値を取得する。</li><li><a href="/snowpark-guide/ntile/" style="color:#38bdf8">ntile</a> ── パーティション内の行を、指定した個数のグループに行数ができるだけ均等になるよう分割する。</li><li><a href="/snowpark-guide/percent-rank-cume-dist/" style="color:#38bdf8">percent_rank / cume_dist</a> ── パーティション内での相対的な順位を、0〜1の割合で表す。</li><li><a href="/snowpark-guide/first-value-last-value/" style="color:#38bdf8">first_value / last_value</a> ── パーティション内で並べ替えた順序の、先頭の値・末尾の値を各行に持たせる。</li></ul>
     
     <h2 style="font-size:1.05rem">出典・検証情報</h2>
     <ul style="padding-left:20px">

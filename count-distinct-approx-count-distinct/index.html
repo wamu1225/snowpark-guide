@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" type="image/svg+xml" href="../favicon.svg" />
+    <title>count_distinct / approx_count_distinct｜Snowpark ⇄ Polars 逆引き｜Snowpark 実践ガイド</title>
+    <meta
+      name="description"
+      content="Snowpark Pythonの基礎知識（アーキテクチャ・Spark比較・Polars比較・UDF/UDTF/SPROC・料金・ML）と、DataFrame/Column APIをPolarsの同等コードと並べて確認できる逆引きリファレンスをまとめたサイトです。"
+    />
+    <link rel="canonical" href="https://study-apps.com/snowpark-guide/count-distinct-approx-count-distinct/" />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="Snowpark 実践ガイド" />
+    <meta property="og:title" content="count_distinct / approx_count_distinct｜Snowpark ⇄ Polars 逆引き｜Snowpark 実践ガイド" />
+    <meta
+      property="og:description"
+      content="Snowpark Pythonの基礎知識と、DataFrame/Column APIをPolarsの同等コードと並べて確認できる逆引きリファレンスをまとめたサイトです。"
+    />
+    <meta property="og:url" content="https://study-apps.com/snowpark-guide/count-distinct-approx-count-distinct/" />
+    <meta property="og:image" content="https://study-apps.com/snowpark-guide/ogp.png" />
+    <meta property="og:locale" content="ja_JP" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="count_distinct / approx_count_distinct｜Snowpark ⇄ Polars 逆引き｜Snowpark 実践ガイド" />
+    <meta
+      name="twitter:description"
+      content="Snowpark Pythonの基礎知識と、DataFrame/Column APIをPolarsの同等コードと並べて確認できる逆引きリファレンスをまとめたサイトです。"
+    />
+    <meta name="twitter:image" content="https://study-apps.com/snowpark-guide/ogp.png" />
+    <script
+      async
+      src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9102538151148380"
+      crossorigin="anonymous"
+    ></script>
+    <script type="module" crossorigin src="../assets/index-Bg5oCDUL.js"></script>
+    <link rel="stylesheet" crossorigin href="../assets/index-Cj1a5bcD.css">
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"TechArticle","headline":"count_distinct / approx_count_distinct","description":"重複を除いた値の種類数（ユニーク数）を求める。近似版は誤差を許容する代わりに高速。 Snowparkでの書き方とPolarsでの書き方を並べて解説します。","url":"https://study-apps.com/snowpark-guide/count-distinct-approx-count-distinct/","dateModified":"2026-08-30","inLanguage":"ja"}</script>
+  </head>
+  <body>
+    <div id="root"><div style="max-width:760px;margin:0 auto;padding:24px 16px;font-family:sans-serif;line-height:1.8;color:#0f172a">
+    <p style="color:#94a3b8;font-size:0.9rem"><a href="/snowpark-guide/" style="color:#94a3b8">トップ</a> / 集約・構造変換</p>
+    <h1 style="font-family:monospace;font-size:1.6rem;margin-bottom:8px">count_distinct / approx_count_distinct</h1>
+    <p style="color:#475569">重複を除いた値の種類数（ユニーク数）を求める。近似版は誤差を許容する代わりに高速。</p>
+    <div style="display:flex;flex-wrap:wrap;gap:16px;margin:20px 0">
+      <div style="flex:1;min-width:260px">
+        <h2 style="color:#0284c7;font-size:0.9rem">SNOWPARK <span style="opacity:0.75;font-weight:500">静的検証のみ</span></h2>
+        <pre style="background:#0f172a;color:#e2e8f0;border-radius:10px;padding:14px;overflow-x:auto"><code>df.select(count_distinct(col(&quot;user_id&quot;)))
+df.select(approx_count_distinct(col(&quot;user_id&quot;)))</code></pre>
+      </div>
+      <div style="flex:1;min-width:260px">
+        <h2 style="color:#c026d3;font-size:0.9rem">POLARS <span style="opacity:0.75;font-weight:500">実行確認済み</span></h2>
+        <pre style="background:#0f172a;color:#e2e8f0;border-radius:10px;padding:14px;overflow-x:auto"><code>df.select(pl.col(&quot;user_id&quot;).n_unique())
+df.select(pl.col(&quot;user_id&quot;).approx_n_unique())</code></pre>
+      </div>
+    </div>
+    <h2 style="font-size:1.05rem">挙動・設計の違い</h2>
+    <p>正確版（<code>count_distinct</code>↔<code>n_unique</code>）・近似版（<code>approx_count_distinct</code>↔<code>approx_n_unique</code>）とも対になる関数がPolars側に存在する。<code>[1,2,2,3,3,3]</code>で実行して確認したところ、<code>n_unique()</code>は正確に<code>3</code>を返す。</p>
+    <h2 style="font-size:1.05rem;color:#b45309">移行時の落とし穴</h2>
+    <p><strong>近似版を使う場面の判断はSnowpark側とPolars側で事情が異なる</strong>。Snowflakeの<code>approx_count_distinct</code>はHyperLogLogアルゴリズムでビッグデータに対する分散集計のコストを下げるために用意されている。一方Polarsはメモリ上の処理なので、<strong>よほど巨大なデータでない限り正確版の<code>n_unique()</code>で十分なことが多く</strong>、近似版を使う必然性はSnowflake側ほど高くない。Snowpark側のコードにならって機械的に近似版へ置き換えると、Polars側では不要な誤差を持ち込むだけになる場合がある。</p>
+    <h2 style="font-size:1.05rem">集約・構造変換の他のメソッド</h2><ul style="padding-left:20px"><li><a href="/snowpark-guide/group-by/" style="color:#38bdf8">group_by / groupBy</a> ── 指定した列の値でグループ化する。集約する前段階として使う。</li><li><a href="/snowpark-guide/agg/" style="color:#38bdf8">agg</a> ── group_byで作ったグループごとに、集約の計算をまとめて指定する。</li><li><a href="/snowpark-guide/count/" style="color:#38bdf8">count</a> ── 行数を数える。</li><li><a href="/snowpark-guide/sum/" style="color:#38bdf8">sum</a> ── 列の値を合計する。</li><li><a href="/snowpark-guide/mean/" style="color:#38bdf8">avg / mean</a> ── 列の値の平均を求める。</li><li><a href="/snowpark-guide/min/" style="color:#38bdf8">min</a> ── 列の最小値を求める。</li><li><a href="/snowpark-guide/max/" style="color:#38bdf8">max</a> ── 列の最大値を求める。</li><li><a href="/snowpark-guide/pivot/" style="color:#38bdf8">pivot</a> ── 行の値を列に展開する（縦持ちから横持ちへ）。</li><li><a href="/snowpark-guide/unpivot/" style="color:#38bdf8">unpivot</a> ── pivotの逆。複数列を1つの列にまとめる（横持ちから縦持ちへ）。</li><li><a href="/snowpark-guide/array-agg/" style="color:#38bdf8">array_agg</a> ── グループ内の複数行の値を、1つの配列（リスト）にまとめる。</li><li><a href="/snowpark-guide/listagg/" style="color:#38bdf8">listagg</a> ── グループ内の複数行の文字列を、区切り文字でつないだ1つの文字列にまとめる。</li><li><a href="/snowpark-guide/median-stddev/" style="color:#38bdf8">median / stddev</a> ── 中央値と標準偏差を求める（外れ値の影響を受けにくい代表値・散らばりの指標）。</li></ul>
+    
+    <h2 style="font-size:1.05rem">出典・検証情報</h2>
+    <ul style="padding-left:20px">
+      <li><a href="https://docs.snowflake.com/en/developer-guide/snowpark/reference/python/latest/snowpark/api/snowflake.snowpark.functions.approx_count_distinct" style="color:#38bdf8">Snowpark 公式リファレンス（count_distinct / approx_count_distinct）</a></li>
+      <li><a href="https://docs.pola.rs/api/python/stable/reference/expressions/api/polars.Expr.n_unique.html" style="color:#38bdf8">Polars 公式リファレンス（count_distinct / approx_count_distinct）</a></li>
+    </ul>
+    <p style="color:#94a3b8;font-size:0.85rem">Polars 1.36.1 で実行確認 / Snowpark Python SDK 1.51.1 で静的検証（2026-08-30）</p>
+    <nav style="margin-top:24px;display:flex;gap:16px;flex-wrap:wrap;font-size:0.85rem"><a href="/snowpark-guide/about/" style="color:#94a3b8">このサイトについて</a><a href="/snowpark-guide/privacy/" style="color:#94a3b8">プライバシーポリシー</a></nav>
+  </div></div>
+  </body>
+</html>
