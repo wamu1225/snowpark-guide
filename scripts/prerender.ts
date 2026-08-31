@@ -249,17 +249,19 @@ for (const page of STATIC_PAGES) {
 console.log('✓ /about/ /privacy/');
 
 // ── sitemap.xml ──
+// lastmod はページ単位の実更新日（O-2-27）。エントリ/コンセプトは検証日フィールドをそのまま使う。
+// トップ・about・privacy はサイト全体の状態を表す構造ページなのでビルド日のままでよい。
 const today = new Date().toISOString().split('T')[0];
 const urls = [
-  { loc: `${BASE_URL}/`, priority: '1.0' },
-  ...ALL_ENTRIES.map((e) => ({ loc: `${BASE_URL}/${e.slug}/`, priority: '0.8' })),
-  ...CONCEPTS.map((c) => ({ loc: `${BASE_URL}/guide/${c.slug}/`, priority: '0.7' })),
-  { loc: `${BASE_URL}/about/`, priority: '0.3' },
-  { loc: `${BASE_URL}/privacy/`, priority: '0.2' },
+  { loc: `${BASE_URL}/`, lastmod: today, priority: '1.0' },
+  ...ALL_ENTRIES.map((e) => ({ loc: `${BASE_URL}/${e.slug}/`, lastmod: e.verified.date, priority: '0.8' })),
+  ...CONCEPTS.map((c) => ({ loc: `${BASE_URL}/guide/${c.slug}/`, lastmod: c.verifiedDate, priority: '0.7' })),
+  { loc: `${BASE_URL}/about/`, lastmod: today, priority: '0.3' },
+  { loc: `${BASE_URL}/privacy/`, lastmod: today, priority: '0.2' },
 ];
 const sitemapXml = `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-${urls.map((u) => `  <url><loc>${u.loc}</loc><lastmod>${today}</lastmod><priority>${u.priority}</priority></url>`).join('\n')}
+${urls.map((u) => `  <url><loc>${u.loc}</loc><lastmod>${u.lastmod}</lastmod><priority>${u.priority}</priority></url>`).join('\n')}
 </urlset>`;
 fs.writeFileSync(path.join(DIST_DIR, 'sitemap.xml'), sitemapXml);
 console.log(`✓ sitemap.xml（全${urls.length}URL）`);
