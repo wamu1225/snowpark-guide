@@ -209,7 +209,51 @@ Polars側の \`collect\`・\`sink_parquet\`・\`sink_csv\`・\`sink_ipc\`・\`si
 
 - **Snowparkが向く場面**：処理対象のデータがそもそもSnowflakeにあり、手元のマシンのメモリに収まらない規模（数百GB〜）を扱う場合。複数人・複数ジョブでガバナンス（権限管理・監査ログ）を効かせながら共有データを処理する場合。
 - **Polarsが向く場面**：データが既に手元にある、またはSnowflakeから抽出した後の分析・試行錯誤の段階。数GB〜数十GB程度でメモリに収まり、クラウドの起動待ち時間（ウェアハウスの起動）を待たずに即座に結果を見たい場合。
-- **組み合わせる**：実務では二者択一ではなく、**重い集計はSnowparkでSnowflake側にやらせ、集計後の小さな結果だけをPolarsやpandasに引き渡してローカルで可視化・探索する**という組み合わせがよく使われます。\`to_pandas()\`で結果をpandas DataFrameに変換すれば、その後はローカルのエコシステム（Polarsやmatplotlib等）に接続できます。`,relatedEntrySlugs:[`group-by`,`to-pandas`],sources:[{label:`Snowflake Documentation: Working with DataFrames in Snowpark Python`,url:`https://docs.snowflake.com/en/developer-guide/snowpark/python/working-with-dataframes`},{label:`Polars API Reference: LazyFrame`,url:`https://docs.pola.rs/api/python/stable/reference/lazyframe/`}],verifiedDate:`2026-08-27`},{slug:`udf-udtf-sproc`,title:`UDF・Vectorized UDF・UDTF・ストアドプロシージャの使い分け`,summary:`Snowflake上でカスタムロジックを実行する4つの手段を、入出力の形とSQLからの呼び出し方で整理します。`,body:`## この4つは「入出力の形」で区別する
+- **組み合わせる**：実務では二者択一ではなく、**重い集計はSnowparkでSnowflake側にやらせ、集計後の小さな結果だけをPolarsやpandasに引き渡してローカルで可視化・探索する**という組み合わせがよく使われます。\`to_pandas()\`で結果をpandas DataFrameに変換すれば、その後はローカルのエコシステム（Polarsやmatplotlib等）に接続できます。`,relatedEntrySlugs:[`group-by`,`to-pandas`],sources:[{label:`Snowflake Documentation: Working with DataFrames in Snowpark Python`,url:`https://docs.snowflake.com/en/developer-guide/snowpark/python/working-with-dataframes`},{label:`Polars API Reference: LazyFrame`,url:`https://docs.pola.rs/api/python/stable/reference/lazyframe/`}],verifiedDate:`2026-08-27`},{slug:`pandas-on-snowflake`,title:`Snowpark pandas API（pandas on Snowflake）の位置づけ`,summary:`pandasの書き方のままSnowflake上のデータを扱えるが、既存のSnowpark DataFrameやto_pandas()と何が違うのかを整理します。`,body:`## importするパッケージが変わるだけ、という触れ込み
+
+Snowpark pandas API（公式には「pandas on Snowflake」）は、\`import pandas as pd\`を次のように変えるだけで、手元のpandasコードをSnowflake上のデータに対して実行できるようにする機能です。
+
+\`\`\`python
+# 変更前（ふつうのpandas。手元のメモリで実行）
+import pandas as pd
+df = pd.read_csv("orders.csv")
+
+# 変更後（Snowpark pandas。Snowflake上のテーブルに対して実行）
+import modin.pandas as pd
+import snowflake.snowpark.modin.plugin
+df = pd.read_snowflake("ORDERS")
+\`\`\`
+
+公式ドキュメントは「importの記述を変えるだけで、慣れ親しんだpandasネイティブの体験を、Snowflakeのスケーラビリティとセキュリティの恩恵とともに得られる」と説明しています。インストールは\`pip install "snowflake-snowpark-python[modin]"\`で行います。
+
+## 中身はModin：pandasのフロントエンドをSnowflakeに繋ぐ
+
+Snowpark pandasは、オープンソースの分散pandas実装であるModinをフロントエンド層として使い、pandasと同じAPIのシグネチャとDataFrameの意味論を保ったまま、裏側の処理をSnowflakeへ委譲する構成になっています。ここまでで紹介してきた通常のSnowpark DataFrame（\`session.table()\`や\`col()\`を使う書き方）とは別の入り口ですが、最終的にはどちらもSnowflakeのSQLエンジンで処理される点は共通です。
+
+## データの実行場所：ハイブリッド実行
+
+Snowpark Python 1.40.0以降、Snowpark pandasは既定で「ハイブリッド実行」が有効になっています。公式ドキュメントによれば、データ件数がおおむね10万行程度以下の小規模なデータはローカルのpandasエンジンで実行され、それを超える規模のデータはSnowflake側のSQLへ変換されて分散実行されます。どちらで実行されるかを意識してコードを書き分ける必要は無く、Snowpark pandas側が自動的に切り替えます。
+
+## サポートされないAPIがある
+
+pandasのすべてのAPIがSnowflake上で分散実装されているわけではありません。公式ドキュメントは、サポート対象外のAPIを呼び出すと\`NotImplementedError\`が送出されると明記しています。実際に何がサポートされているかは、Snowflake公式のSnowpark pandas対応API一覧（sources参照）で確認できます。
+
+## 既存の to_pandas() との違い：似た名前だが目的が逆
+
+このサイトの「to_pandas」ページで扱った\`DataFrame.to_pandas()\`は、Snowpark DataFrameの実行結果を**手元のメモリに丸ごと取り出して**、ふつうのpandas DataFrameに変換するメソッドです。取り出した後は完全にローカルの処理になるため、結果がローカルのメモリに収まる規模であることが前提になります。
+
+対して、Snowpark pandas API（pandas on Snowflake）は、**pandasの書き方のままデータをSnowflakeに置いたまま処理する**ための入り口です。目的が逆であることに注意してください。
+
+- **\`to_pandas()\`**：Snowpark DataFrameで絞り込み・集計を終えた「小さくなった最終結果」を、ローカルでさらにpandas/Polars等のエコシステムに繋ぎたいときに使う
+- **Snowpark pandas API**：最初からpandasの書き方で書きたいが、元データがローカルのメモリに収まらない規模（数百万行〜）で、Snowflake側の計算資源に処理を任せたいときに使う
+
+## ⇄Polarsとの関係でどう選ぶか
+
+このサイトの各メソッドページはSnowpark DataFrameとPolarsの対応表として作られていますが、Snowpark pandas APIは「Snowpark DataFrameの構文を覚えたくない・pandasの書き方のまま移行したい」場合の第三の選択肢です。判断の軸は次のとおりです。
+
+- **Snowpark DataFrameの構文（\`col()\`・\`select()\`等）を使う**：このサイトの各ページで比較している通常の書き方。Snowparkのメソッドチェーンに慣れている、またはSQLに近い形で最適化を意識したい場合
+- **Snowpark pandas API（\`modin.pandas\`）を使う**：既存のpandasコード資産をSnowflakeに移行したい、チームがpandasの書き方に慣れている場合。ただし前述のとおりサポート外のAPIには当たる
+- **Polarsを使う**：データがすでに手元にある、またはSnowflakeから抽出した後のローカルでの探索的分析`,relatedEntrySlugs:[`to-pandas`],sources:[{label:`Snowflake Documentation: pandas on Snowflake`,url:`https://docs.snowflake.com/en/developer-guide/snowpark/python/pandas-on-snowflake`},{label:`Snowflake Documentation: Snowpark pandas Supported API`,url:`https://docs.snowflake.com/en/developer-guide/snowpark/reference/python/latest/modin/supported/index`},{label:`Snowflake Snowpark Python Release Notes 2024（1.25.0・2024-11-13：public preview警告の撤廃）`,url:`https://docs.snowflake.com/en/release-notes/clients-drivers/snowpark-python-2024`}],verifiedDate:`2026-09-19`},{slug:`udf-udtf-sproc`,title:`UDF・Vectorized UDF・UDTF・ストアドプロシージャの使い分け`,summary:`Snowflake上でカスタムロジックを実行する4つの手段を、入出力の形とSQLからの呼び出し方で整理します。`,body:`## この4つは「入出力の形」で区別する
 
 名前が似ていて混同しやすいですが、判断基準は1つです。**1行の入力に対して、何を返すか**。
 
@@ -355,7 +399,36 @@ predictions = model_version.run(new_customers_df)
 
 - **向いている**：学習に使う特徴量がすでにSnowflake上のテーブルにあり、前処理・学習・推論のすべてをSnowflakeの権限管理の範囲内で完結させたい場合。モデルのバージョン管理やアクセス権限をデータと同じ基盤で統一したい場合。
 - **向いていない**：PyTorchやTensorFlowで書いた独自のディープラーニングモデルを、Snowflakeの外にある専用のGPUクラスタで学習させたい場合（Snowpark MLの主眼はscikit-learn的な表形式データの学習・前処理で、専用ハードウェアを要する大規模な深層学習はSnowpark MLの主戦場ではありません）。
-- **判断の軸**：「特徴量エンジニアリングから推論までの一連の流れを、Snowflakeのガバナンスの中に閉じ込めたいか」が判断基準になります。閉じ込めたいならSnowpark MLの前処理・学習・Registryの3点セットがそのまま使え、外部のMLプラットフォームとの連携が主目的ならSnowflakeは特徴量の抽出元として使い、学習は別基盤で行う構成の方が向いています。`,relatedEntrySlugs:[],sources:[{label:`Snowflake Documentation: Snowflake ML - Modeling`,url:`https://docs.snowflake.com/en/developer-guide/snowflake-ml/modeling`},{label:`Snowflake Documentation: Model Registry Overview`,url:`https://docs.snowflake.com/en/developer-guide/snowflake-ml/model-registry/overview`},{label:`Snowflake ML API Reference: snowflake.ml.modeling.preprocessing`,url:`https://docs.snowflake.com/en/developer-guide/snowpark-ml/reference/latest/modeling`}],verifiedDate:`2026-08-27`}],S=`/snowpark-guide`;function C(){let e=window.location.pathname;if(e.startsWith(`/snowpark-guide`)){let t=e.slice(15);return t===``?`/`:t}return`/`}function te(e){let t=S+e;window.location.pathname!==t&&(window.history.pushState({},``,t),window.dispatchEvent(new PopStateEvent(`popstate`))),window.scrollTo(0,0)}function w(e){return S+e}function ne(e,t){let n=e.trim().toLowerCase();return!n||t.title.toLowerCase().includes(n)||t.summary.toLowerCase().includes(n)||t.snowparkCode.toLowerCase().includes(n)||t.polarsCode.toLowerCase().includes(n)||t.difference.toLowerCase().includes(n)||t.pitfall.toLowerCase().includes(n)}var T=e((e=>{var t=Symbol.for(`react.transitional.element`),n=Symbol.for(`react.fragment`);function r(e,n,r){var i=null;if(r!==void 0&&(i=``+r),n.key!==void 0&&(i=``+n.key),`key`in n)for(var a in r={},n)a!==`key`&&(r[a]=n[a]);else r=n;return n=r.ref,{$$typeof:t,type:e,key:i,ref:n===void 0?null:n,props:r}}e.Fragment=n,e.jsx=r,e.jsxs=r})),E=e(((e,t)=>{t.exports=T()}))();function re(){let[e,t]=(0,l.useState)(``),n=(0,l.useMemo)(()=>b.filter(t=>ne(e,t)),[e]),r=e.trim().length>0;return(0,E.jsxs)(`div`,{className:`home`,children:[(0,E.jsxs)(`header`,{className:`home__hero`,children:[(0,E.jsx)(`h1`,{children:`Snowpark 実践ガイド`}),(0,E.jsx)(`p`,{className:`home__lead`,children:`Snowpark Python のアーキテクチャ・Spark比較・料金構造・MLといった基礎知識と、 DataFrame / Column API を Polars の LazyFrame / Expression API と並べて見比べられる 逆引きリファレンスをまとめたサイトです。メソッド名で検索するか、下のカテゴリから探してください。`}),(0,E.jsxs)(`label`,{className:`home__search`,children:[(0,E.jsx)(`span`,{className:`sr-only`,children:`メソッド名で検索`}),(0,E.jsx)(`input`,{type:`search`,placeholder:`例: select, with_columns, group_by …`,value:e,onChange:e=>t(e.target.value),autoComplete:`off`})]})]}),r?(0,E.jsxs)(`section`,{className:`home__results`,children:[(0,E.jsxs)(`h2`,{children:[`「`,e,`」の検索結果（`,n.length,`件）`]}),n.length===0?(0,E.jsx)(`p`,{className:`home__empty`,children:`一致するメソッドが見つかりませんでした。カテゴリから探してみてください。`}):(0,E.jsx)(`ul`,{className:`entry-list`,children:n.map(e=>(0,E.jsx)(`li`,{children:(0,E.jsxs)(`a`,{href:w(`/${e.slug}/`),className:`entry-list__item`,children:[(0,E.jsx)(`span`,{className:`entry-list__title`,children:e.title}),(0,E.jsx)(`span`,{className:`entry-list__summary`,children:e.summary})]})},e.slug))})]}):(0,E.jsxs)(E.Fragment,{children:[(0,E.jsxs)(`section`,{className:`home__concepts`,children:[(0,E.jsx)(`h2`,{children:`基礎から読む`}),(0,E.jsx)(`p`,{className:`category-block__desc`,children:`関数の書き方だけでなく、Snowparkがどう動いているか・何にコストがかかるかも解説します。`}),(0,E.jsx)(`ul`,{className:`entry-list`,children:ee.map(e=>(0,E.jsx)(`li`,{children:(0,E.jsxs)(`a`,{href:w(`/guide/${e.slug}/`),className:`entry-list__item`,children:[(0,E.jsx)(`span`,{className:`entry-list__title entry-list__title--prose`,children:e.title}),(0,E.jsx)(`span`,{className:`entry-list__summary`,children:e.summary})]})},e.slug))})]}),(0,E.jsx)(`section`,{className:`home__categories`,children:x.map(e=>{let t=b.filter(t=>t.category===e.id);return t.length===0?null:(0,E.jsxs)(`section`,{className:`category-block`,id:e.id,children:[(0,E.jsx)(`h2`,{children:e.label}),(0,E.jsx)(`p`,{className:`category-block__desc`,children:e.description}),(0,E.jsx)(`ul`,{className:`entry-list`,children:t.map(e=>(0,E.jsx)(`li`,{children:(0,E.jsxs)(`a`,{href:w(`/${e.slug}/`),className:`entry-list__item`,children:[(0,E.jsx)(`span`,{className:`entry-list__title`,children:e.title}),(0,E.jsx)(`span`,{className:`entry-list__summary`,children:e.summary})]})},e.slug))})]},e.id)})})]})]})}function ie(e,t){return e.split(/(`[^`]+`|\[[^\]]+\]\([^)]+\))/g).map((e,n)=>{if(e.startsWith("`")&&e.endsWith("`"))return(0,E.jsx)(`code`,{children:e.slice(1,-1)},`${t}c${n}`);let r=e.match(/^\[([^\]]+)\]\(([^)]+)\)$/);return r?(0,E.jsx)(`a`,{href:w(r[2]),children:r[1]},`${t}l${n}`):e})}function ae(e){return e.split(/(\*\*[^*]+\*\*)/g).flatMap((e,t)=>e.startsWith(`**`)&&e.endsWith(`**`)?[(0,E.jsx)(`strong`,{children:ie(e.slice(2,-2),`b${t}-`)},`b${t}`)]:e?ie(e,`p${t}-`):[])}function oe(e){return e.trim().replace(/^\||\|$/g,``).split(`|`).map(e=>e.trim())}function se(e){let t=e.trim().split(`
+- **判断の軸**：「特徴量エンジニアリングから推論までの一連の流れを、Snowflakeのガバナンスの中に閉じ込めたいか」が判断基準になります。閉じ込めたいならSnowpark MLの前処理・学習・Registryの3点セットがそのまま使え、外部のMLプラットフォームとの連携が主目的ならSnowflakeは特徴量の抽出元として使い、学習は別基盤で行う構成の方が向いています。`,relatedEntrySlugs:[],sources:[{label:`Snowflake Documentation: Snowflake ML - Modeling`,url:`https://docs.snowflake.com/en/developer-guide/snowflake-ml/modeling`},{label:`Snowflake Documentation: Model Registry Overview`,url:`https://docs.snowflake.com/en/developer-guide/snowflake-ml/model-registry/overview`},{label:`Snowflake ML API Reference: snowflake.ml.modeling.preprocessing`,url:`https://docs.snowflake.com/en/developer-guide/snowpark-ml/reference/latest/modeling`}],verifiedDate:`2026-08-27`},{slug:`container-services`,title:`Snowpark Container Services とは何か`,summary:`UDF・UDTF・ストアドプロシージャでは対応できない「任意の言語・ランタイム・ライブラリ」をSnowflake内で動かすための、一般提供済みのコンテナ実行基盤です。`,body:`## UDF・ストアドプロシージャの実行環境には制約がある
+
+このサイトの「UDF・Vectorized UDF・UDTF・ストアドプロシージャの使い分け」で扱った4つの手段は、いずれもSnowflakeが用意したPythonの実行サンドボックスの中で動きます。使えるライブラリやランタイムのバージョンはSnowflakeが提供する範囲に限られ、GPUを使った処理や、Python以外の言語・独自のOSレベルの依存関係を必要とするアプリケーションは、この枠組みでは動かせません。
+
+## Snowpark Container Services：任意のコンテナをSnowflake内で動かす
+
+Snowpark Container Servicesは、この制約を取り払うための、Snowflake内で完結する管理型のコンテナオーケストレーション基盤です。公式ドキュメントは「アプリケーションとその依存関係をOCI（Open Container Initiative）イメージにパッケージ化でき、そこには任意のプログラミング言語・フレームワーク・ライブラリを含められる」と説明しています。つまり、UDFのようにSnowflakeが用意した実行環境の中に収めるのではなく、**自分でDockerイメージを作ってSnowflakeの中で動かす**という発想です。
+
+インフラの管理（コンピュートリソースの確保・オーケストレーション）はSnowflakeが引き受けますが、コンテナの中身（OS・ランタイム・ライブラリの構成）は利用者が完全にコントロールします。
+
+## 提供状況：AWS・GCPは一般提供（GA）を確認済み、Azureも利用可能
+
+Snowpark Container ServicesはAWSで2024年8月に全商用リージョンで一般提供（GA）となり、Google Cloud Platformは2025年8月に一般提供となりました（いずれもSnowflake公式のリリースノートで確認済み）。Microsoft Azureも現在サポート対象のクラウドに含まれていますが、Azure単体でのGA化の日付は、Native Apps対応など個別機能ごとのリリースノートに分かれており、本稿では単一の日付を特定していません。現在はAWS・Azure・GCPの商用リージョンで、有償のSnowflakeエディションであれば利用できます。トライアルアカウントや無料枠のアカウントでは利用できない点に注意してください。
+
+## 何に使うか：3つの典型パターン
+
+公式ドキュメントは主に3つの使い方を挙げています。
+
+1. **バッチジョブ**：ストアドプロシージャに似た形で、柔軟なジョブを実行する。GPUを使う計算集約的なタスク（機械学習モデルの学習・推論など）に向く
+2. **サービス関数**：SQLのクエリから、コンテナ内で動くカスタム処理を関数として呼び出す
+3. **APIやWeb UIの公開**：Snowflake上のデータを扱うビジネスロジックを、APIやWebアプリケーションとして外部に公開する
+
+計算プール（Compute Pool）を作成する際にマシンタイプを指定でき、GPU対応のインスタンスファミリーも選択できるため、機械学習モデルの学習・推論やAIを使った高度な分析といった、CPUだけでは重い処理にも対応します。
+
+## UDF・UDTF・ストアドプロシージャとの使い分け
+
+- **UDF・UDTF・ストアドプロシージャが向く**：Snowflakeが提供するPython環境で完結する軽量な処理。SQLの中から直接呼び出したい、Snowflakeの標準的なライブラリ（Anacondaチャネル経由のパッケージ等）で足りる場合
+- **Snowpark Container Servicesが向く**：GPUが必要な機械学習の学習・推論、Python以外の言語で書かれた既存アプリケーション、特定バージョンのOS依存ライブラリが必要な場合、常駐サービスとしてAPIやWeb UIを公開したい場合
+
+判断の軸は「Snowflakeが用意した実行環境で足りるか、自分でコンテナごと持ち込む必要があるか」です。前者で足りるならUDF・ストアドプロシージャの方が構築・運用ともに軽く済み、後者が必要になった時点でSnowpark Container Servicesを検討する、という順序になります。`,relatedEntrySlugs:[],sources:[{label:`Snowflake Documentation: Snowpark Container Services Overview`,url:`https://docs.snowflake.com/en/developer-guide/snowpark-container-services/overview`},{label:`Snowflake Release Notes: Snowpark Container Services release notes (2024-08-01・AWS一般提供)`,url:`https://docs.snowflake.com/en/release-notes/2024/other/2024-08-01-spcs`},{label:`Snowflake Release Notes: Snowpark Container Services in Google Cloud (General availability)`,url:`https://docs.snowflake.com/en/release-notes/2025/other/2025-08-01-spcs-google-cloud-ga`}],verifiedDate:`2026-09-19`}],S=`/snowpark-guide`;function C(){let e=window.location.pathname;if(e.startsWith(`/snowpark-guide`)){let t=e.slice(15);return t===``?`/`:t}return`/`}function te(e){let t=S+e;window.location.pathname!==t&&(window.history.pushState({},``,t),window.dispatchEvent(new PopStateEvent(`popstate`))),window.scrollTo(0,0)}function w(e){return S+e}function ne(e,t){let n=e.trim().toLowerCase();return!n||t.title.toLowerCase().includes(n)||t.summary.toLowerCase().includes(n)||t.snowparkCode.toLowerCase().includes(n)||t.polarsCode.toLowerCase().includes(n)||t.difference.toLowerCase().includes(n)||t.pitfall.toLowerCase().includes(n)}var T=e((e=>{var t=Symbol.for(`react.transitional.element`),n=Symbol.for(`react.fragment`);function r(e,n,r){var i=null;if(r!==void 0&&(i=``+r),n.key!==void 0&&(i=``+n.key),`key`in n)for(var a in r={},n)a!==`key`&&(r[a]=n[a]);else r=n;return n=r.ref,{$$typeof:t,type:e,key:i,ref:n===void 0?null:n,props:r}}e.Fragment=n,e.jsx=r,e.jsxs=r})),E=e(((e,t)=>{t.exports=T()}))();function re(){let[e,t]=(0,l.useState)(``),n=(0,l.useMemo)(()=>b.filter(t=>ne(e,t)),[e]),r=e.trim().length>0;return(0,E.jsxs)(`div`,{className:`home`,children:[(0,E.jsxs)(`header`,{className:`home__hero`,children:[(0,E.jsx)(`h1`,{children:`Snowpark 実践ガイド`}),(0,E.jsx)(`p`,{className:`home__lead`,children:`Snowpark Python のアーキテクチャ・Spark比較・料金構造・MLといった基礎知識と、 DataFrame / Column API を Polars の LazyFrame / Expression API と並べて見比べられる 逆引きリファレンスをまとめたサイトです。メソッド名で検索するか、下のカテゴリから探してください。`}),(0,E.jsxs)(`label`,{className:`home__search`,children:[(0,E.jsx)(`span`,{className:`sr-only`,children:`メソッド名で検索`}),(0,E.jsx)(`input`,{type:`search`,placeholder:`例: select, with_columns, group_by …`,value:e,onChange:e=>t(e.target.value),autoComplete:`off`})]})]}),r?(0,E.jsxs)(`section`,{className:`home__results`,children:[(0,E.jsxs)(`h2`,{children:[`「`,e,`」の検索結果（`,n.length,`件）`]}),n.length===0?(0,E.jsx)(`p`,{className:`home__empty`,children:`一致するメソッドが見つかりませんでした。カテゴリから探してみてください。`}):(0,E.jsx)(`ul`,{className:`entry-list`,children:n.map(e=>(0,E.jsx)(`li`,{children:(0,E.jsxs)(`a`,{href:w(`/${e.slug}/`),className:`entry-list__item`,children:[(0,E.jsx)(`span`,{className:`entry-list__title`,children:e.title}),(0,E.jsx)(`span`,{className:`entry-list__summary`,children:e.summary})]})},e.slug))})]}):(0,E.jsxs)(E.Fragment,{children:[(0,E.jsxs)(`section`,{className:`home__concepts`,children:[(0,E.jsx)(`h2`,{children:`基礎から読む`}),(0,E.jsx)(`p`,{className:`category-block__desc`,children:`関数の書き方だけでなく、Snowparkがどう動いているか・何にコストがかかるかも解説します。`}),(0,E.jsx)(`ul`,{className:`entry-list`,children:ee.map(e=>(0,E.jsx)(`li`,{children:(0,E.jsxs)(`a`,{href:w(`/guide/${e.slug}/`),className:`entry-list__item`,children:[(0,E.jsx)(`span`,{className:`entry-list__title entry-list__title--prose`,children:e.title}),(0,E.jsx)(`span`,{className:`entry-list__summary`,children:e.summary})]})},e.slug))})]}),(0,E.jsx)(`section`,{className:`home__categories`,children:x.map(e=>{let t=b.filter(t=>t.category===e.id);return t.length===0?null:(0,E.jsxs)(`section`,{className:`category-block`,id:e.id,children:[(0,E.jsx)(`h2`,{children:e.label}),(0,E.jsx)(`p`,{className:`category-block__desc`,children:e.description}),(0,E.jsx)(`ul`,{className:`entry-list`,children:t.map(e=>(0,E.jsx)(`li`,{children:(0,E.jsxs)(`a`,{href:w(`/${e.slug}/`),className:`entry-list__item`,children:[(0,E.jsx)(`span`,{className:`entry-list__title`,children:e.title}),(0,E.jsx)(`span`,{className:`entry-list__summary`,children:e.summary})]})},e.slug))})]},e.id)})})]})]})}function ie(e,t){return e.split(/(`[^`]+`|\[[^\]]+\]\([^)]+\))/g).map((e,n)=>{if(e.startsWith("`")&&e.endsWith("`"))return(0,E.jsx)(`code`,{children:e.slice(1,-1)},`${t}c${n}`);let r=e.match(/^\[([^\]]+)\]\(([^)]+)\)$/);return r?(0,E.jsx)(`a`,{href:w(r[2]),children:r[1]},`${t}l${n}`):e})}function ae(e){return e.split(/(\*\*[^*]+\*\*)/g).flatMap((e,t)=>e.startsWith(`**`)&&e.endsWith(`**`)?[(0,E.jsx)(`strong`,{children:ie(e.slice(2,-2),`b${t}-`)},`b${t}`)]:e?ie(e,`p${t}-`):[])}function oe(e){return e.trim().replace(/^\||\|$/g,``).split(`|`).map(e=>e.trim())}function se(e){let t=e.trim().split(`
 `),n=[],r=[],i=!1;for(let e of t){if(e.startsWith("```")){i=!i,r.push(e),i||(n.push(r.join(`
 `)),r=[]);continue}if(i){r.push(e);continue}if(e.trim()===``){r.length&&(n.push(r.join(`
 `)),r=[]);continue}r.push(e)}return r.length&&n.push(r.join(`

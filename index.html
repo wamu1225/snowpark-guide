@@ -32,7 +32,7 @@
       src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9102538151148380"
       crossorigin="anonymous"
     ></script>
-    <script type="module" crossorigin src="./assets/index-CDqs5wyM.js"></script>
+    <script type="module" crossorigin src="./assets/index-z4B7JITz.js"></script>
     <link rel="stylesheet" crossorigin href="./assets/index-Cj1a5bcD.css">
   <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebSite","name":"Snowpark 実践ガイド","url":"https://study-apps.com/snowpark-guide/","description":"Snowpark Pythonの基礎知識（アーキテクチャ・Spark比較・Polars比較・UDF/UDTF/SPROC・料金・ML）と、DataFrame/Column APIをPolarsの同等コードと並べて確認できる逆引きリファレンスをまとめたサイトです。","inLanguage":"ja"}</script>
   </head>
@@ -43,9 +43,11 @@
   <section style="margin-top:24px"><h2 style="font-size:1.1rem">基礎から読む</h2><ul style="padding-left:20px"><li><a href="/snowpark-guide/guide/architecture/" style="color:#38bdf8">Snowparkのアーキテクチャと実行の仕組み</a> ── 自分のPythonコードは、結局どこで動いているのか。クライアント・Snowflake・UDFという3つの実行場所を切り分けて説明します。</li>
 <li><a href="/snowpark-guide/guide/vs-spark/" style="color:#38bdf8">Snowpark と Apache Spark の違い</a> ── DataFrame APIの書き味はよく似ていますが、クラスタを自分で持つか持たないかで運用とコストの構造がまったく変わります。</li>
 <li><a href="/snowpark-guide/guide/vs-polars/" style="color:#38bdf8">Snowpark と Polars の違い（総論）</a> ── どちらも遅延評価を採用しているが、計算がどこで走るか（クラウドかローカルか）が根本的に異なります。使い分けの軸を整理します。</li>
+<li><a href="/snowpark-guide/guide/pandas-on-snowflake/" style="color:#38bdf8">Snowpark pandas API（pandas on Snowflake）の位置づけ</a> ── pandasの書き方のままSnowflake上のデータを扱えるが、既存のSnowpark DataFrameやto_pandas()と何が違うのかを整理します。</li>
 <li><a href="/snowpark-guide/guide/udf-udtf-sproc/" style="color:#38bdf8">UDF・Vectorized UDF・UDTF・ストアドプロシージャの使い分け</a> ── Snowflake上でカスタムロジックを実行する4つの手段を、入出力の形とSQLからの呼び出し方で整理します。</li>
 <li><a href="/snowpark-guide/guide/pricing/" style="color:#38bdf8">料金構造とウェアハウスのリソース消費</a> ── コストは何に対して発生するのか。標準ウェアハウスとSnowpark-Optimized Warehouseの違い、書き方で抑えられる部分を整理します。</li>
-<li><a href="/snowpark-guide/guide/snowpark-ml/" style="color:#38bdf8">Snowpark ML の概要</a> ── Snowflake上で完結する機械学習ワークフロー。前処理・学習を担うModelingと、モデル管理を担うRegistryの2本柱です。</li></ul></section>
+<li><a href="/snowpark-guide/guide/snowpark-ml/" style="color:#38bdf8">Snowpark ML の概要</a> ── Snowflake上で完結する機械学習ワークフロー。前処理・学習を担うModelingと、モデル管理を担うRegistryの2本柱です。</li>
+<li><a href="/snowpark-guide/guide/container-services/" style="color:#38bdf8">Snowpark Container Services とは何か</a> ── UDF・UDTF・ストアドプロシージャでは対応できない「任意の言語・ランタイム・ライブラリ」をSnowflake内で動かすための、一般提供済みのコンテナ実行基盤です。</li></ul></section>
   <section style="margin-top:24px"><h2 style="font-size:1.1rem">射影・選択</h2><p style="color:#94a3b8;font-size:0.9rem">列を選ぶ・落とす・作る・名前を変える</p><ul style="padding-left:20px"><li><a href="/snowpark-guide/select/" style="color:#38bdf8">select</a> ── 列を選んで取り出す。両方とも遅延評価で、実際のクエリは後段のアクションまで発行されない。</li>
 <li><a href="/snowpark-guide/drop/" style="color:#38bdf8">drop</a> ── 指定した列を取り除く。select の逆で、残す列でなく捨てる列を書く。</li>
 <li><a href="/snowpark-guide/with-column/" style="color:#38bdf8">with_column / with_columns</a> ── 既存の列はそのままに、新しい列を1つ（または複数）追加する。</li>

@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" type="image/svg+xml" href="../../favicon.svg" />
+    <title>Snowpark Container Services とは何か｜Snowpark 実践ガイド</title>
+    <meta
+      name="description"
+      content="Snowpark Pythonの基礎知識（アーキテクチャ・Spark比較・Polars比較・UDF/UDTF/SPROC・料金・ML）と、DataFrame/Column APIをPolarsの同等コードと並べて確認できる逆引きリファレンスをまとめたサイトです。"
+    />
+    <link rel="canonical" href="https://study-apps.com/snowpark-guide/guide/container-services/" />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="Snowpark 実践ガイド" />
+    <meta property="og:title" content="Snowpark Container Services とは何か｜Snowpark 実践ガイド" />
+    <meta
+      property="og:description"
+      content="Snowpark Pythonの基礎知識と、DataFrame/Column APIをPolarsの同等コードと並べて確認できる逆引きリファレンスをまとめたサイトです。"
+    />
+    <meta property="og:url" content="https://study-apps.com/snowpark-guide/guide/container-services/" />
+    <meta property="og:image" content="https://study-apps.com/snowpark-guide/ogp.png" />
+    <meta property="og:locale" content="ja_JP" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Snowpark Container Services とは何か｜Snowpark 実践ガイド" />
+    <meta
+      name="twitter:description"
+      content="Snowpark Pythonの基礎知識と、DataFrame/Column APIをPolarsの同等コードと並べて確認できる逆引きリファレンスをまとめたサイトです。"
+    />
+    <meta name="twitter:image" content="https://study-apps.com/snowpark-guide/ogp.png" />
+    <script
+      async
+      src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9102538151148380"
+      crossorigin="anonymous"
+    ></script>
+    <script type="module" crossorigin src="../../assets/index-z4B7JITz.js"></script>
+    <link rel="stylesheet" crossorigin href="../../assets/index-Cj1a5bcD.css">
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","headline":"Snowpark Container Services とは何か","description":"UDF・UDTF・ストアドプロシージャでは対応できない「任意の言語・ランタイム・ライブラリ」をSnowflake内で動かすための、一般提供済みのコンテナ実行基盤です。","url":"https://study-apps.com/snowpark-guide/guide/container-services/","dateModified":"2026-09-19","inLanguage":"ja"}</script>
+  </head>
+  <body>
+    <div id="root"><div style="max-width:760px;margin:0 auto;padding:24px 16px;font-family:sans-serif;line-height:1.8;color:#0f172a">
+    <p style="color:#94a3b8;font-size:0.9rem"><a href="/snowpark-guide/" style="color:#94a3b8">トップ</a> / 基礎知識</p>
+    <h1 style="font-size:1.6rem;margin-bottom:8px">Snowpark Container Services とは何か</h1>
+    <p style="color:#475569">UDF・UDTF・ストアドプロシージャでは対応できない「任意の言語・ランタイム・ライブラリ」をSnowflake内で動かすための、一般提供済みのコンテナ実行基盤です。</p>
+    
+    <h2>UDF・ストアドプロシージャの実行環境には制約がある</h2>
+<p>このサイトの「UDF・Vectorized UDF・UDTF・ストアドプロシージャの使い分け」で扱った4つの手段は、いずれもSnowflakeが用意したPythonの実行サンドボックスの中で動きます。使えるライブラリやランタイムのバージョンはSnowflakeが提供する範囲に限られ、GPUを使った処理や、Python以外の言語・独自のOSレベルの依存関係を必要とするアプリケーションは、この枠組みでは動かせません。</p>
+<h2>Snowpark Container Services：任意のコンテナをSnowflake内で動かす</h2>
+<p>Snowpark Container Servicesは、この制約を取り払うための、Snowflake内で完結する管理型のコンテナオーケストレーション基盤です。公式ドキュメントは「アプリケーションとその依存関係をOCI（Open Container Initiative）イメージにパッケージ化でき、そこには任意のプログラミング言語・フレームワーク・ライブラリを含められる」と説明しています。つまり、UDFのようにSnowflakeが用意した実行環境の中に収めるのではなく、<strong>自分でDockerイメージを作ってSnowflakeの中で動かす</strong>という発想です。</p>
+<p>インフラの管理（コンピュートリソースの確保・オーケストレーション）はSnowflakeが引き受けますが、コンテナの中身（OS・ランタイム・ライブラリの構成）は利用者が完全にコントロールします。</p>
+<h2>提供状況：AWS・GCPは一般提供（GA）を確認済み、Azureも利用可能</h2>
+<p>Snowpark Container ServicesはAWSで2024年8月に全商用リージョンで一般提供（GA）となり、Google Cloud Platformは2025年8月に一般提供となりました（いずれもSnowflake公式のリリースノートで確認済み）。Microsoft Azureも現在サポート対象のクラウドに含まれていますが、Azure単体でのGA化の日付は、Native Apps対応など個別機能ごとのリリースノートに分かれており、本稿では単一の日付を特定していません。現在はAWS・Azure・GCPの商用リージョンで、有償のSnowflakeエディションであれば利用できます。トライアルアカウントや無料枠のアカウントでは利用できない点に注意してください。</p>
+<h2>何に使うか：3つの典型パターン</h2>
+<p>公式ドキュメントは主に3つの使い方を挙げています。</p>
+<p>1. <strong>バッチジョブ</strong>：ストアドプロシージャに似た形で、柔軟なジョブを実行する。GPUを使う計算集約的なタスク（機械学習モデルの学習・推論など）に向く
+2. <strong>サービス関数</strong>：SQLのクエリから、コンテナ内で動くカスタム処理を関数として呼び出す
+3. <strong>APIやWeb UIの公開</strong>：Snowflake上のデータを扱うビジネスロジックを、APIやWebアプリケーションとして外部に公開する</p>
+<p>計算プール（Compute Pool）を作成する際にマシンタイプを指定でき、GPU対応のインスタンスファミリーも選択できるため、機械学習モデルの学習・推論やAIを使った高度な分析といった、CPUだけでは重い処理にも対応します。</p>
+<h2>UDF・UDTF・ストアドプロシージャとの使い分け</h2>
+<ul><li><strong>UDF・UDTF・ストアドプロシージャが向く</strong>：Snowflakeが提供するPython環境で完結する軽量な処理。SQLの中から直接呼び出したい、Snowflakeの標準的なライブラリ（Anacondaチャネル経由のパッケージ等）で足りる場合</li><li><strong>Snowpark Container Servicesが向く</strong>：GPUが必要な機械学習の学習・推論、Python以外の言語で書かれた既存アプリケーション、特定バージョンのOS依存ライブラリが必要な場合、常駐サービスとしてAPIやWeb UIを公開したい場合</li></ul>
+<p>判断の軸は「Snowflakeが用意した実行環境で足りるか、自分でコンテナごと持ち込む必要があるか」です。前者で足りるならUDF・ストアドプロシージャの方が構築・運用ともに軽く済み、後者が必要になった時点でSnowpark Container Servicesを検討する、という順序になります。</p>
+    
+    <h2 style="font-size:1.05rem">出典</h2>
+    <ul style="padding-left:20px"><li><a href="https://docs.snowflake.com/en/developer-guide/snowpark-container-services/overview" style="color:#38bdf8">Snowflake Documentation: Snowpark Container Services Overview</a></li><li><a href="https://docs.snowflake.com/en/release-notes/2024/other/2024-08-01-spcs" style="color:#38bdf8">Snowflake Release Notes: Snowpark Container Services release notes (2024-08-01・AWS一般提供)</a></li><li><a href="https://docs.snowflake.com/en/release-notes/2025/other/2025-08-01-spcs-google-cloud-ga" style="color:#38bdf8">Snowflake Release Notes: Snowpark Container Services in Google Cloud (General availability)</a></li></ul>
+    <p style="color:#94a3b8;font-size:0.85rem">公式ドキュメントの記載にもとづく解説です（実行検証はしていません）。確認日：2026-09-19</p>
+    <nav style="margin-top:24px;display:flex;gap:16px;flex-wrap:wrap;font-size:0.85rem"><a href="/snowpark-guide/about/" style="color:#94a3b8">このサイトについて</a><a href="/snowpark-guide/privacy/" style="color:#94a3b8">プライバシーポリシー</a></nav>
+  </div></div>
+  </body>
+</html>

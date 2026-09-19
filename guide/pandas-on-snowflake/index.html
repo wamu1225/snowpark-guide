@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" type="image/svg+xml" href="../../favicon.svg" />
+    <title>Snowpark pandas API（pandas on Snowflake）の位置づけ｜Snowpark 実践ガイド</title>
+    <meta
+      name="description"
+      content="Snowpark Pythonの基礎知識（アーキテクチャ・Spark比較・Polars比較・UDF/UDTF/SPROC・料金・ML）と、DataFrame/Column APIをPolarsの同等コードと並べて確認できる逆引きリファレンスをまとめたサイトです。"
+    />
+    <link rel="canonical" href="https://study-apps.com/snowpark-guide/guide/pandas-on-snowflake/" />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="Snowpark 実践ガイド" />
+    <meta property="og:title" content="Snowpark pandas API（pandas on Snowflake）の位置づけ｜Snowpark 実践ガイド" />
+    <meta
+      property="og:description"
+      content="Snowpark Pythonの基礎知識と、DataFrame/Column APIをPolarsの同等コードと並べて確認できる逆引きリファレンスをまとめたサイトです。"
+    />
+    <meta property="og:url" content="https://study-apps.com/snowpark-guide/guide/pandas-on-snowflake/" />
+    <meta property="og:image" content="https://study-apps.com/snowpark-guide/ogp.png" />
+    <meta property="og:locale" content="ja_JP" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Snowpark pandas API（pandas on Snowflake）の位置づけ｜Snowpark 実践ガイド" />
+    <meta
+      name="twitter:description"
+      content="Snowpark Pythonの基礎知識と、DataFrame/Column APIをPolarsの同等コードと並べて確認できる逆引きリファレンスをまとめたサイトです。"
+    />
+    <meta name="twitter:image" content="https://study-apps.com/snowpark-guide/ogp.png" />
+    <script
+      async
+      src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9102538151148380"
+      crossorigin="anonymous"
+    ></script>
+    <script type="module" crossorigin src="../../assets/index-z4B7JITz.js"></script>
+    <link rel="stylesheet" crossorigin href="../../assets/index-Cj1a5bcD.css">
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","headline":"Snowpark pandas API（pandas on Snowflake）の位置づけ","description":"pandasの書き方のままSnowflake上のデータを扱えるが、既存のSnowpark DataFrameやto_pandas()と何が違うのかを整理します。","url":"https://study-apps.com/snowpark-guide/guide/pandas-on-snowflake/","dateModified":"2026-09-19","inLanguage":"ja"}</script>
+  </head>
+  <body>
+    <div id="root"><div style="max-width:760px;margin:0 auto;padding:24px 16px;font-family:sans-serif;line-height:1.8;color:#0f172a">
+    <p style="color:#94a3b8;font-size:0.9rem"><a href="/snowpark-guide/" style="color:#94a3b8">トップ</a> / 基礎知識</p>
+    <h1 style="font-size:1.6rem;margin-bottom:8px">Snowpark pandas API（pandas on Snowflake）の位置づけ</h1>
+    <p style="color:#475569">pandasの書き方のままSnowflake上のデータを扱えるが、既存のSnowpark DataFrameやto_pandas()と何が違うのかを整理します。</p>
+    
+    <h2>importするパッケージが変わるだけ、という触れ込み</h2>
+<p>Snowpark pandas API（公式には「pandas on Snowflake」）は、<code>import pandas as pd</code>を次のように変えるだけで、手元のpandasコードをSnowflake上のデータに対して実行できるようにする機能です。</p>
+<pre class="concept-page__code"><code># 変更前（ふつうのpandas。手元のメモリで実行）
+import pandas as pd
+df = pd.read_csv("orders.csv")
+
+# 変更後（Snowpark pandas。Snowflake上のテーブルに対して実行）
+import modin.pandas as pd
+import snowflake.snowpark.modin.plugin
+df = pd.read_snowflake("ORDERS")</code></pre>
+<p>公式ドキュメントは「importの記述を変えるだけで、慣れ親しんだpandasネイティブの体験を、Snowflakeのスケーラビリティとセキュリティの恩恵とともに得られる」と説明しています。インストールは<code>pip install "snowflake-snowpark-python[modin]"</code>で行います。</p>
+<h2>中身はModin：pandasのフロントエンドをSnowflakeに繋ぐ</h2>
+<p>Snowpark pandasは、オープンソースの分散pandas実装であるModinをフロントエンド層として使い、pandasと同じAPIのシグネチャとDataFrameの意味論を保ったまま、裏側の処理をSnowflakeへ委譲する構成になっています。ここまでで紹介してきた通常のSnowpark DataFrame（<code>session.table()</code>や<code>col()</code>を使う書き方）とは別の入り口ですが、最終的にはどちらもSnowflakeのSQLエンジンで処理される点は共通です。</p>
+<h2>データの実行場所：ハイブリッド実行</h2>
+<p>Snowpark Python 1.40.0以降、Snowpark pandasは既定で「ハイブリッド実行」が有効になっています。公式ドキュメントによれば、データ件数がおおむね10万行程度以下の小規模なデータはローカルのpandasエンジンで実行され、それを超える規模のデータはSnowflake側のSQLへ変換されて分散実行されます。どちらで実行されるかを意識してコードを書き分ける必要は無く、Snowpark pandas側が自動的に切り替えます。</p>
+<h2>サポートされないAPIがある</h2>
+<p>pandasのすべてのAPIがSnowflake上で分散実装されているわけではありません。公式ドキュメントは、サポート対象外のAPIを呼び出すと<code>NotImplementedError</code>が送出されると明記しています。実際に何がサポートされているかは、Snowflake公式のSnowpark pandas対応API一覧（sources参照）で確認できます。</p>
+<h2>既存の to_pandas() との違い：似た名前だが目的が逆</h2>
+<p>このサイトの「to_pandas」ページで扱った<code>DataFrame.to_pandas()</code>は、Snowpark DataFrameの実行結果を<strong>手元のメモリに丸ごと取り出して</strong>、ふつうのpandas DataFrameに変換するメソッドです。取り出した後は完全にローカルの処理になるため、結果がローカルのメモリに収まる規模であることが前提になります。</p>
+<p>対して、Snowpark pandas API（pandas on Snowflake）は、<strong>pandasの書き方のままデータをSnowflakeに置いたまま処理する</strong>ための入り口です。目的が逆であることに注意してください。</p>
+<ul><li><strong><code>to_pandas()</code></strong>：Snowpark DataFrameで絞り込み・集計を終えた「小さくなった最終結果」を、ローカルでさらにpandas/Polars等のエコシステムに繋ぎたいときに使う</li><li><strong>Snowpark pandas API</strong>：最初からpandasの書き方で書きたいが、元データがローカルのメモリに収まらない規模（数百万行〜）で、Snowflake側の計算資源に処理を任せたいときに使う</li></ul>
+<h2>⇄Polarsとの関係でどう選ぶか</h2>
+<p>このサイトの各メソッドページはSnowpark DataFrameとPolarsの対応表として作られていますが、Snowpark pandas APIは「Snowpark DataFrameの構文を覚えたくない・pandasの書き方のまま移行したい」場合の第三の選択肢です。判断の軸は次のとおりです。</p>
+<ul><li><strong>Snowpark DataFrameの構文（<code>col()</code>・<code>select()</code>等）を使う</strong>：このサイトの各ページで比較している通常の書き方。Snowparkのメソッドチェーンに慣れている、またはSQLに近い形で最適化を意識したい場合</li><li><strong>Snowpark pandas API（<code>modin.pandas</code>）を使う</strong>：既存のpandasコード資産をSnowflakeに移行したい、チームがpandasの書き方に慣れている場合。ただし前述のとおりサポート外のAPIには当たる</li><li><strong>Polarsを使う</strong>：データがすでに手元にある、またはSnowflakeから抽出した後のローカルでの探索的分析</li></ul>
+    <h2 style="font-size:1.05rem">関連する関数リファレンス</h2><ul style="padding-left:20px"><li><a href="/snowpark-guide/to-pandas/" style="color:#38bdf8">to_pandas</a></li></ul>
+    <h2 style="font-size:1.05rem">出典</h2>
+    <ul style="padding-left:20px"><li><a href="https://docs.snowflake.com/en/developer-guide/snowpark/python/pandas-on-snowflake" style="color:#38bdf8">Snowflake Documentation: pandas on Snowflake</a></li><li><a href="https://docs.snowflake.com/en/developer-guide/snowpark/reference/python/latest/modin/supported/index" style="color:#38bdf8">Snowflake Documentation: Snowpark pandas Supported API</a></li><li><a href="https://docs.snowflake.com/en/release-notes/clients-drivers/snowpark-python-2024" style="color:#38bdf8">Snowflake Snowpark Python Release Notes 2024（1.25.0・2024-11-13：public preview警告の撤廃）</a></li></ul>
+    <p style="color:#94a3b8;font-size:0.85rem">公式ドキュメントの記載にもとづく解説です（実行検証はしていません）。確認日：2026-09-19</p>
+    <nav style="margin-top:24px;display:flex;gap:16px;flex-wrap:wrap;font-size:0.85rem"><a href="/snowpark-guide/about/" style="color:#94a3b8">このサイトについて</a><a href="/snowpark-guide/privacy/" style="color:#94a3b8">プライバシーポリシー</a></nav>
+  </div></div>
+  </body>
+</html>
