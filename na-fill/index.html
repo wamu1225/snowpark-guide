@@ -32,15 +32,15 @@
       src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9102538151148380"
       crossorigin="anonymous"
     ></script>
-    <script type="module" crossorigin src="../assets/index-z4B7JITz.js"></script>
+    <script type="module" crossorigin src="../assets/index-CY5xPdRD.js"></script>
     <link rel="stylesheet" crossorigin href="../assets/index-Cj1a5bcD.css">
-  <script type="application/ld+json">{"@context":"https://schema.org","@type":"TechArticle","headline":"na.fill（fillna）","description":"NULL（欠損）を指定した値で埋める。 Snowparkでの書き方とPolarsでの書き方を並べて解説します。","url":"https://study-apps.com/snowpark-guide/na-fill/","dateModified":"2026-08-25","inLanguage":"ja"}</script>
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"TechArticle","headline":"na.fill（fillna）","description":"NULL（欠損）を指定した値で埋めます。 Snowparkでの書き方とPolarsでの書き方を並べて解説します。","url":"https://study-apps.com/snowpark-guide/na-fill/","dateModified":"2026-08-25","inLanguage":"ja"}</script>
   </head>
   <body>
     <div id="root"><div style="max-width:760px;margin:0 auto;padding:24px 16px;font-family:sans-serif;line-height:1.8;color:#0f172a">
     <p style="color:#94a3b8;font-size:0.9rem"><a href="/snowpark-guide/" style="color:#94a3b8">トップ</a> / Null処理</p>
     <h1 style="font-family:monospace;font-size:1.6rem;margin-bottom:8px">na.fill（fillna）</h1>
-    <p style="color:#475569">NULL（欠損）を指定した値で埋める。</p>
+    <p style="color:#475569">NULL（欠損）を指定した値で埋めます。</p>
     <div style="display:flex;flex-wrap:wrap;gap:16px;margin:20px 0">
       <div style="flex:1;min-width:260px">
         <h2 style="color:#0284c7;font-size:0.9rem">SNOWPARK <span style="opacity:0.75;font-weight:500">静的検証のみ</span></h2>
@@ -52,10 +52,10 @@
       </div>
     </div>
     <h2 style="font-size:1.05rem">挙動・設計の違い</h2>
-    <p>Snowparkは列名と埋める値の辞書を<code>na.fill()</code>に渡し、対応するSQLに展開される。Polarsは列ごとに<code>.fill_null()</code>を<code>with_columns</code>へ並べる。書き方は違うが、狙いは同じ「指定した列のNULLだけを値で置き換える」。</p>
+    <p>Snowparkは列名と埋める値の辞書を<code>na.fill()</code>に渡し、対応するSQLに展開されます。Polarsは列ごとに<code>.fill_null()</code>を<code>with_columns</code>へ並べます。書き方は違いますが、どちらも「指定した列のNULLだけを値で置き換える」という狙いは同じです。</p>
     <h2 style="font-size:1.05rem;color:#b45309">移行時の落とし穴</h2>
-    <p><strong>【Polars 側の落とし穴】整数列に浮動小数点数で埋めると、エラーにならずに型が変わる</strong>。Polars で整数列（<code>i64</code>）に<code>fill_null(0.0)</code>のような浮動小数点数を渡すと、<strong>例外を出さずに列全体の型がこっそり<code>f64</code>へ変わる</strong>（Polars 1.43.2 で実行して確認）。「型エラーで気づける」と思っていると危険で、後続の処理で誤差や想定外の桁が出てから気づくことになりやすい。整数列を保ちたいときは、埋める値の型（<code>0</code>か<code>0.0</code>か）を明示的に意識する。</p>
-    <h2 style="font-size:1.05rem">Null処理の他のメソッド</h2><ul style="padding-left:20px"><li><a href="/snowpark-guide/na-drop/" style="color:#38bdf8">na.drop（dropna）</a> ── 指定した列がNULLの行を取り除く。</li><li><a href="/snowpark-guide/na-replace/" style="color:#38bdf8">na.replace</a> ── 特定の値（NULLとは限らない）を、別の値に一括で置き換える。</li></ul>
+    <p><strong>【Polars 側の落とし穴】整数列に浮動小数点数で埋めると、エラーにならずに型が変わります</strong>。Polars で整数列（<code>i64</code>）に<code>fill_null(0.0)</code>のような浮動小数点数を渡すと、<strong>例外を出さずに列全体の型がこっそり<code>f64</code>へ変わります</strong>（Polars 1.43.2 で実行して確認）。「型エラーで気づける」と思っていると危険で、後続の処理で誤差や想定外の桁が出てから気づくことになりやすいです。整数列を保ちたいときは、埋める値の型（<code>0</code>か<code>0.0</code>か）を明示的に意識します。</p>
+    <h2 style="font-size:1.05rem">Null処理の他のメソッド</h2><ul style="padding-left:20px"><li><a href="/snowpark-guide/na-drop/" style="color:#38bdf8">na.drop（dropna）</a> ── 指定した列がNULLの行を取り除きます。</li><li><a href="/snowpark-guide/na-replace/" style="color:#38bdf8">na.replace</a> ── 特定の値（NULLとは限らない）を、別の値に一括で置き換えます。</li></ul>
     
     <h2 style="font-size:1.05rem">出典・検証情報</h2>
     <ul style="padding-left:20px">

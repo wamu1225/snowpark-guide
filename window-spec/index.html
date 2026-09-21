@@ -32,15 +32,15 @@
       src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9102538151148380"
       crossorigin="anonymous"
     ></script>
-    <script type="module" crossorigin src="../assets/index-z4B7JITz.js"></script>
+    <script type="module" crossorigin src="../assets/index-CY5xPdRD.js"></script>
     <link rel="stylesheet" crossorigin href="../assets/index-Cj1a5bcD.css">
-  <script type="application/ld+json">{"@context":"https://schema.org","@type":"TechArticle","headline":"Window.partition_by / Window.order_by","description":"グループ（パーティション）ごとに、行をまたいだ計算をするための土台を定義する。 Snowparkでの書き方とPolarsでの書き方を並べて解説します。","url":"https://study-apps.com/snowpark-guide/window-spec/","dateModified":"2026-08-24","inLanguage":"ja"}</script>
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"TechArticle","headline":"Window.partition_by / Window.order_by","description":"グループ（パーティション）ごとに、行をまたいだ計算をするための土台を定義します。 Snowparkでの書き方とPolarsでの書き方を並べて解説します。","url":"https://study-apps.com/snowpark-guide/window-spec/","dateModified":"2026-08-24","inLanguage":"ja"}</script>
   </head>
   <body>
     <div id="root"><div style="max-width:760px;margin:0 auto;padding:24px 16px;font-family:sans-serif;line-height:1.8;color:#0f172a">
     <p style="color:#94a3b8;font-size:0.9rem"><a href="/snowpark-guide/" style="color:#94a3b8">トップ</a> / ウィンドウ関数</p>
     <h1 style="font-family:monospace;font-size:1.6rem;margin-bottom:8px">Window.partition_by / Window.order_by</h1>
-    <p style="color:#475569">グループ（パーティション）ごとに、行をまたいだ計算をするための土台を定義する。</p>
+    <p style="color:#475569">グループ（パーティション）ごとに、行をまたいだ計算をするための土台を定義します。</p>
     <div style="display:flex;flex-wrap:wrap;gap:16px;margin:20px 0">
       <div style="flex:1;min-width:260px">
         <h2 style="color:#0284c7;font-size:0.9rem">SNOWPARK <span style="opacity:0.75;font-weight:500">静的検証のみ</span></h2>
@@ -52,10 +52,10 @@
       </div>
     </div>
     <h2 style="font-size:1.05rem">挙動・設計の違い</h2>
-    <p>SnowparkはPySpark由来の<code>WindowSpec</code>オブジェクトを<code>Window.partition_by(...).order_by(...)</code>で組み立て、後述の<code>rank()</code>等の式に<code>.over(window_spec)</code>として渡す。Polarsには独立した「窓の仕様オブジェクト」という概念が無く、集計したい式の末尾に直接<code>.over("department")</code>を付けるだけでパーティションごとの計算になる。</p>
+    <p>SnowparkはPySpark由来の<code>WindowSpec</code>オブジェクトを<code>Window.partition_by(...).order_by(...)</code>で組み立て、後述の<code>rank()</code>等の式に<code>.over(window_spec)</code>として渡します。Polarsには独立した「窓の仕様オブジェクト」という概念がなく、集計したい式の末尾に直接<code>.over("department")</code>を付けるだけでパーティションごとの計算になります。</p>
     <h2 style="font-size:1.05rem;color:#b45309">移行時の落とし穴</h2>
-    <p>Snowparkは並べ替え（<code>order_by</code>）を<code>WindowSpec</code>の中で一括指定できるが、Polarsの<code>.over()</code>自体には並べ替えを指定する引数が無い。<code>row_number</code>や<code>lag</code>/<code>lead</code>のようにパーティション内の順序が結果を左右する計算をPolarsで行うときは、<code>.over()</code>を付ける<strong>前に</strong><code>sort()</code>でデータ全体を正しい順序に並べておく必要がある（次の<code>row_number</code>のページを参照）。</p>
-    <h2 style="font-size:1.05rem">ウィンドウ関数の他のメソッド</h2><ul style="padding-left:20px"><li><a href="/snowpark-guide/rank/" style="color:#38bdf8">rank</a> ── パーティション内で順位をつける。同じ値には同じ順位がつき、その分だけ次の順位を飛ばす。</li><li><a href="/snowpark-guide/dense-rank/" style="color:#38bdf8">dense_rank</a> ── パーティション内で順位をつける。同じ値には同じ順位がつくが、次の順位は飛ばさない。</li><li><a href="/snowpark-guide/row-number/" style="color:#38bdf8">row_number</a> ── パーティション内で1から始まる連番をふる。同率でも必ず別の番号になる。</li><li><a href="/snowpark-guide/lag/" style="color:#38bdf8">lag</a> ── パーティション内で、1つ前（過去）の行の値を取得する。</li><li><a href="/snowpark-guide/lead/" style="color:#38bdf8">lead</a> ── パーティション内で、1つ後（未来）の行の値を取得する。</li><li><a href="/snowpark-guide/ntile/" style="color:#38bdf8">ntile</a> ── パーティション内の行を、指定した個数のグループに行数ができるだけ均等になるよう分割する。</li><li><a href="/snowpark-guide/percent-rank-cume-dist/" style="color:#38bdf8">percent_rank / cume_dist</a> ── パーティション内での相対的な順位を、0〜1の割合で表す。</li><li><a href="/snowpark-guide/first-value-last-value/" style="color:#38bdf8">first_value / last_value</a> ── パーティション内で並べ替えた順序の、先頭の値・末尾の値を各行に持たせる。</li></ul>
+    <p>Snowparkは並べ替え（<code>order_by</code>）を<code>WindowSpec</code>の中で一括指定できますが、Polarsの<code>.over()</code>自体には並べ替えを指定する引数がありません。<code>row_number</code>や<code>lag</code>/<code>lead</code>のようにパーティション内の順序が結果を左右する計算をPolarsで行うときは、<code>.over()</code>を付ける<strong>前に</strong><code>sort()</code>でデータ全体を正しい順序に並べておく必要があります（次の<code>row_number</code>のページを参照）。</p>
+    <h2 style="font-size:1.05rem">ウィンドウ関数の他のメソッド</h2><ul style="padding-left:20px"><li><a href="/snowpark-guide/rank/" style="color:#38bdf8">rank</a> ── パーティション内で順位をつけます。同じ値には同じ順位がつき、その分だけ次の順位を飛ばします。</li><li><a href="/snowpark-guide/dense-rank/" style="color:#38bdf8">dense_rank</a> ── パーティション内で順位をつけます。同じ値には同じ順位がつきますが、次の順位は飛ばしません。</li><li><a href="/snowpark-guide/row-number/" style="color:#38bdf8">row_number</a> ── パーティション内で1から始まる連番をふります。同率でも必ず別の番号になります。</li><li><a href="/snowpark-guide/lag/" style="color:#38bdf8">lag</a> ── パーティション内で、1つ前（過去）の行の値を取得します。</li><li><a href="/snowpark-guide/lead/" style="color:#38bdf8">lead</a> ── パーティション内で、1つ後（未来）の行の値を取得します。</li><li><a href="/snowpark-guide/ntile/" style="color:#38bdf8">ntile</a> ── パーティション内の行を、指定した個数のグループに行数ができるだけ均等になるよう分割します。</li><li><a href="/snowpark-guide/percent-rank-cume-dist/" style="color:#38bdf8">percent_rank / cume_dist</a> ── パーティション内での相対的な順位を、0〜1の割合で表します。</li><li><a href="/snowpark-guide/first-value-last-value/" style="color:#38bdf8">first_value / last_value</a> ── パーティション内で並べ替えた順序の、先頭の値・末尾の値を各行に持たせます。</li></ul>
     
     <h2 style="font-size:1.05rem">出典・検証情報</h2>
     <ul style="padding-left:20px">

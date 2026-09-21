@@ -32,15 +32,15 @@
       src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9102538151148380"
       crossorigin="anonymous"
     ></script>
-    <script type="module" crossorigin src="../assets/index-z4B7JITz.js"></script>
+    <script type="module" crossorigin src="../assets/index-CY5xPdRD.js"></script>
     <link rel="stylesheet" crossorigin href="../assets/index-Cj1a5bcD.css">
-  <script type="application/ld+json">{"@context":"https://schema.org","@type":"TechArticle","headline":"createOrReplaceView（create_or_replace_view）","description":"今のDataFrameの定義を、他のSQLセッションからも参照できるビューとして登録する。 Snowparkでの書き方とPolarsでの書き方を並べて解説します。","url":"https://study-apps.com/snowpark-guide/create-or-replace-view/","dateModified":"2026-08-26","inLanguage":"ja"}</script>
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"TechArticle","headline":"createOrReplaceView（create_or_replace_view）","description":"今のDataFrameの定義を、他のSQLセッションからも参照できるビューとして登録します。 Snowparkでの書き方とPolarsでの書き方を並べて解説します。","url":"https://study-apps.com/snowpark-guide/create-or-replace-view/","dateModified":"2026-08-26","inLanguage":"ja"}</script>
   </head>
   <body>
     <div id="root"><div style="max-width:760px;margin:0 auto;padding:24px 16px;font-family:sans-serif;line-height:1.8;color:#0f172a">
     <p style="color:#94a3b8;font-size:0.9rem"><a href="/snowpark-guide/" style="color:#94a3b8">トップ</a> / 実行・アクション・IO</p>
     <h1 style="font-family:monospace;font-size:1.6rem;margin-bottom:8px">createOrReplaceView（create_or_replace_view）</h1>
-    <p style="color:#475569">今のDataFrameの定義を、他のSQLセッションからも参照できるビューとして登録する。</p>
+    <p style="color:#475569">今のDataFrameの定義を、他のSQLセッションからも参照できるビューとして登録します。</p>
     <div style="display:flex;flex-wrap:wrap;gap:16px;margin:20px 0">
       <div style="flex:1;min-width:260px">
         <h2 style="color:#0284c7;font-size:0.9rem">SNOWPARK <span style="opacity:0.75;font-weight:500">静的検証のみ</span></h2>
@@ -53,10 +53,10 @@ ctx.register(&quot;my_view&quot;, ldf)</code></pre>
       </div>
     </div>
     <h2 style="font-size:1.05rem">挙動・設計の違い</h2>
-    <p>Snowparkは実際にSnowflake内へ<code>CREATE OR REPLACE VIEW ... AS ...</code>というDDLを発行し、Snowflake上に永続するデータベースオブジェクトを作る。他のSQLセッションやBIツールからもそのまま参照できる。Polarsの<code>SQLContext().register()</code>はローカルのプロセス内だけで有効なSQL用の名前の登録で、実行して動作を確認したところSQL文からその名前でLazyFrameを参照できるようになる。ただしSnowflakeのビューのように外部から参照できる永続オブジェクトにはならない。</p>
+    <p>Snowparkは実際にSnowflake内へ<code>CREATE OR REPLACE VIEW ... AS ...</code>というDDLを発行し、Snowflake上に永続するデータベースオブジェクトを作ります。他のSQLセッションやBIツールからもそのまま参照できます。Polarsの<code>SQLContext().register()</code>はローカルのプロセス内だけで有効なSQL用の名前の登録で、実行して動作を確認したところSQL文からその名前でLazyFrameを参照できるようになります。ただしSnowflakeのビューのように外部から参照できる永続オブジェクトにはなりません。</p>
     <h2 style="font-size:1.05rem;color:#b45309">移行時の落とし穴</h2>
-    <p>両者は似た書き方に見えるが、<strong>「データベースに永続するオブジェクトを作る」のか「今のPythonプロセス内だけで一時的に名前を割り当てる」のか</strong>という根本的に違う操作である。Polars側の<code>register</code>をSnowparkのビューと同じ感覚で「他から参照できる」と誤解しない。</p>
-    <h2 style="font-size:1.05rem">実行・アクション・IOの他のメソッド</h2><ul style="padding-left:20px"><li><a href="/snowpark-guide/collect/" style="color:#38bdf8">collect</a> ── それまで積み上げた変換を実際に評価し、結果を手元に取得する。最も基本的なアクション。</li><li><a href="/snowpark-guide/show/" style="color:#38bdf8">show</a> ── 結果の先頭数行を、確認用に画面へ表示する。</li><li><a href="/snowpark-guide/first/" style="color:#38bdf8">first</a> ── 先頭の1行だけを取得する。</li><li><a href="/snowpark-guide/take/" style="color:#38bdf8">take</a> ── 指定した件数の行を取得する。</li><li><a href="/snowpark-guide/to-pandas/" style="color:#38bdf8">to_pandas</a> ── 結果をpandas DataFrameに変換する。</li><li><a href="/snowpark-guide/to-local-iterator/" style="color:#38bdf8">to_local_iterator</a> ── 結果を全件メモリに載せず、1行（またはチャンク）ずつ順番に処理する。</li><li><a href="/snowpark-guide/cache-result/" style="color:#38bdf8">cache_result</a> ── それまでの計算結果を1度だけ確定させ、以降はその結果を使い回す。</li><li><a href="/snowpark-guide/create-or-replace-temp-view/" style="color:#38bdf8">createOrReplaceTempView（create_or_replace_temp_view）</a> ── 今のセッション限定で有効な、一時的なビューを作る。</li><li><a href="/snowpark-guide/save-as-table/" style="color:#38bdf8">write.save_as_table</a> ── 結果をテーブル（またはファイル）として書き出す。</li><li><a href="/snowpark-guide/explain/" style="color:#38bdf8">explain</a> ── その時点までの変換が、実際にどう実行される予定かを表示する。</li></ul>
+    <p>両者は似た書き方に見えますが、<strong>「データベースに永続するオブジェクトを作る」のか「今のPythonプロセス内だけで一時的に名前を割り当てる」のか</strong>という根本的に違う操作です。Polars側の<code>register</code>をSnowparkのビューと同じ感覚で「他から参照できる」と誤解しないでください。</p>
+    <h2 style="font-size:1.05rem">実行・アクション・IOの他のメソッド</h2><ul style="padding-left:20px"><li><a href="/snowpark-guide/collect/" style="color:#38bdf8">collect</a> ── それまで積み上げた変換を実際に評価し、結果を手元に取得します。最も基本的なアクション。</li><li><a href="/snowpark-guide/show/" style="color:#38bdf8">show</a> ── 結果の先頭数行を、確認用に画面へ表示します。</li><li><a href="/snowpark-guide/first/" style="color:#38bdf8">first</a> ── 先頭の1行だけを取得します。</li><li><a href="/snowpark-guide/take/" style="color:#38bdf8">take</a> ── 指定した件数の行を取得します。</li><li><a href="/snowpark-guide/to-pandas/" style="color:#38bdf8">to_pandas</a> ── 結果をpandas DataFrameに変換します。</li><li><a href="/snowpark-guide/to-local-iterator/" style="color:#38bdf8">to_local_iterator</a> ── 結果を全件メモリに載せず、1行（またはチャンク）ずつ順番に処理します。</li><li><a href="/snowpark-guide/cache-result/" style="color:#38bdf8">cache_result</a> ── それまでの計算結果を1度だけ確定させ、以降はその結果を使い回します。</li><li><a href="/snowpark-guide/create-or-replace-temp-view/" style="color:#38bdf8">createOrReplaceTempView（create_or_replace_temp_view）</a> ── 今のセッション限定で有効な、一時的なビューを作ります。</li><li><a href="/snowpark-guide/save-as-table/" style="color:#38bdf8">write.save_as_table</a> ── 結果をテーブル（またはファイル）として書き出します。</li><li><a href="/snowpark-guide/explain/" style="color:#38bdf8">explain</a> ── その時点までの変換が、実際にどう実行される予定かを表示します。</li></ul>
     
     <h2 style="font-size:1.05rem">出典・検証情報</h2>
     <ul style="padding-left:20px">

@@ -32,7 +32,7 @@
       src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9102538151148380"
       crossorigin="anonymous"
     ></script>
-    <script type="module" crossorigin src="../../assets/index-z4B7JITz.js"></script>
+    <script type="module" crossorigin src="../../assets/index-CY5xPdRD.js"></script>
     <link rel="stylesheet" crossorigin href="../../assets/index-Cj1a5bcD.css">
   <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","headline":"Snowpark と Apache Spark の違い","description":"DataFrame APIの書き味はよく似ていますが、クラスタを自分で持つか持たないかで運用とコストの構造がまったく変わります。","url":"https://study-apps.com/snowpark-guide/guide/vs-spark/","dateModified":"2026-08-29","inLanguage":"ja"}</script>
   </head>
@@ -66,7 +66,7 @@ result = (
       .sort(col("avg_amount").desc())
       .limit(10)
 )</code></pre>
-<p>違いが出るのは複合語のメソッド名です。PySparkは<code>groupBy</code>・<code>withColumn</code>のようにcamelCaseが標準ですが、Snowparkは<code>group_by</code>・<code>with_column</code>のようにsnake_caseが標準です。<strong>Snowparkは実は<code>groupBy</code>・<code>withColumn</code>・<code>orderBy</code>というcamelCaseのエイリアスも内部に持っており、PySparkと同じ綴りでも動きます</strong>（SDKのクラス定義を実機で確認済み）。ただしSnowflake公式のサンプルコードはsnake_caseで統一されているため、新規に書くならsnake_caseに合わせておくのが無難です。</p>
+<p>違いが出るのは複合語のメソッド名です。PySparkは<code>groupBy</code>・<code>withColumn</code>のようにcamelCaseが標準ですが、Snowparkは<code>group_by</code>・<code>with_column</code>のようにsnake_caseが標準です。<strong>Snowparkは実は<code>groupBy</code>・<code>withColumn</code>・<code>orderBy</code>というcamelCaseのエイリアスも内部に持っており、PySparkと同じ綴りでも動きます</strong>（SDKのクラス定義を実機で確認済みです）。ただしSnowflake公式のサンプルコードはsnake_caseで統一されているため、新規に書くならsnake_caseに合わせておくのが無難です。</p>
 <h2>UDFを書いている場合は移行の影響が一番大きい</h2>
 <p>DataFrameの変換メソッドだけを使っているコードは前述のとおりほぼそのまま移植できますが、<strong>UDF（ユーザー定義関数）を使っている場合は実行モデルそのものが変わります</strong>。PySparkの公式ドキュメントは「Apache Arrowは、SparkがJVMとPythonプロセスの間でデータを効率的に転送するために使うインメモリの列指向データ形式である」と説明しており、これはPySparkのPython UDFが<strong>JVM（Sparkエンジン本体）とは別のPythonプロセスで動き、その間のデータ受け渡しにシリアライズのコストがかかる</strong>ことを裏付けています。一方Snowparkでは、Python UDFの中身は<a href="/snowpark-guide/guide/architecture/">Snowflake側のサンドボックス</a>で実行されます。どちらも「メインの実行エンジンとは別の場所でPythonが動く」という構造は共通していますが、<strong>その「別の場所」を自分でチューニングできるか（Sparkのワーカー設定）、Snowflakeに任せるか</strong>という運用面の違いは大きく影響します。UDF・UDTF・ストアドプロシージャの使い分け自体は<a href="/snowpark-guide/guide/udf-udtf-sproc/">こちらのページ</a>で解説しています。</p>
 <h2>コストの発生の仕方</h2>

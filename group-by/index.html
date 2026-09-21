@@ -32,15 +32,15 @@
       src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9102538151148380"
       crossorigin="anonymous"
     ></script>
-    <script type="module" crossorigin src="../assets/index-z4B7JITz.js"></script>
+    <script type="module" crossorigin src="../assets/index-CY5xPdRD.js"></script>
     <link rel="stylesheet" crossorigin href="../assets/index-Cj1a5bcD.css">
-  <script type="application/ld+json">{"@context":"https://schema.org","@type":"TechArticle","headline":"group_by / groupBy","description":"指定した列の値でグループ化する。集約する前段階として使う。 Snowparkでの書き方とPolarsでの書き方を並べて解説します。","url":"https://study-apps.com/snowpark-guide/group-by/","dateModified":"2026-08-22","inLanguage":"ja"}</script>
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"TechArticle","headline":"group_by / groupBy","description":"指定した列の値でグループ化します。集約する前段階として使います。 Snowparkでの書き方とPolarsでの書き方を並べて解説します。","url":"https://study-apps.com/snowpark-guide/group-by/","dateModified":"2026-08-22","inLanguage":"ja"}</script>
   </head>
   <body>
     <div id="root"><div style="max-width:760px;margin:0 auto;padding:24px 16px;font-family:sans-serif;line-height:1.8;color:#0f172a">
     <p style="color:#94a3b8;font-size:0.9rem"><a href="/snowpark-guide/" style="color:#94a3b8">トップ</a> / 集約・構造変換</p>
     <h1 style="font-family:monospace;font-size:1.6rem;margin-bottom:8px">group_by / groupBy</h1>
-    <p style="color:#475569">指定した列の値でグループ化する。集約する前段階として使う。</p>
+    <p style="color:#475569">指定した列の値でグループ化します。集約する前段階として使います。</p>
     <div style="display:flex;flex-wrap:wrap;gap:16px;margin:20px 0">
       <div style="flex:1;min-width:260px">
         <h2 style="color:#0284c7;font-size:0.9rem">SNOWPARK <span style="opacity:0.75;font-weight:500">静的検証のみ</span></h2>
@@ -52,10 +52,10 @@
       </div>
     </div>
     <h2 style="font-size:1.05rem">挙動・設計の違い</h2>
-    <p>どちらも、この時点ではまだ集約を実行しない。グループ化キーを保持した中間オブジェクト（Snowparkは<code>RelationalGroupedDataFrame</code>、Polarsは<code>LazyGroupBy</code>）を返し、後続の<code>agg()</code>呼び出しを待つ設計が共通している。</p>
+    <p>どちらも、この時点ではまだ集約を実行しません。グループ化キーを保持した中間オブジェクト（Snowparkは<code>RelationalGroupedDataFrame</code>、Polarsは<code>LazyGroupBy</code>）を返し、後続の<code>agg()</code>呼び出しを待つ設計が共通しています。</p>
     <h2 style="font-size:1.05rem;color:#b45309">移行時の落とし穴</h2>
-    <p>Snowparkはキャメルケースの<code>groupBy</code>も別名として使えるが、Polarsはスネークケースの<code>group_by</code>に統一されている。SnowparkのコードをPolarsへそのまま移植するとき<code>groupBy</code>と書いてしまうと存在しないメソッドになる。</p>
-    <h2 style="font-size:1.05rem">集約・構造変換の他のメソッド</h2><ul style="padding-left:20px"><li><a href="/snowpark-guide/agg/" style="color:#38bdf8">agg</a> ── group_byで作ったグループごとに、集約の計算をまとめて指定する。</li><li><a href="/snowpark-guide/count/" style="color:#38bdf8">count</a> ── 行数を数える。</li><li><a href="/snowpark-guide/sum/" style="color:#38bdf8">sum</a> ── 列の値を合計する。</li><li><a href="/snowpark-guide/mean/" style="color:#38bdf8">avg / mean</a> ── 列の値の平均を求める。</li><li><a href="/snowpark-guide/min/" style="color:#38bdf8">min</a> ── 列の最小値を求める。</li><li><a href="/snowpark-guide/max/" style="color:#38bdf8">max</a> ── 列の最大値を求める。</li><li><a href="/snowpark-guide/pivot/" style="color:#38bdf8">pivot</a> ── 行の値を列に展開する（縦持ちから横持ちへ）。</li><li><a href="/snowpark-guide/unpivot/" style="color:#38bdf8">unpivot</a> ── pivotの逆。複数列を1つの列にまとめる（横持ちから縦持ちへ）。</li><li><a href="/snowpark-guide/array-agg/" style="color:#38bdf8">array_agg</a> ── グループ内の複数行の値を、1つの配列（リスト）にまとめる。</li><li><a href="/snowpark-guide/listagg/" style="color:#38bdf8">listagg</a> ── グループ内の複数行の文字列を、区切り文字でつないだ1つの文字列にまとめる。</li><li><a href="/snowpark-guide/median-stddev/" style="color:#38bdf8">median / stddev</a> ── 中央値と標準偏差を求める（外れ値の影響を受けにくい代表値・散らばりの指標）。</li><li><a href="/snowpark-guide/count-distinct-approx-count-distinct/" style="color:#38bdf8">count_distinct / approx_count_distinct</a> ── 重複を除いた値の種類数（ユニーク数）を求める。近似版は誤差を許容する代わりに高速。</li></ul>
+    <p>Snowparkはキャメルケースの<code>groupBy</code>も別名として使えるが、Polarsはスネークケースの<code>group_by</code>に統一されています。SnowparkのコードをPolarsへそのまま移植するとき<code>groupBy</code>と書いてしまうと存在しないメソッドになります。</p>
+    <h2 style="font-size:1.05rem">集約・構造変換の他のメソッド</h2><ul style="padding-left:20px"><li><a href="/snowpark-guide/agg/" style="color:#38bdf8">agg</a> ── group_byで作ったグループごとに、集約の計算をまとめて指定します。</li><li><a href="/snowpark-guide/count/" style="color:#38bdf8">count</a> ── 行数を数える。</li><li><a href="/snowpark-guide/sum/" style="color:#38bdf8">sum</a> ── 列の値を合計します。</li><li><a href="/snowpark-guide/mean/" style="color:#38bdf8">avg / mean</a> ── 列の値の平均を求める。</li><li><a href="/snowpark-guide/min/" style="color:#38bdf8">min</a> ── 列の最小値を求める。</li><li><a href="/snowpark-guide/max/" style="color:#38bdf8">max</a> ── 列の最大値を求める。</li><li><a href="/snowpark-guide/pivot/" style="color:#38bdf8">pivot</a> ── 行の値を列に展開します（縦持ちから横持ちへ）。</li><li><a href="/snowpark-guide/unpivot/" style="color:#38bdf8">unpivot</a> ── pivotの逆です。複数列を1つの列にまとめます（横持ちから縦持ちへ）。</li><li><a href="/snowpark-guide/array-agg/" style="color:#38bdf8">array_agg</a> ── グループ内の複数行の値を、1つの配列（リスト）にまとめます。</li><li><a href="/snowpark-guide/listagg/" style="color:#38bdf8">listagg</a> ── グループ内の複数行の文字列を、区切り文字でつないだ1つの文字列にまとめます。</li><li><a href="/snowpark-guide/median-stddev/" style="color:#38bdf8">median / stddev</a> ── 中央値と標準偏差を求めます（外れ値の影響を受けにくい代表値・散らばりの指標）。</li><li><a href="/snowpark-guide/count-distinct-approx-count-distinct/" style="color:#38bdf8">count_distinct / approx_count_distinct</a> ── 重複を除いた値の種類数（ユニーク数）を求めます。近似版は誤差を許容する代わりに高速です。</li></ul>
     <h2 style="font-size:1.05rem">関連する基礎知識</h2><ul style="padding-left:20px"><li><a href="/snowpark-guide/guide/vs-spark/" style="color:#38bdf8">Snowpark と Apache Spark の違い</a></li><li><a href="/snowpark-guide/guide/vs-polars/" style="color:#38bdf8">Snowpark と Polars の違い（総論）</a></li></ul>
     <h2 style="font-size:1.05rem">出典・検証情報</h2>
     <ul style="padding-left:20px">

@@ -32,7 +32,7 @@
       src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9102538151148380"
       crossorigin="anonymous"
     ></script>
-    <script type="module" crossorigin src="../../assets/index-z4B7JITz.js"></script>
+    <script type="module" crossorigin src="../../assets/index-CY5xPdRD.js"></script>
     <link rel="stylesheet" crossorigin href="../../assets/index-Cj1a5bcD.css">
   <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","headline":"Snowpark Container Services とは何か","description":"UDF・UDTF・ストアドプロシージャでは対応できない「任意の言語・ランタイム・ライブラリ」をSnowflake内で動かすための、一般提供済みのコンテナ実行基盤です。","url":"https://study-apps.com/snowpark-guide/guide/container-services/","dateModified":"2026-09-19","inLanguage":"ja"}</script>
   </head>
@@ -48,10 +48,10 @@
 <p>Snowpark Container Servicesは、この制約を取り払うための、Snowflake内で完結する管理型のコンテナオーケストレーション基盤です。公式ドキュメントは「アプリケーションとその依存関係をOCI（Open Container Initiative）イメージにパッケージ化でき、そこには任意のプログラミング言語・フレームワーク・ライブラリを含められる」と説明しています。つまり、UDFのようにSnowflakeが用意した実行環境の中に収めるのではなく、<strong>自分でDockerイメージを作ってSnowflakeの中で動かす</strong>という発想です。</p>
 <p>インフラの管理（コンピュートリソースの確保・オーケストレーション）はSnowflakeが引き受けますが、コンテナの中身（OS・ランタイム・ライブラリの構成）は利用者が完全にコントロールします。</p>
 <h2>提供状況：AWS・GCPは一般提供（GA）を確認済み、Azureも利用可能</h2>
-<p>Snowpark Container ServicesはAWSで2024年8月に全商用リージョンで一般提供（GA）となり、Google Cloud Platformは2025年8月に一般提供となりました（いずれもSnowflake公式のリリースノートで確認済み）。Microsoft Azureも現在サポート対象のクラウドに含まれていますが、Azure単体でのGA化の日付は、Native Apps対応など個別機能ごとのリリースノートに分かれており、本稿では単一の日付を特定していません。現在はAWS・Azure・GCPの商用リージョンで、有償のSnowflakeエディションであれば利用できます。トライアルアカウントや無料枠のアカウントでは利用できない点に注意してください。</p>
+<p>Snowpark Container ServicesはAWSで2024年8月に全商用リージョンで一般提供（GA）となり、Google Cloud Platformは2025年8月に一般提供となりました（いずれもSnowflake公式のリリースノートで確認済みです）。Microsoft Azureも現在サポート対象のクラウドに含まれていますが、Azure単体でのGA化の日付は、Native Apps対応など個別機能ごとのリリースノートに分かれており、本稿では単一の日付を特定していません。現在はAWS・Azure・GCPの商用リージョンで、有償のSnowflakeエディションであれば利用できます。トライアルアカウントや無料枠のアカウントでは利用できない点に注意してください。</p>
 <h2>何に使うか：3つの典型パターン</h2>
 <p>公式ドキュメントは主に3つの使い方を挙げています。</p>
-<p>1. <strong>バッチジョブ</strong>：ストアドプロシージャに似た形で、柔軟なジョブを実行する。GPUを使う計算集約的なタスク（機械学習モデルの学習・推論など）に向く
+<p>1. <strong>バッチジョブ</strong>：ストアドプロシージャに似た形で、柔軟なジョブを実行します。GPUを使う計算集約的なタスク（機械学習モデルの学習・推論など）に向く
 2. <strong>サービス関数</strong>：SQLのクエリから、コンテナ内で動くカスタム処理を関数として呼び出す
 3. <strong>APIやWeb UIの公開</strong>：Snowflake上のデータを扱うビジネスロジックを、APIやWebアプリケーションとして外部に公開する</p>
 <p>計算プール（Compute Pool）を作成する際にマシンタイプを指定でき、GPU対応のインスタンスファミリーも選択できるため、機械学習モデルの学習・推論やAIを使った高度な分析といった、CPUだけでは重い処理にも対応します。</p>

@@ -32,7 +32,7 @@
       src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9102538151148380"
       crossorigin="anonymous"
     ></script>
-    <script type="module" crossorigin src="../../assets/index-z4B7JITz.js"></script>
+    <script type="module" crossorigin src="../../assets/index-CY5xPdRD.js"></script>
     <link rel="stylesheet" crossorigin href="../../assets/index-Cj1a5bcD.css">
   <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","headline":"UDF・Vectorized UDF・UDTF・ストアドプロシージャの使い分け","description":"Snowflake上でカスタムロジックを実行する4つの手段を、入出力の形とSQLからの呼び出し方で整理します。","url":"https://study-apps.com/snowpark-guide/guide/udf-udtf-sproc/","dateModified":"2026-08-27","inLanguage":"ja"}</script>
   </head>
@@ -96,7 +96,7 @@ def archive_old_rows(session, cutoff_date: str) -&gt; str:
 <h2>使い分けの早見表</h2>
 <table><thead><tr><th>種類</th><th>主な目的</th><th>戻り値</th><th>SQL式内から直接呼べるか</th><th>DDL/DMLの実行</th></tr></thead><tbody><tr><td>スカラUDF</td><td>行ごとの計算・変換</td><td>単一の値</td><td>可能</td><td>不可</td></tr><tr><td>Vectorized UDF</td><td>バッチ単位の高速演算</td><td>単一の値（バッチ処理）</td><td>可能</td><td>不可</td></tr><tr><td>UDTF</td><td>表構造への展開・変換</td><td>複数行・複数列</td><td>可能（FROM句内）</td><td>不可</td></tr><tr><td>ストアドプロシージャ</td><td>パイプライン制御・自動化</td><td>任意</td><td>不可（CALL文）</td><td>可能</td></tr></tbody></table>
 <h2>で、どれを選べばいいか</h2>
-<ul><li><strong>既存の1行1値の変換ロジックをSQLに埋め込みたいだけ</strong> → スカラUDF。まず最初に検討する選択肢</li><li><strong>機械学習の推論・大量データへの数値演算で、1行ずつの呼び出しオーバーヘッドが無視できない</strong> → Vectorized UDF。同じロジックでもバッチ化するだけで速くなる場合がある</li><li><strong>1行の入力から複数行を生成したい（文章の単語分割・JSON配列の展開など）</strong> → UDTF。スカラUDFやVectorized UDFでは戻り値が1行に固定されるため代用できない</li><li><strong>複数のテーブル操作をまとめて実行し、条件分岐や例外処理も含めて1つの処理としてパッケージ化したい</strong> → ストアドプロシージャ。「値を返す関数」ではなく「手順を実行するジョブ」を作りたいときはこちら</li></ul>
+<ul><li><strong>既存の1行1値の変換ロジックをSQLに埋め込みたいだけ</strong> → スカラUDF。まず最初に検討する選択肢</li><li><strong>機械学習の推論・大量データへの数値演算で、1行ずつの呼び出しオーバーヘッドが無視できない</strong> → Vectorized UDF。同じロジックでもバッチ化するだけで速くなる場合があります</li><li><strong>1行の入力から複数行を生成したい（文章の単語分割・JSON配列の展開など）</strong> → UDTF。スカラUDFやVectorized UDFでは戻り値が1行に固定されるため代用できません</li><li><strong>複数のテーブル操作をまとめて実行し、条件分岐や例外処理も含めて1つの処理としてパッケージ化したい</strong> → ストアドプロシージャ。「値を返す関数」ではなく「手順を実行するジョブ」を作りたいときはこちら</li></ul>
 <p>Polarsはローカルで動くライブラリなので、この4分類そのものが存在しません。Polarsで「カスタムロジック」というと、<code>map_elements</code>のようなメソッドにPython関数を渡す形が中心で、SQLエンジン側にプッシュダウンして実行させるという概念がそもそもありません。</p>
     
     <h2 style="font-size:1.05rem">出典</h2>

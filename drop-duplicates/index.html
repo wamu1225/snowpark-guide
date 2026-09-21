@@ -32,15 +32,15 @@
       src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9102538151148380"
       crossorigin="anonymous"
     ></script>
-    <script type="module" crossorigin src="../assets/index-z4B7JITz.js"></script>
+    <script type="module" crossorigin src="../assets/index-CY5xPdRD.js"></script>
     <link rel="stylesheet" crossorigin href="../assets/index-Cj1a5bcD.css">
-  <script type="application/ld+json">{"@context":"https://schema.org","@type":"TechArticle","headline":"drop_duplicates","description":"指定した列の値が一致する行を重複とみなして間引く。 Snowparkでの書き方とPolarsでの書き方を並べて解説します。","url":"https://study-apps.com/snowpark-guide/drop-duplicates/","dateModified":"2026-08-21","inLanguage":"ja"}</script>
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"TechArticle","headline":"drop_duplicates","description":"指定した列の値が一致する行を重複とみなして間引きます。 Snowparkでの書き方とPolarsでの書き方を並べて解説します。","url":"https://study-apps.com/snowpark-guide/drop-duplicates/","dateModified":"2026-08-21","inLanguage":"ja"}</script>
   </head>
   <body>
     <div id="root"><div style="max-width:760px;margin:0 auto;padding:24px 16px;font-family:sans-serif;line-height:1.8;color:#0f172a">
     <p style="color:#94a3b8;font-size:0.9rem"><a href="/snowpark-guide/" style="color:#94a3b8">トップ</a> / フィルタ・サンプリング</p>
     <h1 style="font-family:monospace;font-size:1.6rem;margin-bottom:8px">drop_duplicates</h1>
-    <p style="color:#475569">指定した列の値が一致する行を重複とみなして間引く。</p>
+    <p style="color:#475569">指定した列の値が一致する行を重複とみなして間引きます。</p>
     <div style="display:flex;flex-wrap:wrap;gap:16px;margin:20px 0">
       <div style="flex:1;min-width:260px">
         <h2 style="color:#0284c7;font-size:0.9rem">SNOWPARK <span style="opacity:0.75;font-weight:500">静的検証のみ</span></h2>
@@ -52,10 +52,10 @@
       </div>
     </div>
     <h2 style="font-size:1.05rem">挙動・設計の違い</h2>
-    <p>Snowparkは内部的に<code>ROW_NUMBER() OVER (PARTITION BY user_id ORDER BY ...)</code>のようなウィンドウ関数を含むサブクエリに展開して重複行を除く。Polarsは指定列のハッシュ値をもとに、<code>keep</code>引数で指定した方針（最初/最後/いずれか1件）で1行だけを残す。</p>
+    <p>Snowparkは内部的に<code>ROW_NUMBER() OVER (PARTITION BY user_id ORDER BY ...)</code>のようなウィンドウ関数を含むサブクエリに展開して重複行を除きます。Polarsは指定列のハッシュ値をもとに、<code>keep</code>引数で指定した方針（最初/最後/いずれか1件）で1行だけを残します。</p>
     <h2 style="font-size:1.05rem;color:#b45309">移行時の落とし穴</h2>
-    <p>事前に明示的なソートをしていない場合、複数の重複行のうち「どの1行が残るか」の決定ロジックがエンジン間で異なる可能性がある。特定の行を残したい場合は、drop_duplicates／uniqueの前に必ずソートしておく。</p>
-    <h2 style="font-size:1.05rem">フィルタ・サンプリングの他のメソッド</h2><ul style="padding-left:20px"><li><a href="/snowpark-guide/filter/" style="color:#38bdf8">filter / where</a> ── 条件に合う行だけを残す。whereはfilterの別名で、書き方はどちらも同じ。</li><li><a href="/snowpark-guide/limit/" style="color:#38bdf8">limit</a> ── 先頭から指定した行数だけを取得する。</li><li><a href="/snowpark-guide/sample/" style="color:#38bdf8">sample</a> ── データの一部をランダムに抽出する。</li><li><a href="/snowpark-guide/distinct/" style="color:#38bdf8">distinct / unique</a> ── 重複行を取り除く。メソッド名がSnowparkとPolarsで異なる点に注意。</li><li><a href="/snowpark-guide/between/" style="color:#38bdf8">between</a> ── 値が指定した範囲内（両端を含む）にあるかを判定する。</li><li><a href="/snowpark-guide/is-in/" style="color:#38bdf8">in_ / isin</a> ── 値が指定したリストの中に含まれるかを判定する。</li></ul>
+    <p>事前に明示的なソートをしていない場合、複数の重複行のうち「どの1行が残るか」の決定ロジックがエンジン間で異なる可能性があります。特定の行を残したい場合は、drop_duplicates／uniqueの前に必ずソートしておきます。</p>
+    <h2 style="font-size:1.05rem">フィルタ・サンプリングの他のメソッド</h2><ul style="padding-left:20px"><li><a href="/snowpark-guide/filter/" style="color:#38bdf8">filter / where</a> ── 条件に合う行だけを残します。whereはfilterの別名で、書き方はどちらも同じです。</li><li><a href="/snowpark-guide/limit/" style="color:#38bdf8">limit</a> ── 先頭から指定した行数だけを取得します。</li><li><a href="/snowpark-guide/sample/" style="color:#38bdf8">sample</a> ── データの一部をランダムに抽出します。</li><li><a href="/snowpark-guide/distinct/" style="color:#38bdf8">distinct / unique</a> ── 重複行を取り除きます。メソッド名がSnowparkとPolarsで異なる点に注意してください。</li><li><a href="/snowpark-guide/between/" style="color:#38bdf8">between</a> ── 値が指定した範囲内（両端を含む）にあるかを判定します。</li><li><a href="/snowpark-guide/is-in/" style="color:#38bdf8">in_ / isin</a> ── 値が指定したリストの中に含まれるかを判定します。</li></ul>
     
     <h2 style="font-size:1.05rem">出典・検証情報</h2>
     <ul style="padding-left:20px">

@@ -32,15 +32,15 @@
       src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9102538151148380"
       crossorigin="anonymous"
     ></script>
-    <script type="module" crossorigin src="../assets/index-z4B7JITz.js"></script>
+    <script type="module" crossorigin src="../assets/index-CY5xPdRD.js"></script>
     <link rel="stylesheet" crossorigin href="../assets/index-Cj1a5bcD.css">
-  <script type="application/ld+json">{"@context":"https://schema.org","@type":"TechArticle","headline":"join の how（結合の種類）","description":"inner/left/full/semi/anti など、結合の種類を切り替える。 Snowparkでの書き方とPolarsでの書き方を並べて解説します。","url":"https://study-apps.com/snowpark-guide/join-how-types/","dateModified":"2026-08-31","inLanguage":"ja"}</script>
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"TechArticle","headline":"join の how（結合の種類）","description":"inner/left/full/semi/anti など、結合の種類を切り替えます。 Snowparkでの書き方とPolarsでの書き方を並べて解説します。","url":"https://study-apps.com/snowpark-guide/join-how-types/","dateModified":"2026-08-31","inLanguage":"ja"}</script>
   </head>
   <body>
     <div id="root"><div style="max-width:760px;margin:0 auto;padding:24px 16px;font-family:sans-serif;line-height:1.8;color:#0f172a">
     <p style="color:#94a3b8;font-size:0.9rem"><a href="/snowpark-guide/" style="color:#94a3b8">トップ</a> / 結合・集合演算</p>
     <h1 style="font-family:monospace;font-size:1.6rem;margin-bottom:8px">join の how（結合の種類）</h1>
-    <p style="color:#475569">inner/left/full/semi/anti など、結合の種類を切り替える。</p>
+    <p style="color:#475569">inner/left/full/semi/anti など、結合の種類を切り替えます。</p>
     <div style="display:flex;flex-wrap:wrap;gap:16px;margin:20px 0">
       <div style="flex:1;min-width:260px">
         <h2 style="color:#0284c7;font-size:0.9rem">SNOWPARK <span style="opacity:0.75;font-weight:500">静的検証のみ</span></h2>
@@ -54,10 +54,10 @@ ldf1.join(ldf2, on=&quot;id&quot;, how=&quot;anti&quot;)</code></pre>
       </div>
     </div>
     <h2 style="font-size:1.05rem">挙動・設計の違い</h2>
-    <p>Snowpark公式ドキュメントに列挙されている<code>how</code>の値（<code>inner</code>/<code>left</code>・<code>leftouter</code>/<code>right</code>・<code>rightouter</code>/<code>full</code>・<code>outer</code>・<code>fullouter</code>/<code>semi</code>・<code>leftsemi</code>/<code>anti</code>・<code>leftanti</code>/<code>cross</code>/<code>asof</code>）は、<strong><code>semi</code>・<code>anti</code>を含めてPolarsの<code>how</code>とほぼ同じ語彙</strong>。<code>semi</code>結合は「相手に一致する行だけを残すが、相手側の列は付けない」、<code>anti</code>結合は「相手に一致しない行だけを残す」というSQLではやや馴染みの薄い結合で、両APIとも同じ意味・同じ名前で使える。</p>
+    <p>Snowpark公式ドキュメントに列挙されている<code>how</code>の値（<code>inner</code>/<code>left</code>・<code>leftouter</code>/<code>right</code>・<code>rightouter</code>/<code>full</code>・<code>outer</code>・<code>fullouter</code>/<code>semi</code>・<code>leftsemi</code>/<code>anti</code>・<code>leftanti</code>/<code>cross</code>/<code>asof</code>）は、<strong><code>semi</code>・<code>anti</code>を含めてPolarsの<code>how</code>とほぼ同じ語彙です</strong>。<code>semi</code>結合は「相手に一致する行だけを残すが、相手側の列は付けない」、<code>anti</code>結合は「相手に一致しない行だけを残す」というSQLではやや馴染みの薄い結合で、両APIとも同じ意味・同じ名前で使えます。</p>
     <h2 style="font-size:1.05rem;color:#b45309">移行時の落とし穴</h2>
-    <p><strong><code>on</code>に同じ列名を渡した場合の結果列の扱いがAPI間で違う</strong>（<code>how="full"</code>など外部結合で顕在化）。Snowpark公式ドキュメントは「列名の文字列を渡すと、結合キー列は1つにマージされる」と明記している。一方Polarsを実行して確認したところ、<code>how="full"</code>で<code>on="id"</code>を指定しても、<strong>結果には<code>id</code>と<code>id_right</code>という2つの列が別々に残る</strong>（一致しなかった行では片方が<code>null</code>になる）。Snowpark側のコードを移植して「同じ列名を渡したから1列にまとまるはず」と思っていると、Polars側では列が重複したまま残っていて後続処理でつまずく。</p>
-    <h2 style="font-size:1.05rem">結合・集合演算の他のメソッド</h2><ul style="padding-left:20px"><li><a href="/snowpark-guide/join/" style="color:#38bdf8">join</a> ── 2つのDataFrameを結合する。</li><li><a href="/snowpark-guide/union/" style="color:#38bdf8">union</a> ── 2つのDataFrameを縦に連結し、重複行を取り除く。</li><li><a href="/snowpark-guide/union-all/" style="color:#38bdf8">union_all / unionAll</a> ── 2つのDataFrameを縦に連結する。重複行はそのまま残す。</li><li><a href="/snowpark-guide/union-by-name/" style="color:#38bdf8">union_by_name / unionByName</a> ── 列の並び順ではなく列名を基準に2つのDataFrameを連結する。</li><li><a href="/snowpark-guide/intersect/" style="color:#38bdf8">intersect</a> ── 2つのDataFrameの両方に存在する行だけを残す（積集合）。</li><li><a href="/snowpark-guide/subtract/" style="color:#38bdf8">subtract / except_</a> ── 片方のDataFrameから、もう片方にも存在する行を取り除く（差集合）。</li></ul>
+    <p><strong><code>on</code>に同じ列名を渡した場合の結果列の扱いがAPI間で違います</strong>（<code>how="full"</code>など外部結合で顕在化）。Snowpark公式ドキュメントは「列名の文字列を渡すと、結合キー列は1つにマージされる」と明記しています。一方Polarsを実行して確認したところ、<code>how="full"</code>で<code>on="id"</code>を指定しても、<strong>結果には<code>id</code>と<code>id_right</code>という2つの列が別々に残ります</strong>（一致しなかった行では片方が<code>null</code>になります）。Snowpark側のコードを移植して「同じ列名を渡したから1列にまとまるはず」と思っていると、Polars側では列が重複したまま残っていて後続処理でつまずきます。</p>
+    <h2 style="font-size:1.05rem">結合・集合演算の他のメソッド</h2><ul style="padding-left:20px"><li><a href="/snowpark-guide/join/" style="color:#38bdf8">join</a> ── 2つのDataFrameを結合します。</li><li><a href="/snowpark-guide/union/" style="color:#38bdf8">union</a> ── 2つのDataFrameを縦に連結し、重複行を取り除きます。</li><li><a href="/snowpark-guide/union-all/" style="color:#38bdf8">union_all / unionAll</a> ── 2つのDataFrameを縦に連結します。重複行はそのまま残します。</li><li><a href="/snowpark-guide/union-by-name/" style="color:#38bdf8">union_by_name / unionByName</a> ── 列の並び順ではなく列名を基準に2つのDataFrameを連結します。</li><li><a href="/snowpark-guide/intersect/" style="color:#38bdf8">intersect</a> ── 2つのDataFrameの両方に存在する行だけを残します（積集合）。</li><li><a href="/snowpark-guide/subtract/" style="color:#38bdf8">subtract / except_</a> ── 片方のDataFrameから、もう片方にも存在する行を取り除きます（差集合）。</li></ul>
     
     <h2 style="font-size:1.05rem">出典・検証情報</h2>
     <ul style="padding-left:20px">

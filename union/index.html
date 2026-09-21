@@ -32,15 +32,15 @@
       src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9102538151148380"
       crossorigin="anonymous"
     ></script>
-    <script type="module" crossorigin src="../assets/index-z4B7JITz.js"></script>
+    <script type="module" crossorigin src="../assets/index-CY5xPdRD.js"></script>
     <link rel="stylesheet" crossorigin href="../assets/index-Cj1a5bcD.css">
-  <script type="application/ld+json">{"@context":"https://schema.org","@type":"TechArticle","headline":"union","description":"2つのDataFrameを縦に連結し、重複行を取り除く。 Snowparkでの書き方とPolarsでの書き方を並べて解説します。","url":"https://study-apps.com/snowpark-guide/union/","dateModified":"2026-08-23","inLanguage":"ja"}</script>
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"TechArticle","headline":"union","description":"2つのDataFrameを縦に連結し、重複行を取り除きます。 Snowparkでの書き方とPolarsでの書き方を並べて解説します。","url":"https://study-apps.com/snowpark-guide/union/","dateModified":"2026-08-23","inLanguage":"ja"}</script>
   </head>
   <body>
     <div id="root"><div style="max-width:760px;margin:0 auto;padding:24px 16px;font-family:sans-serif;line-height:1.8;color:#0f172a">
     <p style="color:#94a3b8;font-size:0.9rem"><a href="/snowpark-guide/" style="color:#94a3b8">トップ</a> / 結合・集合演算</p>
     <h1 style="font-family:monospace;font-size:1.6rem;margin-bottom:8px">union</h1>
-    <p style="color:#475569">2つのDataFrameを縦に連結し、重複行を取り除く。</p>
+    <p style="color:#475569">2つのDataFrameを縦に連結し、重複行を取り除きます。</p>
     <div style="display:flex;flex-wrap:wrap;gap:16px;margin:20px 0">
       <div style="flex:1;min-width:260px">
         <h2 style="color:#0284c7;font-size:0.9rem">SNOWPARK <span style="opacity:0.75;font-weight:500">静的検証のみ</span></h2>
@@ -52,10 +52,10 @@
       </div>
     </div>
     <h2 style="font-size:1.05rem">挙動・設計の違い</h2>
-    <p>SnowparkのunionはSQLのUNION（重複排除あり）を発行する。Polarsの<code>pl.concat</code>は既定では単純な垂直連結だけを行い、重複排除はしないため<code>.unique()</code>を明示的に呼ぶ必要がある。</p>
+    <p>SnowparkのunionはSQLのUNION（重複排除あり）を発行します。Polarsの<code>pl.concat</code>は既定では単純な垂直連結だけを行い、重複排除はしないため<code>.unique()</code>を明示的に呼ぶ必要があります。</p>
     <h2 style="font-size:1.05rem;color:#b45309">移行時の落とし穴</h2>
-    <p>Snowparkの<code>union</code>は重複を取り除く点が、他の多くのフレームワークの「union」という言葉から連想する挙動（単純な連結）と異なる。「重複を残したい」ときは次に説明する<code>union_all</code>を使う。</p>
-    <h2 style="font-size:1.05rem">結合・集合演算の他のメソッド</h2><ul style="padding-left:20px"><li><a href="/snowpark-guide/join/" style="color:#38bdf8">join</a> ── 2つのDataFrameを結合する。</li><li><a href="/snowpark-guide/union-all/" style="color:#38bdf8">union_all / unionAll</a> ── 2つのDataFrameを縦に連結する。重複行はそのまま残す。</li><li><a href="/snowpark-guide/union-by-name/" style="color:#38bdf8">union_by_name / unionByName</a> ── 列の並び順ではなく列名を基準に2つのDataFrameを連結する。</li><li><a href="/snowpark-guide/intersect/" style="color:#38bdf8">intersect</a> ── 2つのDataFrameの両方に存在する行だけを残す（積集合）。</li><li><a href="/snowpark-guide/subtract/" style="color:#38bdf8">subtract / except_</a> ── 片方のDataFrameから、もう片方にも存在する行を取り除く（差集合）。</li><li><a href="/snowpark-guide/join-how-types/" style="color:#38bdf8">join の how（結合の種類）</a> ── inner/left/full/semi/anti など、結合の種類を切り替える。</li></ul>
+    <p>Snowparkの<code>union</code>は重複を取り除く点が、他の多くのフレームワークの「union」という言葉から連想する挙動（単純な連結）と異なります。「重複を残したい」ときは次に説明する<code>union_all</code>を使います。</p>
+    <h2 style="font-size:1.05rem">結合・集合演算の他のメソッド</h2><ul style="padding-left:20px"><li><a href="/snowpark-guide/join/" style="color:#38bdf8">join</a> ── 2つのDataFrameを結合します。</li><li><a href="/snowpark-guide/union-all/" style="color:#38bdf8">union_all / unionAll</a> ── 2つのDataFrameを縦に連結します。重複行はそのまま残します。</li><li><a href="/snowpark-guide/union-by-name/" style="color:#38bdf8">union_by_name / unionByName</a> ── 列の並び順ではなく列名を基準に2つのDataFrameを連結します。</li><li><a href="/snowpark-guide/intersect/" style="color:#38bdf8">intersect</a> ── 2つのDataFrameの両方に存在する行だけを残します（積集合）。</li><li><a href="/snowpark-guide/subtract/" style="color:#38bdf8">subtract / except_</a> ── 片方のDataFrameから、もう片方にも存在する行を取り除きます（差集合）。</li><li><a href="/snowpark-guide/join-how-types/" style="color:#38bdf8">join の how（結合の種類）</a> ── inner/left/full/semi/anti など、結合の種類を切り替えます。</li></ul>
     
     <h2 style="font-size:1.05rem">出典・検証情報</h2>
     <ul style="padding-left:20px">

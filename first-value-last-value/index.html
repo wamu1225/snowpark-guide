@@ -32,15 +32,15 @@
       src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9102538151148380"
       crossorigin="anonymous"
     ></script>
-    <script type="module" crossorigin src="../assets/index-z4B7JITz.js"></script>
+    <script type="module" crossorigin src="../assets/index-CY5xPdRD.js"></script>
     <link rel="stylesheet" crossorigin href="../assets/index-Cj1a5bcD.css">
-  <script type="application/ld+json">{"@context":"https://schema.org","@type":"TechArticle","headline":"first_value / last_value","description":"パーティション内で並べ替えた順序の、先頭の値・末尾の値を各行に持たせる。 Snowparkでの書き方とPolarsでの書き方を並べて解説します。","url":"https://study-apps.com/snowpark-guide/first-value-last-value/","dateModified":"2026-08-30","inLanguage":"ja"}</script>
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"TechArticle","headline":"first_value / last_value","description":"パーティション内で並べ替えた順序の、先頭の値・末尾の値を各行に持たせます。 Snowparkでの書き方とPolarsでの書き方を並べて解説します。","url":"https://study-apps.com/snowpark-guide/first-value-last-value/","dateModified":"2026-08-30","inLanguage":"ja"}</script>
   </head>
   <body>
     <div id="root"><div style="max-width:760px;margin:0 auto;padding:24px 16px;font-family:sans-serif;line-height:1.8;color:#0f172a">
     <p style="color:#94a3b8;font-size:0.9rem"><a href="/snowpark-guide/" style="color:#94a3b8">トップ</a> / ウィンドウ関数</p>
     <h1 style="font-family:monospace;font-size:1.6rem;margin-bottom:8px">first_value / last_value</h1>
-    <p style="color:#475569">パーティション内で並べ替えた順序の、先頭の値・末尾の値を各行に持たせる。</p>
+    <p style="color:#475569">パーティション内で並べ替えた順序の、先頭の値・末尾の値を各行に持たせます。</p>
     <div style="display:flex;flex-wrap:wrap;gap:16px;margin:20px 0">
       <div style="flex:1;min-width:260px">
         <h2 style="color:#0284c7;font-size:0.9rem">SNOWPARK <span style="opacity:0.75;font-weight:500">静的検証のみ</span></h2>
@@ -54,10 +54,10 @@ pl.col(&quot;salary&quot;).last().over(&quot;department&quot;)</code></pre>
       </div>
     </div>
     <h2 style="font-size:1.05rem">挙動・設計の違い</h2>
-    <p>SnowparkはSQLの<code>FIRST_VALUE</code>/<code>LAST_VALUE</code>ウィンドウ関数に変換される。Polarsは通常の集約メソッド<code>first()</code>/<code>last()</code>を<code>.over()</code>と組み合わせることで、同じ「グループ内の先頭・末尾の値を全行に展開する」処理になる。実行して確認したところ、<code>department</code>でグループ化した<code>salary</code>列で、両APIとも各グループの先頭行・末尾行の値が全行に複製される。</p>
+    <p>SnowparkはSQLの<code>FIRST_VALUE</code>/<code>LAST_VALUE</code>ウィンドウ関数に変換されます。Polarsは通常の集約メソッド<code>first()</code>/<code>last()</code>を<code>.over()</code>と組み合わせることで、同じ「グループ内の先頭・末尾の値を全行に展開する」処理になります。実行して確認したところ、<code>department</code>でグループ化した<code>salary</code>列で、両APIとも各グループの先頭行・末尾行の値が全行に複製されます。</p>
     <h2 style="font-size:1.05rem;color:#b45309">移行時の落とし穴</h2>
-    <p><strong>「先頭・末尾」が何を基準にした順序かは、事前の並べ替えに完全に依存する</strong>。SnowparkはWindow仕様の<code>order_by</code>が順序を決めるが、Polars側は<code>.over()</code>を呼ぶ前に<code>ldf.sort(...)</code>で明示的に並べ替えておく必要がある（<code>lag</code>/<code>lead</code>のページと同じ注意点）。並べ替えを忘れると、Snowflake側では意図した順序で<code>FIRST_VALUE</code>が決まるのに、Polars側は元のデータの物理的な並び順のままの「先頭」を返してしまう。</p>
-    <h2 style="font-size:1.05rem">ウィンドウ関数の他のメソッド</h2><ul style="padding-left:20px"><li><a href="/snowpark-guide/window-spec/" style="color:#38bdf8">Window.partition_by / Window.order_by</a> ── グループ（パーティション）ごとに、行をまたいだ計算をするための土台を定義する。</li><li><a href="/snowpark-guide/rank/" style="color:#38bdf8">rank</a> ── パーティション内で順位をつける。同じ値には同じ順位がつき、その分だけ次の順位を飛ばす。</li><li><a href="/snowpark-guide/dense-rank/" style="color:#38bdf8">dense_rank</a> ── パーティション内で順位をつける。同じ値には同じ順位がつくが、次の順位は飛ばさない。</li><li><a href="/snowpark-guide/row-number/" style="color:#38bdf8">row_number</a> ── パーティション内で1から始まる連番をふる。同率でも必ず別の番号になる。</li><li><a href="/snowpark-guide/lag/" style="color:#38bdf8">lag</a> ── パーティション内で、1つ前（過去）の行の値を取得する。</li><li><a href="/snowpark-guide/lead/" style="color:#38bdf8">lead</a> ── パーティション内で、1つ後（未来）の行の値を取得する。</li><li><a href="/snowpark-guide/ntile/" style="color:#38bdf8">ntile</a> ── パーティション内の行を、指定した個数のグループに行数ができるだけ均等になるよう分割する。</li><li><a href="/snowpark-guide/percent-rank-cume-dist/" style="color:#38bdf8">percent_rank / cume_dist</a> ── パーティション内での相対的な順位を、0〜1の割合で表す。</li></ul>
+    <p><strong>「先頭・末尾」が何を基準にした順序かは、事前の並べ替えに完全に依存します</strong>。SnowparkはWindow仕様の<code>order_by</code>が順序を決めますが、Polars側は<code>.over()</code>を呼ぶ前に<code>ldf.sort(...)</code>で明示的に並べ替えておく必要があります（<code>lag</code>/<code>lead</code>のページと同じ注意点）。並べ替えを忘れると、Snowflake側では意図した順序で<code>FIRST_VALUE</code>が決まるのに、Polars側は元のデータの物理的な並び順のままの「先頭」を返してしまいます。</p>
+    <h2 style="font-size:1.05rem">ウィンドウ関数の他のメソッド</h2><ul style="padding-left:20px"><li><a href="/snowpark-guide/window-spec/" style="color:#38bdf8">Window.partition_by / Window.order_by</a> ── グループ（パーティション）ごとに、行をまたいだ計算をするための土台を定義します。</li><li><a href="/snowpark-guide/rank/" style="color:#38bdf8">rank</a> ── パーティション内で順位をつけます。同じ値には同じ順位がつき、その分だけ次の順位を飛ばします。</li><li><a href="/snowpark-guide/dense-rank/" style="color:#38bdf8">dense_rank</a> ── パーティション内で順位をつけます。同じ値には同じ順位がつきますが、次の順位は飛ばしません。</li><li><a href="/snowpark-guide/row-number/" style="color:#38bdf8">row_number</a> ── パーティション内で1から始まる連番をふります。同率でも必ず別の番号になります。</li><li><a href="/snowpark-guide/lag/" style="color:#38bdf8">lag</a> ── パーティション内で、1つ前（過去）の行の値を取得します。</li><li><a href="/snowpark-guide/lead/" style="color:#38bdf8">lead</a> ── パーティション内で、1つ後（未来）の行の値を取得します。</li><li><a href="/snowpark-guide/ntile/" style="color:#38bdf8">ntile</a> ── パーティション内の行を、指定した個数のグループに行数ができるだけ均等になるよう分割します。</li><li><a href="/snowpark-guide/percent-rank-cume-dist/" style="color:#38bdf8">percent_rank / cume_dist</a> ── パーティション内での相対的な順位を、0〜1の割合で表します。</li></ul>
     
     <h2 style="font-size:1.05rem">出典・検証情報</h2>
     <ul style="padding-left:20px">
