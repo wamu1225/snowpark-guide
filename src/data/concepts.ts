@@ -1,5 +1,5 @@
 // 基礎知識・概要（Layer A）。関数リファレンス（Layer B = entries/）は「引く」場所、
-// こちらは「読む」場所。相互リンクは EntryPage 側で relatedEntrySlugs を逆引きして表示する。
+// こちらは「読む」場所。相互リンクは EntryPage 側で relatedEntrySlugs を逆引きして表示します。
 // 実行検証ができない領域のため、本文は公式ドキュメントの記載に厳密に沿って書く（体感・推測を書かない）。
 export type ConceptPage = {
   slug: string;
@@ -123,7 +123,7 @@ result = (
 )
 \`\`\`
 
-違いが出るのは複合語のメソッド名です。PySparkは\`groupBy\`・\`withColumn\`のようにcamelCaseが標準ですが、Snowparkは\`group_by\`・\`with_column\`のようにsnake_caseが標準です。**Snowparkは実は\`groupBy\`・\`withColumn\`・\`orderBy\`というcamelCaseのエイリアスも内部に持っており、PySparkと同じ綴りでも動きます**（SDKのクラス定義を実機で確認済み）。ただしSnowflake公式のサンプルコードはsnake_caseで統一されているため、新規に書くならsnake_caseに合わせておくのが無難です。
+違いが出るのは複合語のメソッド名です。PySparkは\`groupBy\`・\`withColumn\`のようにcamelCaseが標準ですが、Snowparkは\`group_by\`・\`with_column\`のようにsnake_caseが標準です。**Snowparkは実は\`groupBy\`・\`withColumn\`・\`orderBy\`というcamelCaseのエイリアスも内部に持っており、PySparkと同じ綴りでも動きます**（SDKのクラス定義を実機で確認済みです）。ただしSnowflake公式のサンプルコードはsnake_caseで統一されているため、新規に書くならsnake_caseに合わせておくのが無難です。
 
 ## UDFを書いている場合は移行の影響が一番大きい
 
@@ -271,7 +271,7 @@ pandasのすべてのAPIがSnowflake上で分散実装されているわけで�
 このサイトの各メソッドページはSnowpark DataFrameとPolarsの対応表として作られていますが、Snowpark pandas APIは「Snowpark DataFrameの構文を覚えたくない・pandasの書き方のまま移行したい」場合の第三の選択肢です。判断の軸は次のとおりです。
 
 - **Snowpark DataFrameの構文（\`col()\`・\`select()\`等）を使う**：このサイトの各ページで比較している通常の書き方。Snowparkのメソッドチェーンに慣れている、またはSQLに近い形で最適化を意識したい場合
-- **Snowpark pandas API（\`modin.pandas\`）を使う**：既存のpandasコード資産をSnowflakeに移行したい、チームがpandasの書き方に慣れている場合。ただし前述のとおりサポート外のAPIには当たる
+- **Snowpark pandas API（\`modin.pandas\`）を使う**：既存のpandasコード資産をSnowflakeに移行したい、チームがpandasの書き方に慣れている場合。ただし前述のとおりサポート外のAPIには当たります
 - **Polarsを使う**：データがすでに手元にある、またはSnowflakeから抽出した後のローカルでの探索的分析`,
     relatedEntrySlugs: ['to-pandas'],
     sources: [
@@ -384,8 +384,8 @@ UDF・UDTFにはできないDDL/DMLの実行が可能な点が大きな違いで
 ## で、どれを選べばいいか
 
 - **既存の1行1値の変換ロジックをSQLに埋め込みたいだけ** → スカラUDF。まず最初に検討する選択肢
-- **機械学習の推論・大量データへの数値演算で、1行ずつの呼び出しオーバーヘッドが無視できない** → Vectorized UDF。同じロジックでもバッチ化するだけで速くなる場合がある
-- **1行の入力から複数行を生成したい（文章の単語分割・JSON配列の展開など）** → UDTF。スカラUDFやVectorized UDFでは戻り値が1行に固定されるため代用できない
+- **機械学習の推論・大量データへの数値演算で、1行ずつの呼び出しオーバーヘッドが無視できない** → Vectorized UDF。同じロジックでもバッチ化するだけで速くなる場合があります
+- **1行の入力から複数行を生成したい（文章の単語分割・JSON配列の展開など）** → UDTF。スカラUDFやVectorized UDFでは戻り値が1行に固定されるため代用できません
 - **複数のテーブル操作をまとめて実行し、条件分岐や例外処理も含めて1つの処理としてパッケージ化したい** → ストアドプロシージャ。「値を返す関数」ではなく「手順を実行するジョブ」を作りたいときはこちら
 
 Polarsはローカルで動くライブラリなので、この4分類そのものが存在しません。Polarsで「カスタムロジック」というと、\`map_elements\`のようなメソッドにPython関数を渡す形が中心で、SQLエンジン側にプッシュダウンして実行させるという概念がそもそもありません。`,
@@ -553,13 +553,13 @@ Snowpark Container Servicesは、この制約を取り払うための、Snowflak
 
 ## 提供状況：AWS・GCPは一般提供（GA）を確認済み、Azureも利用可能
 
-Snowpark Container ServicesはAWSで2024年8月に全商用リージョンで一般提供（GA）となり、Google Cloud Platformは2025年8月に一般提供となりました（いずれもSnowflake公式のリリースノートで確認済み）。Microsoft Azureも現在サポート対象のクラウドに含まれていますが、Azure単体でのGA化の日付は、Native Apps対応など個別機能ごとのリリースノートに分かれており、本稿では単一の日付を特定していません。現在はAWS・Azure・GCPの商用リージョンで、有償のSnowflakeエディションであれば利用できます。トライアルアカウントや無料枠のアカウントでは利用できない点に注意してください。
+Snowpark Container ServicesはAWSで2024年8月に全商用リージョンで一般提供（GA）となり、Google Cloud Platformは2025年8月に一般提供となりました（いずれもSnowflake公式のリリースノートで確認済みです）。Microsoft Azureも現在サポート対象のクラウドに含まれていますが、Azure単体でのGA化の日付は、Native Apps対応など個別機能ごとのリリースノートに分かれており、本稿では単一の日付を特定していません。現在はAWS・Azure・GCPの商用リージョンで、有償のSnowflakeエディションであれば利用できます。トライアルアカウントや無料枠のアカウントでは利用できない点に注意してください。
 
 ## 何に使うか：3つの典型パターン
 
 公式ドキュメントは主に3つの使い方を挙げています。
 
-1. **バッチジョブ**：ストアドプロシージャに似た形で、柔軟なジョブを実行する。GPUを使う計算集約的なタスク（機械学習モデルの学習・推論など）に向く
+1. **バッチジョブ**：ストアドプロシージャに似た形で、柔軟なジョブを実行します。GPUを使う計算集約的なタスク（機械学習モデルの学習・推論など）に向く
 2. **サービス関数**：SQLのクエリから、コンテナ内で動くカスタム処理を関数として呼び出す
 3. **APIやWeb UIの公開**：Snowflake上のデータを扱うビジネスロジックを、APIやWebアプリケーションとして外部に公開する
 

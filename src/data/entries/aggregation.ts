@@ -8,13 +8,13 @@ export const aggregationEntries: Entry[] = [
     slug: 'group-by',
     title: 'group_by / groupBy',
     category: 'aggregation',
-    summary: '指定した列の値でグループ化する。集約する前段階として使う。',
+    summary: '指定した列の値でグループ化します。集約する前段階として使います。',
     snowparkCode: 'df.group_by("department")',
     polarsCode: 'ldf.group_by("department")',
     difference:
-      'どちらも、この時点ではまだ集約を実行しない。グループ化キーを保持した中間オブジェクト（Snowparkは`RelationalGroupedDataFrame`、Polarsは`LazyGroupBy`）を返し、後続の`agg()`呼び出しを待つ設計が共通している。',
+      'どちらも、この時点ではまだ集約を実行しません。グループ化キーを保持した中間オブジェクト（Snowparkは`RelationalGroupedDataFrame`、Polarsは`LazyGroupBy`）を返し、後続の`agg()`呼び出しを待つ設計が共通しています。',
     pitfall:
-      'Snowparkはキャメルケースの`groupBy`も別名として使えるが、Polarsはスネークケースの`group_by`に統一されている。SnowparkのコードをPolarsへそのまま移植するとき`groupBy`と書いてしまうと存在しないメソッドになる。',
+      'Snowparkはキャメルケースの`groupBy`も別名として使えるが、Polarsはスネークケースの`group_by`に統一されています。SnowparkのコードをPolarsへそのまま移植するとき`groupBy`と書いてしまうと存在しないメソッドになります。',
     snowparkDocUrl:
       'https://docs.snowflake.com/en/developer-guide/snowpark/reference/python/latest/snowpark/api/snowflake.snowpark.DataFrame.group_by',
     polarsDocUrl: 'https://docs.pola.rs/api/python/stable/reference/lazyframe/api/polars.LazyFrame.group_by.html',
@@ -30,13 +30,13 @@ export const aggregationEntries: Entry[] = [
     slug: 'agg',
     title: 'agg',
     category: 'aggregation',
-    summary: 'group_byで作ったグループごとに、集約の計算をまとめて指定する。',
+    summary: 'group_byで作ったグループごとに、集約の計算をまとめて指定します。',
     snowparkCode: 'df.group_by("department").agg(sum_("salary").alias("total_sal"), avg("age"))',
     polarsCode: 'ldf.group_by("department").agg(pl.col("salary").sum().alias("total_sal"), pl.col("age").mean())',
     difference:
-      'SnowparkはGROUP BYを含む集約SQLに変換される。Polarsはグループごとの集約計算をマルチスレッドで並列実行し、単純な合計・平均だけでなく任意の複雑な式（フィルタ済みの合計など）もExpressionとしてそのまま書ける。',
+      'SnowparkはGROUP BYを含む集約SQLに変換されます。Polarsはグループごとの集約計算をマルチスレッドで並列実行し、単純な合計・平均だけでなく任意の複雑な式（フィルタ済みの合計など）もExpressionとしてそのまま書けます。',
     pitfall:
-      'Polarsでは複数の集約式を渡すとき、`.agg(式1, 式2)`のように可変長引数で渡す書き方が現行版では一般的（リストでまとめて渡す古い書き方も動くが、可変長引数の方が読みやすい）。実行して確認したところ、複数式を渡した場合も1回のgroup_byで正しく集計される。',
+      'Polarsでは複数の集約式を渡すとき、`.agg(式1, 式2)`のように可変長引数で渡す書き方が現行版では一般的です（リストでまとめて渡す古い書き方も動きますが、可変長引数の方が読みやすいです）。実行して確認したところ、複数式を渡した場合も1回のgroup_byで正しく集計されます。',
     snowparkDocUrl:
       'https://docs.snowflake.com/en/developer-guide/snowpark/reference/python/latest/snowpark/api/snowflake.snowpark.RelationalGroupedDataFrame.agg',
     polarsDocUrl:
@@ -57,9 +57,9 @@ export const aggregationEntries: Entry[] = [
     snowparkCode: 'df.count()',
     polarsCode: 'ldf.select(pl.len()).collect()',
     difference:
-      'Snowparkの`count()`はアクションで、呼んだ瞬間に`SELECT COUNT(*) FROM ...`が発行されて整数値が返る（遅延評価の対象外）。Polarsの`pl.len()`は他の式と同じように遅延評価される式で、`select`に載せて`collect()`するまで実際には数えない。',
+      'Snowparkの`count()`はアクションで、呼んだ瞬間に`SELECT COUNT(*) FROM ...`が発行されて整数値が返ります（遅延評価の対象外）。Polarsの`pl.len()`は他の式と同じように遅延評価される式で、`select`に載せて`collect()`するまで実際には数えません。',
     pitfall:
-      'Snowparkの`count()`は他の変換メソッドと違って**即座に実行される**（アクションである）点を見落としやすい。チェーンの途中に`count()`を挟むと、そこで一旦ウェアハウスへのクエリが発行されてしまう（[料金構造のページ](/guide/pricing/)も参照）。',
+      'Snowparkの`count()`は他の変換メソッドと違って**即座に実行される**（アクションである）点を見落としやすいです。チェーンの途中に`count()`を挟むと、そこで一旦ウェアハウスへのクエリが発行されてしまいます（[料金構造のページ](/guide/pricing/)も参照）。',
     snowparkDocUrl:
       'https://docs.snowflake.com/en/developer-guide/snowpark/reference/python/latest/snowpark/api/snowflake.snowpark.DataFrame.count',
     polarsDocUrl: 'https://docs.pola.rs/api/python/stable/reference/expressions/api/polars.len.html',
@@ -75,12 +75,12 @@ export const aggregationEntries: Entry[] = [
     slug: 'sum',
     title: 'sum',
     category: 'aggregation',
-    summary: '列の値を合計する。',
+    summary: '列の値を合計します。',
     snowparkCode: 'df.select(sum_("salary"))',
     polarsCode: 'ldf.select(pl.col("salary").sum())',
-    difference: 'SnowparkはSQLの`SUM`関数に変換される。PolarsはExpressionの`.sum()`メソッドとして式に組み込まれる。',
+    difference: 'SnowparkはSQLの`SUM`関数に変換されます。PolarsはExpressionの`.sum()`メソッドとして式に組み込まれます。',
     pitfall:
-      'Snowparkの合計関数はPythonの組み込み`sum`と名前が衝突するため、`snowflake.snowpark.functions`から`sum as sum_`のように別名でインポートするのが実務上の定石。そのままインポートすると組み込み関数を上書きしてしまう。',
+      'Snowparkの合計関数はPythonの組み込み`sum`と名前が衝突するため、`snowflake.snowpark.functions`から`sum as sum_`のように別名でインポートするのが実務上の定石です。そのままインポートすると組み込み関数を上書きしてしまいます。',
     snowparkDocUrl:
       'https://docs.snowflake.com/en/developer-guide/snowpark/reference/python/latest/snowpark/api/snowflake.snowpark.functions.sum',
     polarsDocUrl: 'https://docs.pola.rs/api/python/stable/reference/expressions/api/polars.Expr.sum.html',
@@ -99,9 +99,9 @@ export const aggregationEntries: Entry[] = [
     summary: '列の値の平均を求める。',
     snowparkCode: 'df.select(avg("age"))',
     polarsCode: 'ldf.select(pl.col("age").mean())',
-    difference: '計算内容は同じ単純平均。呼び方だけが異なる。',
+    difference: '計算内容は同じ単純平均です。呼び方だけが異なります。',
     pitfall:
-      'メソッド・関数の名前がAPI間で違う（Snowpark: `avg`、Polars: `mean`）。どちらも「平均」だが、片方の名前をもう片方に書いてしまう取り違えが起きやすい。',
+      'メソッド・関数の名前がAPI間で違います（Snowpark: `avg`、Polars: `mean`）。どちらも「平均」だが、片方の名前をもう片方に書いてしまう取り違えが起きやすいです。',
     snowparkDocUrl:
       'https://docs.snowflake.com/en/developer-guide/snowpark/reference/python/latest/snowpark/api/snowflake.snowpark.functions.avg',
     polarsDocUrl: 'https://docs.pola.rs/api/python/stable/reference/expressions/api/polars.Expr.mean.html',
@@ -120,9 +120,9 @@ export const aggregationEntries: Entry[] = [
     summary: '列の最小値を求める。',
     snowparkCode: 'df.select(min_("age"))',
     polarsCode: 'ldf.select(pl.col("age").min())',
-    difference: 'どちらも対応するSQL/Expressionの最小値集約に変換される。挙動の違いは無い。',
+    difference: 'どちらも対応するSQL/Expressionの最小値集約に変換されます。挙動の違いはありません。',
     pitfall:
-      'Snowparkの`min`もPythonの組み込み`min`と名前が衝突するため、`sum`と同様に別名インポート（`min as min_`）が実務上の定石。',
+      'Snowparkの`min`もPythonの組み込み`min`と名前が衝突するため、`sum`と同様に別名インポート（`min as min_`）が実務上の定石です。',
     snowparkDocUrl:
       'https://docs.snowflake.com/en/developer-guide/snowpark/reference/python/latest/snowpark/api/snowflake.snowpark.functions.min',
     polarsDocUrl: 'https://docs.pola.rs/api/python/stable/reference/expressions/api/polars.Expr.min.html',
@@ -141,8 +141,8 @@ export const aggregationEntries: Entry[] = [
     summary: '列の最大値を求める。',
     snowparkCode: 'df.select(max_("age"))',
     polarsCode: 'ldf.select(pl.col("age").max())',
-    difference: 'どちらも対応するSQL/Expressionの最大値集約に変換される。挙動の違いは無い。',
-    pitfall: '`sum`・`min`と同じ理由で、Snowparkの`max`もPythonの組み込みと衝突するため別名インポートが定石。',
+    difference: 'どちらも対応するSQL/Expressionの最大値集約に変換されます。挙動の違いはありません。',
+    pitfall: '`sum`・`min`と同じ理由で、Snowparkの`max`もPythonの組み込みと衝突するため別名インポートが定石です。',
     snowparkDocUrl:
       'https://docs.snowflake.com/en/developer-guide/snowpark/reference/python/latest/snowpark/api/snowflake.snowpark.functions.max',
     polarsDocUrl: 'https://docs.pola.rs/api/python/stable/reference/expressions/api/polars.Expr.max.html',
@@ -158,13 +158,13 @@ export const aggregationEntries: Entry[] = [
     slug: 'pivot',
     title: 'pivot',
     category: 'aggregation',
-    summary: '行の値を列に展開する（縦持ちから横持ちへ）。',
+    summary: '行の値を列に展開します（縦持ちから横持ちへ）。',
     snowparkCode: 'df.pivot("department", ["sales", "eng"]).sum("salary")',
     polarsCode: 'ldf.pivot(on="department", on_columns=["sales", "eng"], values="salary", aggregate_function="sum")',
     difference:
-      'SnowparkはSQLのPIVOT構文に直結し、展開する列名の一覧を静的に指定することでクエリレベルで安全に列を生成する。Polarsはメモリ上でハッシュテーブルを組み替えて新しい列を作る。',
+      'SnowparkはSQLのPIVOT構文に直結し、展開する列名の一覧を静的に指定することでクエリレベルで安全に列を生成します。Polarsはメモリ上でハッシュテーブルを組み替えて新しい列を作ります。',
     pitfall:
-      '**Polars 1.43.2では`LazyFrame.pivot()`を直接呼び出せる**（実機で確認済み）。ただし`DataFrame`（Eager）版の`pivot()`と違い、**`on_columns`（展開後の列名の一覧）を明示的に渡すことが必須**で、省略すると`TypeError`になる。「LazyFrameからpivotは呼べず必ずcollect()を挟む必要がある」という情報を見かけることがあるが、少なくとも1.43.2ではこれは誤りで、正しくは「呼べるが`on_columns`の指定が必須」という違いになる。',
+      '**Polars 1.43.2では`LazyFrame.pivot()`を直接呼び出せます**（実機で確認済み）。ただし`DataFrame`（Eager）版の`pivot()`と違い、**`on_columns`（展開後の列名の一覧）を明示的に渡すことが必須**で、省略すると`TypeError`になります。「LazyFrameからpivotは呼べず必ずcollect()を挟む必要がある」という情報を見かけることがあるが、少なくとも1.43.2ではこれは誤りで、正しくは「呼べるが`on_columns`の指定が必須」という違いになります。',
     snowparkDocUrl:
       'https://docs.snowflake.com/en/developer-guide/snowpark/reference/python/latest/snowpark/api/snowflake.snowpark.DataFrame.pivot',
     polarsDocUrl: 'https://docs.pola.rs/api/python/stable/reference/lazyframe/api/polars.LazyFrame.pivot.html',
@@ -180,12 +180,12 @@ export const aggregationEntries: Entry[] = [
     slug: 'unpivot',
     title: 'unpivot',
     category: 'aggregation',
-    summary: 'pivotの逆。複数列を1つの列にまとめる（横持ちから縦持ちへ）。',
+    summary: 'pivotの逆です。複数列を1つの列にまとめます（横持ちから縦持ちへ）。',
     snowparkCode: 'df.unpivot("value_col", "name_col", ["col_2021", "col_2022"])',
     polarsCode: 'ldf.unpivot(on=["col_2021", "col_2022"], variable_name="name_col", value_name="value_col")',
-    difference: 'SnowparkはSQLのUNPIVOT構文に変換される。Polarsは列を縦方向に展開するアルゴリズムを実行する。',
+    difference: 'SnowparkはSQLのUNPIVOT構文に変換されます。Polarsは列を縦方向に展開するアルゴリズムを実行します。',
     pitfall:
-      '引数の並び順の意味がAPI間で異なる。Snowparkは(値の列名, 変数の列名, 対象列一覧)の順の位置引数だが、Polarsはキーワード引数（`on`・`variable_name`・`value_name`）で指定する。位置だけを見て移植すると引数の意味を取り違える。',
+      '引数の並び順の意味がAPI間で異なります。Snowparkは(値の列名, 変数の列名, 対象列一覧)の順の位置引数だが、Polarsはキーワード引数（`on`・`variable_name`・`value_name`）で指定します。位置だけを見て移植すると引数の意味を取り違えます。',
     snowparkDocUrl:
       'https://docs.snowflake.com/en/developer-guide/snowpark/reference/python/latest/snowpark/api/snowflake.snowpark.DataFrame.unpivot',
     polarsDocUrl: 'https://docs.pola.rs/api/python/stable/reference/lazyframe/api/polars.LazyFrame.unpivot.html',
@@ -201,13 +201,13 @@ export const aggregationEntries: Entry[] = [
     slug: 'array-agg',
     title: 'array_agg',
     category: 'aggregation',
-    summary: 'グループ内の複数行の値を、1つの配列（リスト）にまとめる。',
+    summary: 'グループ内の複数行の値を、1つの配列（リスト）にまとめます。',
     snowparkCode: 'df.group_by("dept").agg(array_agg("name").alias("members"))',
     polarsCode: 'df.group_by("dept").agg(pl.col("name").implode().alias("members"))',
     difference:
-      'Snowparkは`array_agg`という専用の集約関数をSQLの`ARRAY_AGG`として呼び出す。Polarsには同名の集約関数は無く、**列をリストへ「圧縮する」という意味の`implode()`**を使う。実行して確認したところ、`group_by().agg()`の中では**`implode()`を書かなくても、他の集約関数（`sum`等）を適用しない列は自動的にリスト化される**（`pl.col("name")`だけでも同じ結果になる）。',
+      'Snowparkは`array_agg`という専用の集約関数をSQLの`ARRAY_AGG`として呼び出します。Polarsには同名の集約関数は無く、**列をリストへ「圧縮する」という意味の`implode()`**を使います。実行して確認したところ、`group_by().agg()`の中では**`implode()`を書かなくても、他の集約関数（`sum`等）を適用しない列は自動的にリスト化されます**（`pl.col("name")`だけでも同じ結果になります）。',
     pitfall:
-      'Polars側は明示的な集約関数を書かないとリストになる「暗黙の挙動」に見えるため、**どの列が集約されているのか意図が伝わりにくい**。`array_agg`に相当する処理だと分かるように、`implode()`を明示的に書いておくとSnowpark側のコードと対応が取りやすい。',
+      'Polars側は明示的な集約関数を書かないとリストになる「暗黙の挙動」に見えるため、**どの列が集約されているのか意図が伝わりにくいです**。`array_agg`に相当する処理だと分かるように、`implode()`を明示的に書いておくとSnowpark側のコードと対応が取りやすいです。',
     snowparkDocUrl:
       'https://docs.snowflake.com/en/developer-guide/snowpark/reference/python/latest/snowpark/api/snowflake.snowpark.functions.array_agg',
     polarsDocUrl: 'https://docs.pola.rs/api/python/stable/reference/expressions/api/polars.Expr.implode.html',
@@ -223,13 +223,13 @@ export const aggregationEntries: Entry[] = [
     slug: 'listagg',
     title: 'listagg',
     category: 'aggregation',
-    summary: 'グループ内の複数行の文字列を、区切り文字でつないだ1つの文字列にまとめる。',
+    summary: 'グループ内の複数行の文字列を、区切り文字でつないだ1つの文字列にまとめます。',
     snowparkCode: 'df.group_by("dept").agg(listagg("name", ",").alias("names"))',
     polarsCode: 'df.group_by("dept").agg(pl.col("name").str.join(",").alias("names"))',
     difference:
-      'Snowparkの`listagg`はSQLの`LISTAGG`に変換され、区切り文字を第2引数に渡す。Polarsは`.str`名前空間の`join()`メソッドで同じことを行う。`["x","y"]`を`,`で連結して実行して確認したところ、どちらも`"x,y"`になる。',
+      'Snowparkの`listagg`はSQLの`LISTAGG`に変換され、区切り文字を第2引数に渡します。Polarsは`.str`名前空間の`join()`メソッドで同じことを行います。`["x","y"]`を`,`で連結して実行して確認したところ、どちらも`"x,y"`になります。',
     pitfall:
-      '`array_agg`（配列としてまとめる）と`listagg`（文字列としてまとめる）は目的が近く紛らわしい。**配列のまま後続処理で使うか、表示用に1本の文字列へ潰すか**で使い分ける。Polars側でリスト列ができてから文字列化したい場合は`.list.join(",")`（`str`名前空間ではなく`list`名前空間）を使う点にも注意。',
+      '`array_agg`（配列としてまとめる）と`listagg`（文字列としてまとめる）は目的が近く紛らわしいです。**配列のまま後続処理で使うか、表示用に1本の文字列へ潰すか**で使い分けます。Polars側でリスト列ができてから文字列化したい場合は`.list.join(",")`（`str`名前空間ではなく`list`名前空間）を使う点にも注意が必要です。',
     snowparkDocUrl:
       'https://docs.snowflake.com/en/developer-guide/snowpark/reference/python/latest/snowpark/api/snowflake.snowpark.functions.listagg',
     polarsDocUrl: 'https://docs.pola.rs/api/python/stable/reference/expressions/api/polars.Expr.str.join.html',
@@ -245,13 +245,13 @@ export const aggregationEntries: Entry[] = [
     slug: 'median-stddev',
     title: 'median / stddev',
     category: 'aggregation',
-    summary: '中央値と標準偏差を求める（外れ値の影響を受けにくい代表値・散らばりの指標）。',
+    summary: '中央値と標準偏差を求めます（外れ値の影響を受けにくい代表値・散らばりの指標）。',
     snowparkCode: 'df.select(median(col("score")), stddev(col("score")))',
     polarsCode: 'df.select(pl.col("score").median(), pl.col("score").std())',
     difference:
-      '`median`はどちらも中央値でそのまま対応する。`stddev`と`.std()`は**どちらも既定で標本標準偏差（n-1で割る）**という点まで一致する＝Snowflake公式ドキュメントの「STDDEVは標本標準偏差を返す（母標準偏差はSTDDEV_POP）」を確認したうえで、Polars側`.std()`の既定引数`ddof=1`（実行して`[1,2,3,4,5]`のstdが約`1.581`になることを確認）と突き合わせた結果、両者は同じ定義。',
+      '`median`はどちらも中央値でそのまま対応します。`stddev`と`.std()`は**どちらも既定で標本標準偏差（n-1で割る）**という点まで一致する＝Snowflake公式ドキュメントの「STDDEVは標本標準偏差を返す（母標準偏差はSTDDEV_POP）」を確認したうえで、Polars側`.std()`の既定引数`ddof=1`（実行して`[1,2,3,4,5]`のstdが約`1.581`になることを確認）と突き合わせた結果、両者は同じ定義です。',
     pitfall:
-      '**母集団の標準偏差が欲しいときの書き方が違う**。Snowflake側は別の関数`STDDEV_POP`に切り替える必要があるのに対し、Polarsは同じ`.std()`に`ddof=0`を渡すだけで済む（実行して確認＝同じ`[1,2,3,4,5]`で`ddof=0`だと約`1.414`）。関数を探して切り替えるSnowpark側と、引数を変えるだけのPolars側で操作の形が異なる。',
+      '**母集団の標準偏差が欲しいときの書き方が違います**。Snowflake側は別の関数`STDDEV_POP`に切り替える必要があるのに対し、Polarsは同じ`.std()`に`ddof=0`を渡すだけで済みます（実行して確認＝同じ`[1,2,3,4,5]`で`ddof=0`だと約`1.414`）。関数を探して切り替えるSnowpark側と、引数を変えるだけのPolars側で操作の形が異なります。',
     snowparkDocUrl:
       'https://docs.snowflake.com/en/developer-guide/snowpark/reference/python/latest/snowpark/api/snowflake.snowpark.functions.stddev',
     polarsDocUrl: 'https://docs.pola.rs/api/python/stable/reference/expressions/api/polars.Expr.std.html',
@@ -267,13 +267,13 @@ export const aggregationEntries: Entry[] = [
     slug: 'count-distinct-approx-count-distinct',
     title: 'count_distinct / approx_count_distinct',
     category: 'aggregation',
-    summary: '重複を除いた値の種類数（ユニーク数）を求める。近似版は誤差を許容する代わりに高速。',
+    summary: '重複を除いた値の種類数（ユニーク数）を求めます。近似版は誤差を許容する代わりに高速です。',
     snowparkCode: 'df.select(count_distinct(col("user_id")))\ndf.select(approx_count_distinct(col("user_id")))',
     polarsCode: 'df.select(pl.col("user_id").n_unique())\ndf.select(pl.col("user_id").approx_n_unique())',
     difference:
-      '正確版（`count_distinct`↔`n_unique`）・近似版（`approx_count_distinct`↔`approx_n_unique`）とも対になる関数がPolars側に存在する。`[1,2,2,3,3,3]`で実行して確認したところ、`n_unique()`は正確に`3`を返す。',
+      '正確版（`count_distinct`↔`n_unique`）・近似版（`approx_count_distinct`↔`approx_n_unique`）とも対になる関数がPolars側に存在します。`[1,2,2,3,3,3]`で実行して確認したところ、`n_unique()`は正確に`3`を返します。',
     pitfall:
-      '**近似版を使う場面の判断はSnowpark側とPolars側で事情が異なる**。Snowflakeの`approx_count_distinct`はHyperLogLogアルゴリズムでビッグデータに対する分散集計のコストを下げるために用意されている。一方Polarsはメモリ上の処理なので、**よほど巨大なデータでない限り正確版の`n_unique()`で十分なことが多く**、近似版を使う必然性はSnowflake側ほど高くない。Snowpark側のコードにならって機械的に近似版へ置き換えると、Polars側では不要な誤差を持ち込むだけになる場合がある。',
+      '**近似版を使う場面の判断はSnowpark側とPolars側で事情が異なります**。Snowflakeの`approx_count_distinct`はHyperLogLogアルゴリズムでビッグデータに対する分散集計のコストを下げるために用意されています。一方Polarsはメモリ上の処理なので、**よほど巨大なデータでない限り正確版の`n_unique()`で十分なことが多く**、近似版を使う必然性はSnowflake側ほど高くありません。Snowpark側のコードにならって機械的に近似版へ置き換えると、Polars側では不要な誤差を持ち込むだけになる場合があります。',
     snowparkDocUrl:
       'https://docs.snowflake.com/en/developer-guide/snowpark/reference/python/latest/snowpark/api/snowflake.snowpark.functions.approx_count_distinct',
     polarsDocUrl: 'https://docs.pola.rs/api/python/stable/reference/expressions/api/polars.Expr.n_unique.html',

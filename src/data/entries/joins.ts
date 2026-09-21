@@ -7,13 +7,13 @@ export const joinsEntries: Entry[] = [
     slug: 'join',
     title: 'join',
     category: 'joins',
-    summary: '2つのDataFrameを結合する。',
+    summary: '2つのDataFrameを結合します。',
     snowparkCode: 'df1.join(df2, df1["id"] == df2["id"], how="inner")',
     polarsCode: 'ldf1.join(ldf2, on="id", how="inner")',
     difference:
-      'SnowparkはINNER JOIN等のSQL演算に変換され、Snowflakeのオプティマイザが結合アルゴリズムを選ぶ。Polarsはローカルの最適化器がハッシュジョインなどを実行する。どちらも遅延評価の対象で、実際の結合は後段のアクション/collectまで行われない。',
+      'SnowparkはINNER JOIN等のSQL演算に変換され、Snowflakeのオプティマイザが結合アルゴリズムを選びます。Polarsはローカルの最適化器がハッシュジョインなどを実行します。どちらも遅延評価の対象で、実際の結合は後段のアクション/collectまで行われません。',
     pitfall:
-      '同名のキー列がある場合の挙動が違う。Snowparkは結合後に同名列が2つ残り、そのままではどちらの列か曖昧になってエラーになりやすい。Polarsは`on="id"`のように結合キーを指定すると、そのキー列は1つに整理される（実機で確認済み）。ただしキー以外の同名列は`_right`のような接尾辞つきの別名で両方残る。',
+      '同名のキー列がある場合の挙動が違います。Snowparkは結合後に同名列が2つ残り、そのままではどちらの列か曖昧になってエラーになりやすいです。Polarsは`on="id"`のように結合キーを指定すると、そのキー列は1つに整理されます（実機で確認済み）。ただしキー以外の同名列は`_right`のような接尾辞つきの別名で両方残ります。',
     snowparkDocUrl:
       'https://docs.snowflake.com/en/developer-guide/snowpark/reference/python/latest/snowpark/api/snowflake.snowpark.DataFrame.join',
     polarsDocUrl: 'https://docs.pola.rs/api/python/stable/reference/lazyframe/api/polars.LazyFrame.join.html',
@@ -29,13 +29,13 @@ export const joinsEntries: Entry[] = [
     slug: 'union',
     title: 'union',
     category: 'joins',
-    summary: '2つのDataFrameを縦に連結し、重複行を取り除く。',
+    summary: '2つのDataFrameを縦に連結し、重複行を取り除きます。',
     snowparkCode: 'df1.union(df2)',
     polarsCode: 'pl.concat([ldf1, ldf2]).unique()',
     difference:
-      'SnowparkのunionはSQLのUNION（重複排除あり）を発行する。Polarsの`pl.concat`は既定では単純な垂直連結だけを行い、重複排除はしないため`.unique()`を明示的に呼ぶ必要がある。',
+      'SnowparkのunionはSQLのUNION（重複排除あり）を発行します。Polarsの`pl.concat`は既定では単純な垂直連結だけを行い、重複排除はしないため`.unique()`を明示的に呼ぶ必要があります。',
     pitfall:
-      'Snowparkの`union`は重複を取り除く点が、他の多くのフレームワークの「union」という言葉から連想する挙動（単純な連結）と異なる。「重複を残したい」ときは次に説明する`union_all`を使う。',
+      'Snowparkの`union`は重複を取り除く点が、他の多くのフレームワークの「union」という言葉から連想する挙動（単純な連結）と異なります。「重複を残したい」ときは次に説明する`union_all`を使います。',
     snowparkDocUrl:
       'https://docs.snowflake.com/en/developer-guide/snowpark/reference/python/latest/snowpark/api/snowflake.snowpark.DataFrame.union',
     polarsDocUrl: 'https://docs.pola.rs/api/python/stable/reference/api/polars.concat.html',
@@ -51,13 +51,13 @@ export const joinsEntries: Entry[] = [
     slug: 'union-all',
     title: 'union_all / unionAll',
     category: 'joins',
-    summary: '2つのDataFrameを縦に連結する。重複行はそのまま残す。',
+    summary: '2つのDataFrameを縦に連結します。重複行はそのまま残します。',
     snowparkCode: 'df1.union_all(df2)',
     polarsCode: 'pl.concat([ldf1, ldf2], how="vertical")',
     difference:
-      'SnowparkはSQLのUNION ALLに変換される。Polarsは`pl.concat`に`how="vertical"`（既定値でもある）を指定した単純な縦連結で、実行して確認したところ重複行はそのまま残る。',
+      'SnowparkはSQLのUNION ALLに変換されます。Polarsは`pl.concat`に`how="vertical"`（既定値でもある）を指定した単純な縦連結で、実行して確認したところ重複行はそのまま残ります。',
     pitfall:
-      '連結する2つのDataFrame/LazyFrameの列名と列数が一致している必要がある。列構成が異なる場合にエラーになる点は両APIで共通なので、スキーマが違う可能性があるときは次の`union_by_name`を検討する。',
+      '連結する2つのDataFrame/LazyFrameの列名と列数が一致している必要があります。列構成が異なる場合にエラーになる点は両APIで共通なので、スキーマが違う可能性があるときは次の`union_by_name`を検討します。',
     snowparkDocUrl:
       'https://docs.snowflake.com/en/developer-guide/snowpark/reference/python/latest/snowpark/api/snowflake.snowpark.DataFrame.union_all',
     polarsDocUrl: 'https://docs.pola.rs/api/python/stable/reference/api/polars.concat.html',
@@ -73,13 +73,13 @@ export const joinsEntries: Entry[] = [
     slug: 'union-by-name',
     title: 'union_by_name / unionByName',
     category: 'joins',
-    summary: '列の並び順ではなく列名を基準に2つのDataFrameを連結する。',
+    summary: '列の並び順ではなく列名を基準に2つのDataFrameを連結します。',
     snowparkCode: 'df1.union_by_name(df2)',
     polarsCode: 'pl.concat([ldf1, ldf2], how="diagonal")',
     difference:
-      '列名にもとづいてスキーマの異なるDataFrameを結合し、片方にしかない列はもう片方でNULLになる。実行して確認したところ、Polarsの`how="diagonal"`も同様に不足列をnullで埋めて連結する。',
+      '列名にもとづいてスキーマの異なるDataFrameを結合し、片方にしかない列はもう片方でNULLになります。実行して確認したところ、Polarsの`how="diagonal"`も同様に不足列をnullで埋めて連結します。',
     pitfall:
-      'Snowparkの`union_by_name`には`allow_missing_columns`という引数があり、既定では列が完全に一致しないとエラーになる（明示的にTrueを渡すと不足列を許容する）。Polars側は`how="diagonal"`を指定した時点で不足列の補完が既定の挙動になっており、両者で「列不足を許容するかどうか」の既定値が異なる点に注意。',
+      'Snowparkの`union_by_name`には`allow_missing_columns`という引数があり、既定では列が完全に一致しないとエラーになります（明示的にTrueを渡すと不足列を許容します）。Polars側は`how="diagonal"`を指定した時点で不足列の補完が既定の挙動になっており、両者で「列不足を許容するかどうか」の既定値が異なる点に注意が必要です。',
     snowparkDocUrl:
       'https://docs.snowflake.com/en/developer-guide/snowpark/reference/python/latest/snowpark/api/snowflake.snowpark.DataFrame.union_by_name',
     polarsDocUrl: 'https://docs.pola.rs/api/python/stable/reference/api/polars.concat.html',
@@ -95,13 +95,13 @@ export const joinsEntries: Entry[] = [
     slug: 'intersect',
     title: 'intersect',
     category: 'joins',
-    summary: '2つのDataFrameの両方に存在する行だけを残す（積集合）。',
+    summary: '2つのDataFrameの両方に存在する行だけを残します（積集合）。',
     snowparkCode: 'df1.intersect(df2)',
     polarsCode: 'ldf1.join(ldf2, on=ldf1.collect_schema().names(), how="semi")',
     difference:
-      'SnowparkはSQLのINTERSECTに変換される。Polarsの`LazyFrame`には直接のintersectメソッドが無いため、全列をキーにした`semi`結合で代用する。実行して確認したところ、この書き方で正しく積集合が得られる。',
+      'SnowparkはSQLのINTERSECTに変換されます。Polarsの`LazyFrame`には直接のintersectメソッドが無いため、全列をキーにした`semi`結合で代用します。実行して確認したところ、この書き方で正しく積集合が得られます。',
     pitfall:
-      '`how="semi"`結合は「もう片方に一致する行があるかどうか」だけを見る結合で、通常のjoinと違って結合相手側の列は出力に含まれない（左側の列だけが残る）。SQLのINTERSECTとは呼び方も返す列も違う概念なので、単純な言い換えとして覚えるより「semi結合」という独立した仕組みとして理解する方が誤解が少ない。',
+      '`how="semi"`結合は「もう片方に一致する行があるかどうか」だけを見る結合で、通常のjoinと違って結合相手側の列は出力に含まれません（左側の列だけが残ります）。SQLのINTERSECTとは呼び方も返す列も違う概念なので、単純な言い換えとして覚えるより「semi結合」という独立した仕組みとして理解する方が誤解が少ないです。',
     snowparkDocUrl:
       'https://docs.snowflake.com/en/developer-guide/snowpark/reference/python/latest/snowpark/api/snowflake.snowpark.DataFrame.intersect',
     polarsDocUrl: 'https://docs.pola.rs/api/python/stable/reference/lazyframe/api/polars.LazyFrame.join.html',
@@ -117,13 +117,13 @@ export const joinsEntries: Entry[] = [
     slug: 'subtract',
     title: 'subtract / except_',
     category: 'joins',
-    summary: '片方のDataFrameから、もう片方にも存在する行を取り除く（差集合）。',
+    summary: '片方のDataFrameから、もう片方にも存在する行を取り除きます（差集合）。',
     snowparkCode: 'df1.subtract(df2)  # df1.except_(df2) でも同じ',
     polarsCode: 'ldf1.join(ldf2, on=ldf1.collect_schema().names(), how="anti")',
     difference:
-      'SnowparkはSQLのEXCEPT（別名MINUS）に変換される。`subtract`と`except_`はSnowpark側の別名で、どちらを呼んでも同じ結果になる。Polars側は全列をキーにした`anti`結合（もう片方に一致する行を除外する結合）で代用する。実行して確認済み。',
+      'SnowparkはSQLのEXCEPT（別名MINUS）に変換されます。`subtract`と`except_`はSnowpark側の別名で、どちらを呼んでも同じ結果になります。Polars側は全列をキーにした`anti`結合（もう片方に一致する行を除外する結合）で代用します。実行して確認済み。',
     pitfall:
-      '`except_`という名前は、Pythonの予約語`except`と衝突しないよう末尾にアンダースコアが付いている。うっかり`except`と書くとPythonの構文エラーになる。',
+      '`except_`という名前は、Pythonの予約語`except`と衝突しないよう末尾にアンダースコアが付いています。うっかり`except`と書くとPythonの構文エラーになります。',
     snowparkDocUrl:
       'https://docs.snowflake.com/en/developer-guide/snowpark/reference/python/latest/snowpark/api/snowflake.snowpark.DataFrame.except_',
     polarsDocUrl: 'https://docs.pola.rs/api/python/stable/reference/lazyframe/api/polars.LazyFrame.join.html',
@@ -139,13 +139,13 @@ export const joinsEntries: Entry[] = [
     slug: 'join-how-types',
     title: 'join の how（結合の種類）',
     category: 'joins',
-    summary: 'inner/left/full/semi/anti など、結合の種類を切り替える。',
+    summary: 'inner/left/full/semi/anti など、結合の種類を切り替えます。',
     snowparkCode: 'df1.join(df2, on="id", how="semi")   # df1側でdf2に一致する行だけを残す（df2の列は付かない）\ndf1.join(df2, on="id", how="anti")  # df1側でdf2に一致しない行だけを残す',
     polarsCode: 'ldf1.join(ldf2, on="id", how="semi")\nldf1.join(ldf2, on="id", how="anti")',
     difference:
-      'Snowpark公式ドキュメントに列挙されている`how`の値（`inner`/`left`・`leftouter`/`right`・`rightouter`/`full`・`outer`・`fullouter`/`semi`・`leftsemi`/`anti`・`leftanti`/`cross`/`asof`）は、**`semi`・`anti`を含めてPolarsの`how`とほぼ同じ語彙**。`semi`結合は「相手に一致する行だけを残すが、相手側の列は付けない」、`anti`結合は「相手に一致しない行だけを残す」というSQLではやや馴染みの薄い結合で、両APIとも同じ意味・同じ名前で使える。',
+      'Snowpark公式ドキュメントに列挙されている`how`の値（`inner`/`left`・`leftouter`/`right`・`rightouter`/`full`・`outer`・`fullouter`/`semi`・`leftsemi`/`anti`・`leftanti`/`cross`/`asof`）は、**`semi`・`anti`を含めてPolarsの`how`とほぼ同じ語彙です**。`semi`結合は「相手に一致する行だけを残すが、相手側の列は付けない」、`anti`結合は「相手に一致しない行だけを残す」というSQLではやや馴染みの薄い結合で、両APIとも同じ意味・同じ名前で使えます。',
     pitfall:
-      '**`on`に同じ列名を渡した場合の結果列の扱いがAPI間で違う**（`how="full"`など外部結合で顕在化）。Snowpark公式ドキュメントは「列名の文字列を渡すと、結合キー列は1つにマージされる」と明記している。一方Polarsを実行して確認したところ、`how="full"`で`on="id"`を指定しても、**結果には`id`と`id_right`という2つの列が別々に残る**（一致しなかった行では片方が`null`になる）。Snowpark側のコードを移植して「同じ列名を渡したから1列にまとまるはず」と思っていると、Polars側では列が重複したまま残っていて後続処理でつまずく。',
+      '**`on`に同じ列名を渡した場合の結果列の扱いがAPI間で違います**（`how="full"`など外部結合で顕在化）。Snowpark公式ドキュメントは「列名の文字列を渡すと、結合キー列は1つにマージされる」と明記しています。一方Polarsを実行して確認したところ、`how="full"`で`on="id"`を指定しても、**結果には`id`と`id_right`という2つの列が別々に残ります**（一致しなかった行では片方が`null`になります）。Snowpark側のコードを移植して「同じ列名を渡したから1列にまとまるはず」と思っていると、Polars側では列が重複したまま残っていて後続処理でつまずきます。',
     snowparkDocUrl: 'https://docs.snowflake.com/en/developer-guide/snowpark/reference/python/latest/snowpark/api/snowflake.snowpark.DataFrame.join',
     polarsDocUrl: 'https://docs.pola.rs/api/python/stable/reference/lazyframe/api/polars.LazyFrame.join.html',
     verified: {
